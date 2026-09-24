@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kai — One line, two owners</title>
+<link rel="stylesheet" href="../lib/kai.css">
+</head>
+<body class="stage">
+  <div class="frame"><canvas id="stage"></canvas></div>
+  <div id="bar"></div>
+  <p class="note">Product cut &middot; the Relay Track marketecture, vertical for 9:16.</p>
+<script type="module">
+import * as Kai from '../lib/kai.js';
+import * as S from '../lib/scenes.js';
+import { COPY } from '../lib/copy.js';
+const { K, W, H, TL, at, seg, clamp01, lerp, draw, pop, enter, easeOut, easeBoth,
+        fade, font, grad, roundRect, textBlock, eyebrow, mark, rail, ringNode,
+        feed, arrow, pill, card, ribbon, isoBlock, ground, signal, caption,
+        endCard, scene, mount, bar } = Kai;
+
+document.getElementById('bar').outerHTML = bar();
+
+
+const RX = 330, RTOP = 540, RBOT = 1108;
+const SRC   = [['TVM',60],['EDR',296],['CNAPP',532],['Threat Intel',768]];
+const NODES = [[690,'Exposures'],[858,'Assets & Owners'],[1026,'Remediation Planning']];
+const FORKS = [
+  [1200, K.cyan, 'Detection & Threat Hunting'],
+  [1332, K.blue, 'Manual Remediation'],
+  [1464, K.peri, 'Auto Remediation'],
+];
+
+function render(c, t){
+  ground(c, t);
+  signal(c, t, COPY.descriptor);
+
+
+  // section eyebrow, held for the three beats
+  scene(c, t, TL.b1[0], TL.b3[0]+TL.b3[1]-0.15, () => {
+    const e = enter(seg(t, TL.b1[0]+0.15, 0.5), 18);
+    eyebrow(c, 'Security owns the workflow, end to end', { x: W/2, y: 306, size: 25, color: K.cyan,
+      align: 'center', alpha: e.o });
+  });
+
+  // beat 1 — every source you already run, into one record
+  scene(c, t, TL.b1[0], TL.b3[0]+TL.b3[1]-0.15, () => {
+    const p = at(t,'b1');
+    SRC.forEach(([label, x], i) => {
+      const lp = clamp01((p - i*0.08)/0.42); if (lp <= 0) return;
+      S.sourceChip(c, x, 372, 210, 74, label, lp);
+      S.feedDown(c, x+105, 450, RX, RTOP-8, clamp01((lp-0.35)/0.65), { color: K.line, w: 5 });
+    });
+    const rp = clamp01((p - 0.32)/0.62);
+    const yEnd = RTOP + (RBOT-RTOP)*draw(rp);
+    if (yEnd > RTOP){
+      c.save(); c.strokeStyle = K.ink; c.lineWidth = 22; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(RX, RTOP); c.lineTo(RX, yEnd); c.stroke(); c.restore();
+    }
+  });
+
+  // beat 2 — the stages that never stop
+  scene(c, t, TL.b2[0], TL.b3[0]+TL.b3[1]-0.15, () => {
+    const p = at(t,'b2');
+    NODES.forEach(([y,label], i) => {
+      const lp = clamp01((p - i*0.13)/0.5);
+      ringNode(c, RX, y, 38, lp, { w: 11 });
+      const e = enter(lp, 20);
+      textBlock(c, label, { x: 412, y: y+15, maxW: 600, size: 44, weight: 700,
+        color: K.ink, alpha: e.o });
+    });
+  });
+
+  // beat 3 — one handoff, coloured by who receives it
+  scene(c, t, TL.b3[0], TL.b3[0]+TL.b3[1], () => {
+    const p = at(t,'b3');
+    FORKS.forEach(([y, col, label], i) => {
+      const lp = clamp01((p - i*0.11)/0.55);
+      arrow(c, RX, RBOT, 452, y, lp, { color: col, w: 14, head: 24 });
+      pill(c, 480, y-58, 528, 116, clamp01((lp-0.4)/0.6),
+           { bg: K.ink, label, size: 34 });
+    });
+  });
+
+  caption(c, t, 'b1', 'Every scanner you already run, reconciled to *one record*.', { size: 58, bottom: 1840 });
+  caption(c, t, 'b2', 'Triage and context, *continuous*.', { size: 72, bottom: 1830 });
+  caption(c, t, 'b3', '*One* handoff, and it is only the change.', { size: 60, bottom: 1840 });
+
+  endCard(c, t, 'One line, two owners.');
+}
+
+
+mount({ slug:'one-line-two-owners', title:'One line, two owners', render });
+</script>
+</body>
+</html>

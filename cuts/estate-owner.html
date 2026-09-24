@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kai — 92% have an owner</title>
+<link rel="stylesheet" href="../lib/kai.css">
+</head>
+<body class="stage">
+  <div class="frame"><canvas id="stage"></canvas></div>
+  <div id="bar"></div>
+  <p class="note">Product cut &middot; ownership figures are from a Fortune 50 energy company.</p>
+<script type="module">
+import * as Kai from '../lib/kai.js';
+import * as S from '../lib/scenes.js';
+import { COPY } from '../lib/copy.js';
+const { K, W, H, TL, at, seg, clamp01, lerp, draw, pop, enter, easeOut, easeBoth,
+        fade, font, grad, roundRect, textBlock, eyebrow, mark, rail, ringNode,
+        feed, arrow, pill, card, ribbon, isoBlock, ground, signal, caption,
+        endCard, scene, mount, bar } = Kai;
+
+document.getElementById('bar').outerHTML = bar();
+
+
+function render(c, t){
+  ground(c, t);
+  signal(c, t, COPY.descriptor);
+
+
+  // section eyebrow, held for the three beats
+  scene(c, t, TL.b1[0], TL.b3[0]+TL.b3[1]-0.15, () => {
+    const e = enter(seg(t, TL.b1[0]+0.15, 0.5), 18);
+    eyebrow(c, 'Cyber Asset Attack Surface Management', { x: W/2, y: 330, size: 27, color: K.cyan,
+      align: 'center', alpha: e.o });
+  });
+
+  // beat 1 — the estate as it arrives
+  scene(c, t, TL.b1[0], TL.b2[0]+0.3, () => {
+    S.assetRows(c, { p: at(t,'b1'), x: 110, y: 560, w: 860, n: 6, ownedFrom: 0 });
+  }, { fadeOut: 0.5 });
+
+  // beats 2-3 — rebuilt from evidence
+  scene(c, t, TL.b2[0]+0.3, TL.b3[0]+TL.b3[1]-0.15, () => {
+    const p = t < TL.b3[0] ? seg(t, TL.b2[0]+0.3, TL.b2[1]-0.3) : 1;
+    S.ownerRing(c, { p, x: W/2, y: 830, r: 210, from: 0.04, to: 0.92 });
+    const e = enter(seg(t, TL.b2[0]+0.5, 0.6), 22);
+    eyebrow(c, 'accountable owner', { x: W/2, y: 1130, size: 26, color: K.grey,
+      align: 'center', alpha: e.o*0.9 });
+  });
+
+  scene(c, t, TL.b3[0]+0.2, TL.b3[0]+TL.b3[1], () => {
+    const p = at(t,'b3');
+    card(c, 110, 1230, 410, 168, clamp01((p-0.1)/0.45), { bg: K.tint, stroke: null });
+    card(c, 560, 1230, 410, 168, clamp01((p-0.25)/0.45), { bg: K.tint, stroke: null });
+    const a = easeOut(clamp01((p-0.25)/0.45)), b = easeOut(clamp01((p-0.4)/0.45));
+    textBlock(c, '250,000', { x: 315, y: 1320, maxW: 380, size: 58, weight: 900,
+      color: K.blue, align: 'center', alpha: a });
+    textBlock(c, 'assets in scope', { x: 315, y: 1364, maxW: 380, size: 27, weight: 500,
+      family: K.body, color: K.grey, align: 'center', alpha: a });
+    textBlock(c, 'Under 12 hrs', { x: 765, y: 1320, maxW: 380, size: 58, weight: 900,
+      color: K.blue, align: 'center', alpha: b });
+    textBlock(c, 'to resolve ownership', { x: 765, y: 1364, maxW: 380, size: 27, weight: 500,
+      family: K.body, color: K.grey, align: 'center', alpha: b });
+  });
+
+  caption(c, t, 'b1', '*Four percent* of assets had an accountable owner.', { size: 60, accent: K.crimson });
+  caption(c, t, 'b2', 'Rebuilt from evidence, not from the configuration record.', { size: 54, bottom: 1830 });
+  caption(c, t, 'b3', '*92%*, in under twelve hours.', { size: 78, bottom: 1810 });
+
+  endCard(c, t, 'Find out how much of your estate has a real owner.');
+}
+
+
+mount({ slug:'estate-owner', title:'92% have an owner', render });
+</script>
+</body>
+</html>

@@ -1,0 +1,1306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kai — social tile generator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --ink:#080844; --ink-2:#0C1838; --paper:#fff; --paper-tint:#F0F8FC;
+  --cyan:#00BCFC; --teal:#74E8E8; --blue:#1C58D8; --peri:#8098FC;
+  --crimson:#E11D48; --grey:#586470; --line:#CCD0DC;
+  --font-display:Figtree,"Gilroy","Hanken Grotesk",system-ui,sans-serif;
+  --font-body:Inter,system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body.stage{
+  background:#05051f; color:#fff; font-family:var(--font-body);
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+  padding:16px; overflow:hidden;
+}
+.frame{
+  position:relative; flex:1 1 auto; min-height:0;
+  display:flex; align-items:center; justify-content:center;
+}
+canvas#stage{
+  height:100%; width:auto; max-width:100%;
+  border-radius:14px; box-shadow:0 18px 60px rgba(0,0,0,.55);
+  background:#fff;
+}
+.bar{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  justify-content:center; font-size:13px;
+}
+.bar button{
+  font:600 13px/1 var(--font-body); color:#fff; cursor:pointer;
+  background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18);
+  padding:9px 15px; border-radius:999px; transition:background .15s;
+}
+.bar button:hover{background:rgba(255,255,255,.18)}
+.bar button.pri{background:var(--cyan); border-color:var(--cyan); color:#04263a}
+.bar button.pri:hover{background:#38cdff}
+.bar button.rec[data-on="1"]{background:var(--crimson); border-color:var(--crimson)}
+.bar .t{font-variant-numeric:tabular-nums; opacity:.62; min-width:76px; text-align:center}
+.bar a{color:var(--teal); text-decoration:none; font-weight:600}
+.bar a:hover{text-decoration:underline}
+input[type=range]{accent-color:var(--cyan); width:230px}
+.note{font-size:12px; opacity:.45; text-align:center; max-width:640px; line-height:1.5}
+
+/* editable copy field in the control bar */
+.bar .fld{ display:flex; align-items:center; gap:9px; font-size:12px; opacity:.72 }
+.bar .fld input{
+  font:600 13px/1 var(--font-body); color:#fff; width:320px;
+  background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18);
+  border-radius:8px; padding:9px 11px;
+}
+.bar .fld input:focus{ outline:none; border-color:var(--cyan) }
+.bar .hintline{ font-size:11.5px; opacity:.4 }
+
+
+  body{
+    background:#05051f; color:#fff; font-family:var(--font-body);
+    display:grid; grid-template-columns:400px 1fr; grid-template-rows:100vh; gap:0; height:100vh;
+    margin:0; overflow:hidden;
+  }
+  aside{
+    overflow-y:auto; padding:22px 22px 60px; background:#0a0a2c;
+    border-right:1px solid rgba(255,255,255,.08);
+  }
+  main{ display:flex; flex-direction:column; align-items:center; justify-content:center;
+        gap:16px; padding:22px; min-width:0; min-height:0; overflow:hidden; }
+  h1{ font:900 21px/1.2 var(--font-display); margin:0 0 3px; letter-spacing:-.01em }
+  .sub{ font-size:12.5px; opacity:.5; margin:0 0 20px; line-height:1.5 }
+  h2{ font:800 10.5px/1 var(--font-body); letter-spacing:.14em; text-transform:uppercase;
+      color:var(--cyan); margin:22px 0 9px }
+  label{ display:block; font-size:11.5px; opacity:.6; margin:0 0 5px }
+  select,input[type=text],textarea{
+    width:100%; background:rgba(255,255,255,.07); color:#fff; font:500 13.5px/1.45 var(--font-body);
+    border:1px solid rgba(255,255,255,.15); border-radius:9px; padding:9px 11px; margin-bottom:11px;
+  }
+  textarea{ resize:vertical; min-height:60px }
+  select:focus,input:focus,textarea:focus{ outline:none; border-color:var(--cyan) }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px }
+  .chips button{
+    font:600 11.5px/1.25 var(--font-body); color:#cfe9ff; cursor:pointer; text-align:left;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
+    padding:7px 10px; border-radius:8px; max-width:100%;
+  }
+  .chips button:hover{ background:rgba(0,188,252,.22); border-color:var(--cyan); color:#fff }
+  .row{ display:flex; gap:8px; margin-bottom:11px }
+  .row > *{ flex:1; margin-bottom:0 }
+  .seg{ display:flex; border:1px solid rgba(255,255,255,.15); border-radius:9px; overflow:hidden }
+  .seg button{ flex:1; background:none; border:0; color:#fff; opacity:.55; cursor:pointer;
+               font:600 12.5px/1 var(--font-body); padding:10px 4px }
+  .seg button[aria-pressed=true]{ background:var(--cyan); color:#04263a; opacity:1 }
+  .actions{ display:flex; gap:8px; margin:16px 0 4px }
+  .actions button{ flex:1; font:700 13px/1 var(--font-body); cursor:pointer; padding:12px 8px;
+    border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff }
+  .actions button.pri{ background:var(--cyan); border-color:var(--cyan); color:#04263a }
+  .saved{ display:flex; flex-direction:column; gap:6px }
+  .saved div{ display:flex; gap:6px; align-items:center }
+  .saved button{ font:600 12px/1.3 var(--font-body); cursor:pointer; text-align:left; flex:1;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:#dfe9ff;
+    padding:8px 10px; border-radius:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+  .saved .x{ flex:0 0 30px; text-align:center; color:#ff8da6 }
+  .links{ display:flex; flex-direction:column; gap:5px; font-size:12.5px }
+  .links a{ color:var(--teal); text-decoration:none }
+  .links a:hover{ text-decoration:underline }
+  #wrap{ flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; width:100% }
+  #tile{ max-width:100%; max-height:100%; border-radius:10px; box-shadow:0 18px 60px rgba(0,0,0,.6) }
+  .meta{ font-size:12px; opacity:.45 }
+  .hint{ font-size:11px; opacity:.4; margin:-6px 0 12px; line-height:1.5 }
+
+</style>
+</head>
+<body>
+<aside>
+  <h1>Kai social tile generator</h1>
+  <p class="sub">Bookmark this page. Everything below is editable, and saved tiles stay in this browser.</p>
+
+  <h2>Start from</h2>
+  <div class="chips" id="presets"></div>
+
+  <h2>Format</h2>
+  <select id="format"></select>
+
+  <h2>Art</h2>
+  <select id="art"></select>
+  <div id="cityWrap"><label>City</label><select id="city"></select></div>
+  <div class="row">
+    <div class="seg" id="ground">
+      <button data-v="light" aria-pressed="true">Light</button>
+      <button data-v="dark"  aria-pressed="false">Dark</button>
+    </div>
+    <div class="seg" id="overlay">
+      <button data-v="off" aria-pressed="true">Overlay off</button>
+      <button data-v="on"  aria-pressed="false">On</button>
+    </div>
+  </div>
+
+  <h2>Copy</h2>
+  <p class="hint">Wrap a word in *asterisks* to set it in the emphasis colour.</p>
+  <label>Headline</label><textarea id="headline" rows="2"></textarea>
+  <label>Subline</label><textarea id="subline" rows="2"></textarea>
+  <label>Corner tag</label><input type="text" id="tag">
+
+  <div class="actions">
+    <button id="save">Save tile</button>
+    <button id="download" class="pri">Download PNG</button>
+  </div>
+
+  <h2>Saved tiles</h2>
+  <div class="saved" id="saved"></div>
+
+  <h2>Video cuts</h2>
+  <div class="links" id="cutlinks"></div>
+</aside>
+
+<main>
+  <div id="wrap"><canvas id="tile"></canvas></div>
+  <p class="meta" id="meta"></p>
+</main>
+<script>
+/* Kai — social tile generator. Self-contained: no imports, no server.
+
+   Built by tools/build_standalone.py from lib/kai.js, lib/scenes.js,
+   lib/tileart.js and tiles.html. If you still have that folder, edit the
+   source and rebuild — this file gets overwritten.
+
+   If this file is all you have, editing it directly is fine. Search for:
+     const K = {          the palette. One line, every colour.
+     const RIBBONS        the mark's four ribbons
+     CITIES = {           launch cities and their block grids. Add one here,
+                          then add a landmark cue next to operaHouse.
+     const FORMATS        tile sizes
+     const PRESETS        the eight presets, one per headline
+     const CUTS           links to the video cuts
+     function drawTile    layout: where the art, tag, headline and subline go
+*/
+(function(){
+"use strict";
+/* Copy that is still moving.
+
+   Lines here can be changed in the interface rather than in the source, so a
+   positioning shift does not mean editing Python and rebuilding. Overrides
+   live in this browser under one key and are shared by every page on the same
+   origin — set the descriptor on the hub or on any cut and all seven follow.
+
+   The defaults below are what ships. Change a default only when the wording is
+   settled; until then use the field in the UI. */
+
+const COPY_KEY = 'kai-copy-v1';
+
+const DEFAULTS = {
+  descriptor: 'The Kai Autonomous Defense Platform',
+};
+
+const FIELDS = [
+  { key:'descriptor', label:'Descriptor',
+    hint:'The line under the mark, on all seven cuts.' },
+];
+
+function stored(){
+  try { return JSON.parse(localStorage.getItem(COPY_KEY)) || {}; } catch { return {}; }
+}
+
+/* A live object: mutate it through set() and every render picks it up on the
+   next frame, so edits show immediately and exports use the edited value. */
+const COPY = { ...DEFAULTS, ...stored() };
+
+function set(key, value){
+  COPY[key] = value;
+  const next = stored(); next[key] = value;
+  try { localStorage.setItem(COPY_KEY, JSON.stringify(next)); } catch {}
+}
+
+function reset(key){
+  if (key){ COPY[key] = DEFAULTS[key];
+    const next = stored(); delete next[key];
+    try { localStorage.setItem(COPY_KEY, JSON.stringify(next)); } catch {}
+    return;
+  }
+  Object.assign(COPY, DEFAULTS);
+  try { localStorage.removeItem(COPY_KEY); } catch {}
+}
+
+const isOverridden = key => COPY[key] !== DEFAULTS[key];
+
+/* Kai launch kit — shared render engine.
+   One motion system: enter / draw / pop. Nothing else.
+   Every cut is a pure function of t (seconds), so export and scrub agree. */
+
+const K = {
+  ink:'#080844', ink2:'#0C1838', paper:'#FFFFFF', tint:'#F0F8FC',
+  cyan:'#00BCFC', teal:'#74E8E8', blue:'#1C58D8', peri:'#8098FC',
+  crimson:'#E11D48', grey:'#586470', line:'#CCD0DC',
+  display:'Figtree, Gilroy, "Hanken Grotesk", system-ui, sans-serif',
+  body:'Inter, system-ui, -apple-system, sans-serif',
+};
+
+const W = 1080, H = 1920;
+
+/* ---------- timing ---------- */
+const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
+const lerp = (a,b,p) => a + (b-a)*p;
+/* local progress of a segment starting at `start` lasting `dur` */
+const seg = (t,start,dur) => clamp01((t-start)/dur);
+
+const easeOut  = p => 1 - Math.pow(1-p, 3);
+const easeIn   = p => p*p*p;
+const easeBoth = p => p < .5 ? 4*p*p*p : 1 - Math.pow(-2*p+2,3)/2;
+/* the one overshoot in the system — used only by `pop` */
+const easePop  = p => { const c=1.70158+1; return 1 + c*Math.pow(p-1,3) + 1.70158*Math.pow(p-1,2); };
+
+/* the three moves */
+const enter = (p, dist=60) => ({ o: easeOut(clamp01(p)), dy: (1-easeOut(clamp01(p)))*dist });
+const draw  = (p) => easeBoth(clamp01(p));
+const pop   = (p) => p<=0 ? 0 : p>=1 ? 1 : easePop(p);
+
+/* ---------- canvas helpers ---------- */
+function roundRect(c,x,y,w,h,r){
+  r = Math.min(r, Math.abs(w)/2, Math.abs(h)/2);
+  c.beginPath(); c.moveTo(x+r,y);
+  c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
+  c.arcTo(x,y+h,x,y,r);     c.arcTo(x,y,x+w,y,r);
+  c.closePath();
+}
+
+function grad(c,x0,y0,x1,y1,stops){
+  const g = c.createLinearGradient(x0,y0,x1,y1);
+  stops.forEach(([p,col]) => g.addColorStop(p,col));
+  return g;
+}
+
+/* alpha-blended colour without touching globalAlpha */
+function fade(hex, a){
+  const n = parseInt(hex.slice(1),16);
+  return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;
+}
+
+/* ---------- text ---------- */
+function font(c,{size, weight=700, family=K.display}){
+  c.font = `${weight} ${size}px ${family}`;
+}
+
+function wrap(c, text, maxW){
+  const words = String(text).split(/\s+/);
+  const lines = []; let cur = '';
+  for (const w of words){
+    const test = cur ? cur+' '+w : w;
+    if (c.measureText(test).width > maxW && cur){ lines.push(cur); cur = w; }
+    else cur = test;
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+/* Draws wrapped text. `*word*` sets the emphasis colour.
+   Returns the total block height. Never call with size < 24. */
+function textBlock(c, text, {
+  x, y, maxW, size, weight=700, family=K.display, lh=1.14,
+  color=K.ink, accent=K.cyan, align='left', alpha=1, reveal=1
+}){
+  if (size < 24) size = 24;                       // hard floor, per brief
+  font(c,{size,weight,family});
+  // tokenise into [text, isAccent] runs, keeping the plain string for wrapping
+  const raw = String(text);
+  const plain = raw.replace(/\*/g,'');
+  const lines = wrap(c, plain, maxW);
+
+  // map accent ranges from the marked-up source onto plain indices
+  const acc = []; let i=0, on=false, start=0;
+  for (const ch of raw){
+    if (ch === '*'){ if(!on){ on=true; start=i; } else { on=false; acc.push([start,i]); } continue; }
+    i++;
+  }
+  if (on) acc.push([start,i]);
+  const isAcc = n => acc.some(([a,b]) => n>=a && n<b);
+
+  const shown = Math.round(plain.replace(/\s+/g,' ').length * clamp01(reveal));
+  let seen = 0, yy = y;
+  c.textBaseline = 'alphabetic';
+  for (const line of lines){
+    let lw = c.measureText(line).width;
+    let cx = align==='center' ? x - lw/2 : align==='right' ? x - lw : x;
+    for (const ch of line){
+      if (seen >= shown && reveal < 1) { seen++; continue; }
+      c.fillStyle = fade(isAcc(seen) ? accent : color, alpha);
+      c.fillText(ch, cx, yy);
+      cx += c.measureText(ch).width;
+      seen++;
+    }
+    seen++;                                        // the space the wrap consumed
+    yy += size*lh;
+  }
+  return lines.length * size * lh;
+}
+
+/* small-caps eyebrow */
+function eyebrow(c, text, {x,y,size=26,color=K.cyan,align='left',alpha=1,track=3.2}){
+  font(c,{size,weight:800,family:K.body});
+  const s = String(text).toUpperCase();
+  const w = c.measureText(s).width + track*(s.length-1);
+  let cx = align==='center' ? x-w/2 : align==='right' ? x-w : x;
+  c.fillStyle = fade(color,alpha); c.textBaseline='alphabetic';
+  for (const ch of s){ c.fillText(ch,cx,y); cx += c.measureText(ch).width + track; }
+  return w;
+}
+
+/* ---------- brand primitives ---------- */
+
+/* The woven orb, as geometry so it can be *drawn* rather than faded in.
+   Four ribbons crossing a common centre, teal at the lower left, cyan at the
+   upper right — matching assets/logo-kai.png. */
+const RIBBONS = [            // angle°, rx, ry, cx, cy — all as a fraction of size
+  [  40, .500, .285,  .000,  .000],   // the big outer sweep
+  [ -20, .455, .235, -.015,  .015],
+  [  85, .425, .215,  .018, -.008],
+  [ 132, .440, .205, -.008, -.020],
+];
+
+function mark(c, x, y, size, p=1, {alpha=1, spin=0}={}){
+  if (p <= 0) return;
+  c.save();
+  c.translate(x,y); c.rotate(spin);
+  // built after the transform: canvas resolves gradient coords at paint time
+  const g = grad(c, -size*.5, size*.5, size*.5, -size*.5,
+    [[0,fade('#8FF0E2',alpha)],[.34,fade(K.teal,alpha)],
+     [.72,fade('#2ED0F6',alpha)],[1,fade(K.cyan,alpha)]]);
+  c.strokeStyle = g; c.lineWidth = size*.095; c.lineCap='round';
+  RIBBONS.forEach(([deg,rx,ry,cx,cy],i) => {
+    const RX = size*rx, RY = size*ry, CX = size*cx, CY = size*cy;
+    const circ = Math.PI * (3*(RX+RY) - Math.sqrt((3*RX+RY)*(RX+3*RY)));
+    // stagger the four ribbons so the mark knits itself together
+    const lp = draw(clamp01((p - i*.12) / .64));
+    if (lp <= 0) return;
+    c.setLineDash([circ,circ]); c.lineDashOffset = circ*(1-lp);
+    c.beginPath(); c.ellipse(CX,CY,RX,RY, deg*Math.PI/180, 0, Math.PI*2); c.stroke();
+  });
+  c.restore();
+}
+
+/* the one-record rail: a thick navy line that draws left to right */
+function rail(c, x0, x1, y, p, {w=18, color=K.ink}={}){
+  const e = x0 + (x1-x0)*draw(p); if (e <= x0) return;
+  c.save(); c.strokeStyle = color; c.lineWidth = w; c.lineCap='round';
+  c.beginPath(); c.moveTo(x0,y); c.lineTo(e,y); c.stroke(); c.restore();
+}
+
+/* "runs continuously" — an open cyan ring that pops onto the rail */
+function ringNode(c, x, y, r, p, {color=K.cyan, core=K.paper, w=9}={}){
+  const s = pop(p); if (s <= 0) return;
+  c.save(); c.translate(x,y); c.scale(s,s);
+  c.fillStyle = core; c.beginPath(); c.arc(0,0,r,0,Math.PI*2); c.fill();
+  c.strokeStyle = color; c.lineWidth = w;
+  c.beginPath(); c.arc(0,0,r,0,Math.PI*2); c.stroke(); c.restore();
+}
+
+/* a source you already run, curving into the rail */
+function feed(c, x0, y0, x1, y1, p, {color=K.line, w=4}={}){
+  const q = draw(p); if (q <= 0) return;
+  const mx = (x0+x1)/2;
+  c.save(); c.strokeStyle=color; c.lineWidth=w; c.lineCap='round';
+  const len = Math.hypot(x1-x0,y1-y0)*1.6;
+  c.setLineDash([len,len]); c.lineDashOffset = len*(1-q);
+  c.beginPath(); c.moveTo(x0,y0); c.bezierCurveTo(mx,y0,mx,y1,x1,y1); c.stroke();
+  c.restore();
+}
+
+/* the handoff, coloured by the team that receives it */
+function arrow(c, x0, y0, x1, y1, p, {color=K.blue, w=14, head=26}={}){
+  const q = draw(p); if (q <= 0) return;
+  const x = lerp(x0,x1,q), y = lerp(y0,y1,q);
+  c.save(); c.strokeStyle=color; c.fillStyle=color; c.lineWidth=w; c.lineCap='round';
+  const my = y0 + (y1-y0)*.55;
+  c.beginPath(); c.moveTo(x0,y0); c.bezierCurveTo(x0+(x1-x0)*.45,y0, x0+(x1-x0)*.5,my, x,y); c.stroke();
+  if (q > .9){
+    const a = Math.atan2(y1-y0, (x1-x0)*.25);
+    c.translate(x1,y1); c.rotate(a);
+    c.beginPath(); c.moveTo(head,0); c.lineTo(-head*.5,head*.62); c.lineTo(-head*.5,-head*.62);
+    c.closePath(); c.fill();
+  }
+  c.restore();
+}
+
+/* navy outcome pill */
+function pill(c, x, y, w, h, p, {bg=K.ink, label='', color=K.paper, size=34}={}){
+  const s = pop(p); if (s<=0) return;
+  c.save(); c.translate(x+w/2, y+h/2); c.scale(s,s); c.translate(-w/2,-h/2);
+  c.fillStyle = bg; roundRect(c,0,0,w,h,h/2); c.fill();
+  if (label){
+    font(c,{size,weight:700}); c.fillStyle=color; c.textBaseline='middle';
+    const lines = wrap(c,label,w-52);
+    lines.forEach((ln,i)=> c.fillText(ln, (w-c.measureText(ln).width)/2,
+      h/2 + (i-(lines.length-1)/2)*size*1.15));
+  }
+  c.restore();
+}
+
+/* white card on tint, the shape used across the platform page */
+function card(c, x, y, w, h, p, {bg=K.paper, stroke=fade(K.line,.9), r=28}={}){
+  const s = pop(p); if (s<=0) return;
+  c.save(); c.translate(x+w/2,y+h/2); c.scale(s,s); c.translate(-(x+w/2),-(y+h/2));
+  c.fillStyle=bg; roundRect(c,x,y,w,h,r); c.fill();
+  if (stroke){ c.strokeStyle=stroke; c.lineWidth=2; c.stroke(); }
+  c.restore(); return s;
+}
+
+/* a tapered Sankey ribbon: volume in on the left, less out on the right */
+function ribbon(c, x0,y0,h0, x1,y1,h1, p, {color=fade(K.cyan,.28)}={}){
+  const q = easeOut(clamp01(p)); if (q<=0) return;
+  const xe = lerp(x0,x1,q), he = lerp(h0,h1,q), ye = lerp(y0,y1,q);
+  const cx = (x0+xe)/2;
+  c.save(); c.fillStyle=color; c.beginPath();
+  c.moveTo(x0,y0); c.bezierCurveTo(cx,y0,cx,ye,xe,ye);
+  c.lineTo(xe,ye+he); c.bezierCurveTo(cx,ye+he,cx,y0+h0,x0,y0+h0);
+  c.closePath(); c.fill(); c.restore();
+}
+
+/* isometric extruded block — the unit every skyline is built from */
+const ISO = (x,y,z) => [ (x-y)*0.8660254, (x+y)*0.5 - z ];
+function isoBlock(c, ox, oy, u, bx, by, bw, bd, bh, p, {
+  stroke=K.ink, w=5, fill=null, alpha=1
+}={}){
+  const q = draw(p); if (q<=0) return;
+  const P = (x,y,z) => { const [a,b] = ISO(x,y,z); return [ox+a*u, oy+b*u]; };
+  const x0=bx, x1=bx+bw, y0=by, y1=by+bd, z=bh*q;
+  const top = [P(x0,y0,z),P(x1,y0,z),P(x1,y1,z),P(x0,y1,z)];
+  const poly = pts => { c.beginPath(); c.moveTo(...pts[0]); pts.slice(1).forEach(pt=>c.lineTo(...pt)); c.closePath(); };
+  c.save(); c.lineJoin='round'; c.lineCap='round';
+  if (fill){ c.fillStyle=fill;
+    poly([P(x0,y1,0),P(x1,y1,0),P(x1,y1,z),P(x0,y1,z)]); c.fill();
+    poly([P(x1,y0,0),P(x1,y1,0),P(x1,y1,z),P(x1,y0,z)]); c.fill();
+    poly(top); c.fill();
+  }
+  c.strokeStyle = fade(stroke,alpha); c.lineWidth = w;
+  poly(top); c.stroke();
+  [[x0,y0],[x1,y0],[x1,y1],[x0,y1]].forEach(([vx,vy])=>{
+    const a=P(vx,vy,0), b=P(vx,vy,z);
+    c.beginPath(); c.moveTo(...a); c.lineTo(...b); c.stroke();
+  });
+  // only the two bottom edges that actually face the viewer
+  c.beginPath(); c.moveTo(...P(x1,y0,0)); c.lineTo(...P(x1,y1,0)); c.lineTo(...P(x0,y1,0)); c.stroke();
+  c.restore();
+}
+
+/* ---------- shared cut scaffolding ---------- */
+const DUR = 17;
+const TL = {                       // start, length
+  signal:[0, 3.0], b1:[3.0, 3.8], b2:[6.8, 3.8], b3:[10.6, 3.8], end:[14.4, 2.6]
+};
+const at = (t,k) => seg(t, TL[k][0], TL[k][1]);   // 0..1 within a phase
+
+/* One or two background colours per cut, never more. */
+function ground(c, t, {light=K.paper, dark=K.ink}={}){
+  const flip = seg(t, TL.end[0]-.35, .5);
+  c.fillStyle = light; c.fillRect(0,0,W,H);
+  if (flip > 0){
+    const y = H * (1-easeBoth(flip));
+    c.fillStyle = dark; c.fillRect(0, y, W, H-y);
+  }
+  return flip;
+}
+
+/* Beat 0 — mark drops in, wordmark types out, one-line descriptor. */
+function signal(c, t, descriptor){
+  const p = at(t,'signal');
+  const out = 1 - clamp01(seg(t, TL.signal[1]-.45, .4));
+  if (out <= 0) return p;
+  c.save(); c.globalAlpha = out;
+  const drop = enter(seg(t,.15,.75), 90);
+  mark(c, W/2, 700 + drop.dy, 320, seg(t,.25,1.15), {alpha:drop.o});
+
+  const wm = enter(seg(t,1.0,.5), 26);
+  font(c,{size:132, weight:900});
+  const reveal = clamp01(seg(t,1.05,.7));
+  const full = 'Kai', shown = full.slice(0, Math.ceil(full.length*reveal));
+  if (shown){
+    const w = c.measureText(full).width;
+    c.fillStyle = fade(K.ink, wm.o); c.textBaseline='alphabetic';
+    c.fillText(shown, W/2 - w/2, 1050 + wm.dy);
+    if (reveal < 1){                                   // typing caret
+      c.fillStyle = fade(K.cyan, wm.o);
+      c.fillRect(W/2 - w/2 + c.measureText(shown).width + 8, 1050-96+wm.dy, 9, 100);
+    }
+  }
+  const d = enter(seg(t,1.75,.6), 34);
+  textBlock(c, descriptor, {
+    x:W/2, y:1215 + d.dy, maxW:940, size:46, weight:600, family:K.body,
+    color:K.grey, align:'center', alpha:d.o, lh:1.3
+  });
+  // hairline that draws under the lockup
+  const hl = draw(seg(t,2.1,.6));
+  if (hl>0){ c.strokeStyle=fade(K.cyan,.9); c.lineWidth=6; c.lineCap='round';
+    c.beginPath(); c.moveTo(W/2-110*hl, 1125); c.lineTo(W/2+110*hl, 1125); c.stroke(); }
+  c.restore();
+  return p;
+}
+
+/* Hold a scene between two absolute times, with an automatic tail fade.
+   `fn(alpha)` draws; progress is the caller's business. */
+function scene(c, t, from, to, fn, {fadeIn=0, fadeOut=.35}={}){
+  if (t < from || t > to + fadeOut) return;
+  const a = (fadeIn ? easeOut(seg(t,from,fadeIn)) : 1) * clamp01(1 - seg(t, to, fadeOut));
+  if (a <= 0) return;
+  c.save(); c.globalAlpha = a; fn(a); c.restore();
+}
+
+/* Beat caption, bottom-anchored. `*word*` takes the emphasis colour. */
+function caption(c, t, phase, text, {
+  bottom=1780, size=68, accent=K.cyan, color=K.ink, weight=800
+}={}){
+  const p = at(t,phase); if (p<=0) return;
+  const [st,dl] = TL[phase];
+  const out = clamp01(1 - seg(t, st+dl-.3, .3));
+  const e = enter(seg(t, st+.25, .55), 40);
+  if (e.o*out <= 0) return;
+  font(c,{size,weight});
+  const lines = wrap(c, String(text).replace(/\*/g,''), W-148);
+  const y = bottom - (lines.length-1)*size*1.12;
+  textBlock(c, text, {
+    x:74, y:y+e.dy, maxW:W-148, size, weight, color, accent,
+    alpha:e.o*out, lh:1.12
+  });
+}
+
+/* Beat 4 — dark ground, mark, wordmark, closing line. */
+function endCard(c, t, closing){
+  const p = at(t,'end'); if (p<=0) return;
+
+  const e = enter(seg(t, TL.end[0]+.15, .6), 44);
+  mark(c, W/2, 880+e.dy, 250, 1, {alpha:e.o});
+
+  const wm = enter(seg(t, TL.end[0]+.35, .55), 30);
+  font(c,{size:104, weight:900});
+  const kw = c.measureText('Kai').width;
+  c.fillStyle = fade(K.paper, wm.o); c.textBaseline='alphabetic';
+  c.fillText('Kai', W/2-kw/2, 1105+wm.dy);
+
+  const s2 = enter(seg(t, TL.end[0]+.6, .6), 26);
+  textBlock(c, 'kai.security', {
+    x:W/2, y:1210, maxW:900, size:48, weight:700, family:K.body,
+    color:K.cyan, align:'center', alpha:s2.o
+  });
+
+  const hl = draw(seg(t, TL.end[0]+.8, .5));
+  if (hl>0){ c.strokeStyle=fade(K.cyan,.55); c.lineWidth=4; c.lineCap='round';
+    c.beginPath(); c.moveTo(W/2-90*hl,1268); c.lineTo(W/2+90*hl,1268); c.stroke(); }
+
+  const cl = enter(seg(t, TL.end[0]+.95, .6), 28);
+  textBlock(c, closing, {
+    x:W/2, y:1370, maxW:840, size:44, weight:500, family:K.body,
+    color:K.paper, accent:K.teal, align:'center', alpha:cl.o*.82, lh:1.32
+  });
+}
+
+
+/* ---------- runner ----------
+   `render(ctx, t)` must be pure in t, so scrubbing, playback and export
+   all agree frame for frame. */
+async function mount({ slug, title, render, duration = DUR }){
+  document.title = `Kai — ${title}`;
+  const cv = document.getElementById('stage');
+  cv.width = W; cv.height = H;
+  const c = cv.getContext('2d');
+
+  try { await document.fonts.ready; } catch {}
+
+  let t = 0, playing = true, loop = true, last = performance.now();
+
+  const paint = (time) => { c.save(); render(c, time); c.restore(); };
+
+  const els = {
+    play: document.querySelector('[data-a=play]'),
+    loop: document.querySelector('[data-a=loop]'),
+    rec:  document.querySelector('[data-a=rec]'),
+    still:document.querySelector('[data-a=still]'),
+    scrub:document.querySelector('[data-a=scrub]'),
+    clock:document.querySelector('[data-a=clock]'),
+  };
+  els.scrub.max = duration; els.scrub.step = 1/60;
+
+  function frame(now){
+    const dt = Math.min((now-last)/1000, .05); last = now;
+    if (playing){
+      t += dt;
+      if (t >= duration){ t = loop ? 0 : duration; if(!loop) setPlaying(false); }
+    }
+    paint(t);
+    els.scrub.value = t;
+    els.clock.textContent = `${t.toFixed(2)}s / ${duration}s`;
+    requestAnimationFrame(frame);
+  }
+  function setPlaying(v){ playing = v; els.play.textContent = v ? 'Pause' : 'Play'; }
+
+  els.play.onclick = () => { if (t >= duration) t = 0; setPlaying(!playing); };
+  els.loop.onclick = () => { loop = !loop; els.loop.textContent = loop ? 'Loop: on' : 'Loop: off'; };
+  els.scrub.oninput = e => { t = +e.target.value; setPlaying(false); };
+
+  /* 2x still of the current frame */
+  els.still.onclick = () => {
+    const o = document.createElement('canvas');
+    o.width = W*2; o.height = H*2;
+    const oc = o.getContext('2d'); oc.scale(2,2); render(oc, t);
+    const a = document.createElement('a');
+    a.download = `kai-${slug}-${t.toFixed(1)}s@2x.png`;
+    a.href = o.toDataURL('image/png'); a.click();
+  };
+
+  /* record one full pass */
+  const MIMES = ['video/mp4;codecs=avc1.42E01E','video/mp4',
+                 'video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+  let recorder = null;
+  els.rec.onclick = () => {
+    if (recorder){ recorder.stop(); return; }
+    const mime = MIMES.find(m => MediaRecorder.isTypeSupported(m));
+    if (!mime){ alert('This browser cannot record the canvas.'); return; }
+    const chunks = [];
+    recorder = new MediaRecorder(cv.captureStream(30), { mimeType: mime, videoBitsPerSecond: 12e6 });
+    recorder.ondataavailable = e => e.data.size && chunks.push(e.data);
+    recorder.onstop = () => {
+      const ext = mime.startsWith('video/mp4') ? 'mp4' : 'webm';
+      const a = document.createElement('a');
+      a.download = `kai-${slug}.${ext}`;
+      a.href = URL.createObjectURL(new Blob(chunks, {type:mime}));
+      a.click();
+      recorder = null;
+      els.rec.dataset.on = '0'; els.rec.textContent = 'Record';
+    };
+    t = 0; setPlaying(true);
+    els.rec.dataset.on = '1'; els.rec.textContent = 'Recording…';
+    recorder.start();
+    setTimeout(() => recorder && recorder.stop(), (duration + .25) * 1000);
+  };
+
+  /* copy that is still moving — edit here, every cut follows */
+  const dEl = document.querySelector('[data-a=descriptor]');
+  const dReset = document.querySelector('[data-a=descriptor-reset]');
+  if (dEl){
+    const sync = () => {
+      dEl.value = COPY.descriptor;
+      dReset.hidden = !isOverridden('descriptor');
+    };
+    sync();
+    dEl.oninput = e => { setCopy('descriptor', e.target.value);
+                         dReset.hidden = !isOverridden('descriptor'); };
+    dReset.onclick = () => { resetCopy('descriptor'); sync(); };
+    // another tab changed it
+    addEventListener('storage', e => { if (e.key === 'kai-copy-v1'){
+      Object.assign(COPY, { ...DEFAULTS, ...(JSON.parse(e.newValue || '{}')) }); sync(); } });
+  }
+
+  requestAnimationFrame(now => { last = now; frame(now); });
+}
+
+/* the control bar every cut page shares */
+function bar(){
+  return `<div class="bar">
+    <button data-a="play" class="pri">Pause</button>
+    <button data-a="loop">Loop: on</button>
+    <input data-a="scrub" type="range" min="0" value="0">
+    <span data-a="clock" class="t">0.00s</span>
+    <button data-a="rec" class="rec">Record</button>
+    <button data-a="still">Still @2x</button>
+    <a href="../index.html">All cuts</a>
+    <a href="../kai-tile-generator.html">Tile generator</a>
+  </div>
+  <div class="bar">
+    <label class="fld">Descriptor
+      <input data-a="descriptor" type="text" spellcheck="false">
+    </label>
+    <button data-a="descriptor-reset" hidden>Reset</button>
+    <span class="hintline">Applies to all seven cuts, and to anything you record or export.</span>
+  </div>`;
+}
+
+/* Kai launch kit — reusable scenes.
+   Everything here is geometric: no photography, no generated imagery. */
+
+/* ---------- isometric city ---------- */
+/* blocks: [gx, gy, w, d, h] on a small grid. Drawn back to front. */
+function skyline(c, {p, blocks, ox=W/2, oy=1050, u=100, alpha=1, landmark, dark=false}){
+  const stroke = dark ? K.paper : K.ink;
+  const fill   = dark ? fade('#0E1550',.92) : fade(K.paper,.94);
+  const order = [...blocks].sort((a,b) => (a[0]+a[1]) - (b[0]+b[1]));
+  order.forEach((b,i) => {
+    const lp = clamp01((p - i*0.045) / 0.55);
+    isoBlock(c, ox, oy, u, b[0], b[1], b[2], b[3], b[4], lp,
+      { stroke, w:5, alpha:alpha*0.92, fill });
+  });
+  if (landmark) landmark(c, clamp01((p-0.42)/0.58), {ox, oy, u, alpha, dark});
+}
+
+/* Landmark cues sit in front of the estate, to its lower left, at a constant
+   stroke weight whatever `u` is. Each cue is drawn twice: once fat in the
+   ground colour, so it carries its own clear space through the wireframe
+   without a knockout panel clipping whole blocks, then once in colour. */
+const CUE = { dx: -305, dy: 330 };
+function cue(c, {ox, oy, u, dark=false}, fn){
+  const k = u/62, ground = dark ? K.ink : K.paper;
+  c.save();
+  c.translate(ox + CUE.dx*(u/100), oy + CUE.dy*(u/100));
+  c.scale(k,k);
+  c.lineCap = 'round'; c.lineJoin = 'round';
+  fn(k, 0, ground);
+  fn(k, 1, ground);
+  c.restore();
+}
+
+/* Sydney — the Opera House shells */
+function operaHouse(c, p, {ox, oy, u, alpha=1, dark=false}){
+  if (p<=0) return;
+  const q = draw(p);
+  cue(c, {ox,oy,u,dark}, (k, pass, ground) => {
+    c.strokeStyle = pass ? fade(K.cyan, alpha) : ground;
+    c.lineWidth = (pass ? 8 : 27)/k;
+    // three leaning sails, tallest in the middle
+    [[-6,0,.74],[40,0,1.0],[92,0,.82]].forEach(([dx,dy,sc],i) => {
+      const lp = clamp01((q - i*.16)/.52); if (lp<=0) return;
+      const R = 88*sc, len = R*3.2;
+      c.setLineDash([len,len]); c.lineDashOffset = len*(1-lp);
+      c.beginPath(); c.moveTo(dx-R*.58, dy);
+      c.quadraticCurveTo(dx-R*.26, dy-R*2.05, dx+R*.60, dy-R*.02);
+      c.stroke();
+    });
+    c.setLineDash([]);
+    // the podium the shells sit on
+    const bp = clamp01((q-.45)/.5);
+    if (bp>0){
+      c.strokeStyle = pass ? fade(K.teal, alpha) : ground;
+      c.lineWidth = (pass ? 5 : 24)/k;
+      c.beginPath(); c.moveTo(-66, 7); c.lineTo(-66+232*bp, 7); c.stroke();
+    }
+  });
+}
+
+/* San Diego — a surfboard, planted in front of the estate */
+function surfboard(c, p, {ox, oy, u, alpha=1, dark=false}){
+  if (p<=0) return;
+  const q = draw(p);
+  cue(c, {ox,oy,u,dark}, (k, pass, ground) => {
+    c.strokeStyle = pass ? fade(K.cyan, alpha) : ground;
+    c.lineWidth = (pass ? 8 : 27)/k;
+    const L = 580; c.setLineDash([L,L]); c.lineDashOffset = L*(1-q);
+    c.beginPath();
+    c.moveTo(0, 26);
+    c.bezierCurveTo(-36,-62, -18,-196, 32,-256);
+    c.bezierCurveTo(82,-196, 100,-62, 64, 26);
+    c.bezierCurveTo(48, 52, 16, 52, 0, 26);
+    c.stroke(); c.setLineDash([]);
+    const st = clamp01((q-.5)/.5);
+    if (st>0){
+      c.strokeStyle = pass ? fade(K.teal, alpha) : ground;
+      c.lineWidth = (pass ? 5 : 22)/k;
+      c.setLineDash([290,290]); c.lineDashOffset = 290*(1-st);
+      c.beginPath(); c.moveTo(32,-248); c.lineTo(32,30); c.stroke(); c.setLineDash([]);
+    }
+  });
+}
+
+/* San Jose — three stepped towers, the cue in the estate's own accent */
+function steppedTowers(c, p, {ox, oy, u, alpha=1, dark=false}){
+  if (p<=0) return;
+  const u2 = u*0.50;
+  const OX = ox + CUE.dx*(u/100) + u2*0.9, OY = oy + CUE.dy*(u/100);
+  [[-1,-0.6,1,1,3.1],[0.1,-1.0,1,1,4.3],[1.2,-0.5,1,1,2.5]].forEach((b,i) => {
+    const lp = clamp01((p - i*.16)/.6);
+    isoBlock(c, OX, OY, u2, b[0], b[1], b[2], b[3], b[4], lp,
+      { stroke:K.cyan, w:6, alpha, fill: dark ? fade('#0E1550',.94) : fade(K.tint,.96) });
+  });
+}
+
+/* ---------- overlays ---------- */
+/* the problem: exposures stacking over the estate */
+function exposurePins(c, {p, pts, ox, oy, u, color=K.crimson}){
+  pts.forEach(([gx,gy,gz], i) => {
+    const lp = pop(clamp01((p - i*.07)/.4)); if (lp<=0) return;
+    const X = ox + (gx-gy)*0.8660254*u, Y = oy + ((gx+gy)*0.5 - gz)*u;
+    c.save(); c.translate(X, Y - 46*lp); c.scale(lp,lp);
+    c.fillStyle = color;
+    c.beginPath(); c.moveTo(0,34); c.lineTo(-22,-10); c.lineTo(22,-10); c.closePath(); c.fill();
+    c.beginPath(); c.arc(0,-28,26,0,Math.PI*2); c.fill();
+    c.fillStyle = K.paper; font(c,{size:34,weight:900,family:K.body});
+    c.textBaseline='middle'; c.fillText('!', -4.5, -27);
+    c.restore();
+  });
+}
+
+/* the solution: each pin resolves to a closed cyan ring */
+function resolvePins(c, {p, pts, ox, oy, u}){
+  pts.forEach(([gx,gy,gz], i) => {
+    const lp = clamp01((p - i*.06)/.42); if (lp<=0) return;
+    const X = ox + (gx-gy)*0.8660254*u, Y = oy + ((gx+gy)*0.5 - gz)*u;
+    ringNode(c, X, Y-52, 25, lp, {w:8});
+    if (lp > .75){
+      const t2 = clamp01((lp-.75)/.25);
+      c.save(); c.strokeStyle=fade(K.cyan,1-t2); c.lineWidth=4;
+      c.beginPath(); c.arc(X, Y-52, 25 + 42*t2, 0, Math.PI*2); c.stroke(); c.restore();
+    }
+  });
+}
+
+/* ---------- data shapes ---------- */
+function statBig(c, {x, y, value, label, sub, p, color=K.cyan, align='left', size=132}){
+  const e = enter(p, 34); if (e.o<=0) return;
+  if (label) eyebrow(c, label, {x, y:y-size-18+e.dy, size:24, color:K.grey, align, alpha:e.o*.9});
+  textBlock(c, value, {x, y:y+e.dy, maxW:W, size, weight:900, color, align, alpha:e.o});
+  if (sub) textBlock(c, sub, {x, y:y+46+e.dy, maxW:420, size:30, weight:500,
+    family:K.body, color:K.grey, align, alpha:e.o*.95, lh:1.3});
+}
+
+/* the relay: sources you already run, curving into one record */
+function sources(c, {p, labels, x=150, y0=560, gap=96, railX=470, railY}){
+  labels.forEach((L,i) => {
+    const lp = clamp01((p - i*.1)/.5); if (lp<=0) return;
+    const y = y0 + i*gap;
+    feed(c, x+130, y, railX, railY, lp, {color:K.line, w:4});
+    const e = enter(lp, 22);
+    textBlock(c, L, {x:x+112, y:y+11, maxW:300, size:34, weight:600,
+      family:K.body, color:K.grey, align:'right', alpha:e.o});
+  });
+}
+
+/* a tapered volume that loses most of itself on the way across */
+function funnel(c, {p, x0, x1, yc, h0, h1, color=fade(K.cyan,.30)}){
+  ribbon(c, x0, yc-h0/2, h0, x1, yc-h1/2, h1, p, {color});
+}
+
+/* the "without / with" comparison block — three counts across, as on the
+   Autonomous Defense Cycle slide */
+const CMP_H = 404;
+function compareColumn(c, {p, x, w, top, rows, accent, headline, sub}){
+  const s = card(c, x, top, w, CMP_H, p,
+    { bg: accent===K.crimson ? '#FDF1F4' : K.tint, stroke:null, r:34 });
+  if (!s) return;
+  const a0 = easeOut(clamp01(p/.45));
+  eyebrow(c, headline, {x:x+44, y:top+60, size:25, color:accent, alpha:a0});
+  if (sub) textBlock(c, sub, {x:x+44, y:top+128, maxW:w-88, size:56, weight:900,
+    color:accent, alpha:a0});
+
+  const colW = (w - 88) / rows.length;
+  rows.forEach(([big, small], i) => {
+    const lp = clamp01((p - .3 - i*.13)/.5); if (lp<=0) return;
+    const e = enter(lp, 20), cx = x + 44 + i*colW;
+    c.save(); c.strokeStyle = fade(accent, .28*e.o); c.lineWidth = 3;
+    c.beginPath(); c.moveTo(cx, top+196+e.dy); c.lineTo(cx+colW-34, top+196+e.dy); c.stroke();
+    c.restore();
+    textBlock(c, big, {x:cx, y:top+276+e.dy, maxW:colW-30, size:60, weight:900,
+      color:accent, alpha:e.o});
+    textBlock(c, small, {x:cx, y:top+322+e.dy, maxW:colW-34, size:27, weight:500,
+      family:K.body, color:K.grey, alpha:e.o*.95, lh:1.26});
+  });
+}
+
+/* ownership ring — four percent to ninety-two */
+function ownerRing(c, {p, x, y, r, from=0.04, to=0.92, showTo=true}){
+  const s = pop(clamp01(p/.35)); if (s<=0) return;
+  const val = lerp(from, to, easeBoth(clamp01((p-.2)/.7)));
+  c.save(); c.translate(x,y); c.scale(s,s);
+  c.strokeStyle = fade(K.line,.8); c.lineWidth = 34;
+  c.beginPath(); c.arc(0,0,r,0,Math.PI*2); c.stroke();
+  c.strokeStyle = grad(c,-r,-r,r,r,[[0,K.teal],[1,K.cyan]]);
+  c.lineWidth = 34; c.lineCap='round';
+  c.beginPath(); c.arc(0,0,r,-Math.PI/2, -Math.PI/2 + Math.PI*2*val); c.stroke();
+  if (showTo){
+    font(c,{size:r*.56, weight:900}); c.fillStyle = K.ink; c.textBaseline='middle';
+    const s2 = Math.round(val*100) + '%';
+    c.fillText(s2, -c.measureText(s2).width/2, 4);
+  }
+  c.restore();
+}
+
+/* asset rows, the CAASM table abstracted */
+function assetRows(c, {p, x, y, w, n=6, ownedFrom=0, rowH=74}){
+  for (let i=0;i<n;i++){
+    const lp = clamp01((p - i*.07)/.4); if (lp<=0) continue;
+    const e = enter(lp, 26), yy = y + i*rowH;
+    c.save(); c.globalAlpha = e.o;
+    c.fillStyle = K.paper; roundRect(c, x, yy+e.dy, w, rowH-14, 14); c.fill();
+    c.strokeStyle = fade(K.line,.9); c.lineWidth=2; c.stroke();
+    c.fillStyle = fade(K.ink,.55);
+    roundRect(c, x+26, yy+e.dy+22, 210, 16, 8); c.fill();
+    c.fillStyle = fade(K.line,1);
+    roundRect(c, x+266, yy+e.dy+22, 150, 16, 8); c.fill();
+    const owned = i < ownedFrom;
+    c.fillStyle = owned ? K.cyan : fade(K.line,.75);
+    roundRect(c, x+w-236, yy+e.dy+18, owned ? 200 : 96, 24, 12); c.fill();
+    c.restore();
+  }
+}
+
+/* a source dropping into the head of the line */
+function feedDown(c, x0, y0, x1, y1, p, {color=K.line, w=4}={}){
+  const q = draw(p); if (q<=0) return;
+  c.save(); c.strokeStyle=color; c.lineWidth=w; c.lineCap='round';
+  const len = (Math.abs(y1-y0) + Math.abs(x1-x0))*1.5;
+  c.setLineDash([len,len]); c.lineDashOffset = len*(1-q);
+  c.beginPath(); c.moveTo(x0,y0);
+  c.bezierCurveTo(x0, y0+(y1-y0)*.55, x1, y1-(y1-y0)*.55, x1, y1);
+  c.stroke(); c.restore();
+}
+
+/* small outlined source chip */
+function sourceChip(c, x, y, w, h, label, p){
+  const s = pop(p); if (s<=0) return;
+  c.save(); c.translate(x+w/2,y+h/2); c.scale(s,s); c.translate(-(x+w/2),-(y+h/2));
+  roundRect(c,x,y,w,h,h/2);
+  c.fillStyle = K.paper; c.fill();
+  c.strokeStyle = fade(K.line,1); c.lineWidth = 3; c.stroke();
+  font(c,{size:32,weight:600,family:K.body}); c.fillStyle = K.grey; c.textBaseline='middle';
+  c.fillText(label, x + (w - c.measureText(label).width)/2, y+h/2+1);
+  c.restore();
+}
+
+/* ---------- fitting ---------- */
+/* Isometric bounding box of a block set, in grid units, including the room the
+   landmark cue needs. Lets a skyline be fitted to any tile format. */
+function skylineBox(blocks){
+  let minX=1e9, maxX=-1e9, minY=1e9, maxY=-1e9;
+  const put = (x,y,z) => {
+    const X = (x-y)*0.8660254, Y = (x+y)*0.5 - z;
+    if (X<minX) minX=X; if (X>maxX) maxX=X;
+    if (Y<minY) minY=Y; if (Y>maxY) maxY=Y;
+  };
+  blocks.forEach(([bx,by,bw,bd,bh]) => {
+    for (const x of [bx,bx+bw]) for (const y of [by,by+bd]) for (const z of [0,bh]) put(x,y,z);
+  });
+  // the cue sits at (-2.72u, +3.30u) from the origin and is about 2.5u tall
+  // the landmark cue, anchored at (-2.85u, +3.30u) and drawn at u/62
+  minX = Math.min(minX, -4.05); maxX = Math.max(maxX, -1.10);
+  minY = Math.min(minY, -1.25); maxY = Math.max(maxY,  4.20);
+  return { minX, maxX, minY, maxY, w: maxX-minX, h: maxY-minY };
+}
+
+function fitSkyline(blocks, box, pad=0.94){
+  const b = skylineBox(blocks);
+  const u = Math.min(box.w/b.w, box.h/b.h) * pad;
+  return { u,
+    ox: box.x + box.w/2 - (b.minX+b.maxX)/2 * u,
+    oy: box.y + box.h/2 - (b.minY+b.maxY)/2 * u };
+}
+
+/* Kai launch kit — the three art options a tile can use.
+   Each returns the anchor points the crimson overlay pins hang off, so
+   "overlay on" means the same thing whatever art is selected. */
+
+const CITIES = {
+  'Sydney':    { landmark: operaHouse, blocks:
+    [[-2.6,-0.4,1,1,2.2],[-1.5,-1.1,1,1,3.4],[-0.4,-1.8,1,1,4.9],[0.7,-1.1,1,1,3.0],
+     [1.8,-0.4,1,1,2.4],[-2.0,0.7,1,1,1.6],[-0.9,0.3,1,1,2.7],[0.2,-0.3,1,1,3.8],
+     [1.3,0.3,1,1,2.0],[2.4,0.9,1,1,1.4]] },
+  'San Diego': { landmark: surfboard, blocks:
+    [[-2.4,-0.3,1,1,1.8],[-1.3,-0.9,1,1,2.9],[-0.2,-1.6,1,1,4.2],[0.9,-1.0,1,1,3.3],
+     [2.0,-0.3,1,1,2.1],[-1.9,0.8,1,1,1.4],[-0.8,0.4,1,1,2.2],[0.3,-0.2,1,1,3.1],
+     [1.4,0.4,1,1,1.8],[2.5,1.0,1,1,1.2]] },
+  'San Jose':  { landmark: steppedTowers, blocks:
+    [[-2.5,-0.2,1,1,1.7],[-1.4,-0.8,1,1,2.6],[-0.3,-1.4,1,1,3.4],[0.8,-0.8,1,1,2.8],
+     [1.9,-0.2,1,1,2.0],[-2.0,0.9,1,1,1.3],[-0.9,0.5,1,1,2.0],[0.2,-0.1,1,1,2.7],
+     [1.3,0.5,1,1,1.7],[2.4,1.1,1,1,1.1]] },
+};
+
+/* --- city skyline --- */
+function artSkyline(c, box, { city='Sydney', dark=false }={}){
+  const spec = CITIES[city] || CITIES['Sydney'];
+  const { ox, oy, u } = fitSkyline(spec.blocks, box, 0.94);
+  skyline(c, { p:1, blocks:spec.blocks, ox, oy, u, landmark:spec.landmark, dark });
+  return spec.blocks.filter((_,i)=>[1,3,5,8].includes(i)).map(b => {
+    const gx=b[0]+b[2]/2, gy=b[1]+b[3]/2, gz=b[4];
+    return [ ox + (gx-gy)*0.8660254*u, oy + ((gx+gy)*0.5-gz)*u ];
+  });
+}
+
+/* --- the relay rail --- */
+function artRelay(c, box, { dark=false }={}){
+  const ink = dark ? K.paper : K.ink;
+  const x0 = box.x + box.w*0.10, x1 = box.x + box.w*0.72;
+  const y  = box.y + box.h*0.50;
+  const w  = Math.max(8, box.h*0.030);
+  c.save();
+  // sources feeding in
+  c.strokeStyle = fade(dark ? '#4C5A8C' : K.line, 1);
+  c.lineWidth = Math.max(2, w*0.28); c.lineCap='round';
+  for (let i=0;i<4;i++){
+    const sy = y + (i-1.5)*box.h*0.13, sx = box.x + box.w*0.015;
+    c.beginPath(); c.moveTo(sx, sy);
+    c.bezierCurveTo(x0-box.w*0.05, sy, x0-box.w*0.05, y, x0, y);
+    c.stroke();
+  }
+  // the one record
+  c.strokeStyle = ink; c.lineWidth = w;
+  c.beginPath(); c.moveTo(x0,y); c.lineTo(x1,y); c.stroke();
+  // the fork, coloured by the team that receives it
+  [[-1,K.cyan],[0,K.blue],[1,K.peri]].forEach(([d,col]) => {
+    const ey = y + d*box.h*0.20, ex = box.x + box.w*0.96;
+    c.strokeStyle = col; c.lineWidth = w*0.74; c.lineCap='round';
+    c.beginPath(); c.moveTo(x1,y);
+    c.bezierCurveTo(x1+box.w*0.09, y, x1+box.w*0.10, ey, ex-box.w*0.035, ey);
+    c.stroke();
+    const hs = w*1.15;
+    c.fillStyle = col; c.beginPath();
+    c.moveTo(ex, ey); c.lineTo(ex-hs*1.5, ey-hs*0.85); c.lineTo(ex-hs*1.5, ey+hs*0.85);
+    c.closePath(); c.fill();
+  });
+  const nodes = [0.30, 0.52, 0.74].map(f => x0 + (x1-x0)*f);
+  nodes.forEach(nx => ringNode(c, nx, y, w*1.9, 1,
+    { w: w*0.52, core: dark ? K.ink : K.paper }));
+  c.restore();
+  return nodes.map(nx => [nx, y]);
+}
+
+/* --- the Sankey flow --- */
+function artFlow(c, box, { dark=false }={}){
+  const xa = box.x + box.w*0.04, xb = box.x + box.w*0.40,
+        xc = box.x + box.w*0.82, xd = box.x + box.w*0.99;
+  const top = box.y + box.h*0.10, H = box.h*0.80;
+  const grey = dark ? 'rgba(255,255,255,.17)' : fade(K.line,.60);
+  c.save();
+  ribbon(c, xa, top, H, xb, top, H, 1, { color: dark ? 'rgba(0,188,252,.22)' : fade(K.cyan,.18) });
+  ribbon(c, xb, top,          H*0.72, xc, top-H*0.10, H*0.44, 1, { color: grey });
+  ribbon(c, xb, top+H*0.74,   H*0.15, xc, top+H*0.56, H*0.11, 1, { color: fade(K.cyan,.90) });
+  ribbon(c, xb, top+H*0.90,   H*0.10, xc, top+H*0.86, H*0.14, 1,
+         { color: dark ? 'rgba(255,255,255,.12)' : fade(K.line,.42) });
+  ribbon(c, xc, top+H*0.56, H*0.11, xd, top+H*0.58, H*0.05, 1, { color: K.cyan });
+  c.restore();
+  return [[xb, top+H*0.30],[xb+(xc-xb)*0.5, top+H*0.10],[xc, top+H*0.62]];
+}
+
+/* --- the overlay every art option shares --- */
+function overlayPins(c, pts, scale=1){
+  pts.forEach(([x,y]) => {
+    c.save(); c.translate(x, y-30*scale); c.scale(scale,scale);
+    c.fillStyle = K.crimson;
+    c.beginPath(); c.moveTo(0,32); c.lineTo(-21,-10); c.lineTo(21,-10); c.closePath(); c.fill();
+    c.beginPath(); c.arc(0,-27,25,0,Math.PI*2); c.fill();
+    c.fillStyle = K.paper; font(c,{size:33,weight:900,family:K.body});
+    c.textBaseline='middle'; c.fillText('!', -4.5, -26);
+    c.restore();
+  });
+}
+
+const ART = {
+  'City skyline': artSkyline,
+  'Relay rail':   artRelay,
+  'Sankey flow':  artFlow,
+};
+
+const setCopy = set, resetCopy = reset;
+
+const FORMATS = {
+  '9:16 · 1080×1920':  [1080,1920],
+  '4:5 · 1080×1350':   [1080,1350],
+  '1:1 · 1080×1080':   [1080,1080],
+  '16:9 · 1920×1080':  [1920,1080],
+  '1.91:1 · 1200×628': [1200,628],
+};
+
+/* One preset per headline. Every line is lifted from the platform and CTEM
+   pages — nothing here was written for the tile. */
+const PRESETS = [
+  { name:'Exposure proven',   headline:'Exposure proven. Exposure *closed*.',
+    subline:'Continuous Threat Exposure Management, carried end to end.',
+    art:'Sankey flow', dark:true,  overlay:false, tag:'The platform' },
+  { name:'Ranked ≠ closed',   headline:'*Ranked* is not the same as closed.',
+    subline:'Over 90% of findings removed on exploitability before anyone triages.',
+    art:'Sankey flow', dark:false, overlay:true,  tag:'Exposure management' },
+  { name:'One line',          headline:'One line, *two owners*.',
+    subline:'Kai carries the work from the first exposure to the planned change.',
+    art:'Relay rail',  dark:false, overlay:false, tag:'Autonomous exposure remediation' },
+  { name:'Days to minutes',   headline:'From days to *minutes*.',
+    subline:'Context resolves once, before the fork, and both teams work from that record.',
+    art:'Relay rail',  dark:true,  overlay:false, tag:'The autonomous defense cycle' },
+  { name:'Your stack',        headline:'Your stack, turned into *outcomes*.',
+    subline:'Nothing in your stack is replaced. Everything in it is read.',
+    art:'Sankey flow', dark:false, overlay:false, tag:'The platform' },
+  { name:'Now in…',           headline:'Now in *Sydney*.',
+    subline:'The Kai Autonomous Defense Platform.',
+    art:'City skyline', city:'Sydney', dark:false, overlay:false, tag:'Launch' },
+  { name:'A real owner',      headline:'How much of your estate has a *real owner*?',
+    subline:'92% of assets with an accountable owner, up from four percent.',
+    art:'City skyline', city:'San Jose', dark:false, overlay:true, tag:'Cyber asset attack surface management' },
+  { name:'Path to zero',      headline:'Machine-speed defense on the *path to zero*.',
+    subline:'3M+ analyst and engineering hours saved per year across 5K images.',
+    art:'Relay rail',  dark:true,  overlay:false, tag:'The Kai impact' },
+];
+
+const CUTS = [
+  ['Now in Sydney','cuts/sydney.html'],
+  ['Now in San Diego','cuts/san-diego.html'],
+  ['Now in San Jose','cuts/san-jose.html'],
+  ['Ranked is not the same as closed','cuts/ranked-not-closed.html'],
+  ['One line, two owners','cuts/one-line-two-owners.html'],
+  ['From days to minutes','cuts/days-to-minutes.html'],
+  ['92% have an owner','cuts/estate-owner.html'],
+];
+
+const st = { format:'9:16 · 1080×1920', art:'Sankey flow', city:'Sydney',
+             dark:false, overlay:false, ...PRESETS[1] };
+
+/* ---------------- rendering ---------------- */
+
+/* shrink until the wrapped block fits, never below the 24px floor */
+function fitText(c, text, maxW, maxH, { start, weight=800, family=K.display, lh=1.12 }){
+  let size = start;
+  const plain = String(text).replace(/\*/g,'');
+  while (size > 24){
+    font(c,{size,weight,family});
+    const lines = wrap(c, plain, maxW);
+    if (lines.length * size * lh <= maxH) return { size, lines: lines.length };
+    size -= 2;
+  }
+  font(c,{size:24,weight,family});
+  return { size:24, lines: wrap(c, plain, maxW).length };
+}
+
+function drawTile(c, W, H, s){
+  const fg      = s.dark ? K.paper : K.ink;
+  const subCol  = s.dark ? '#A8B6D8' : K.grey;
+  const pad     = Math.round(Math.min(W,H) * 0.072);
+  const k       = Math.min(W,H) / 1080;
+
+  c.clearRect(0,0,W,H);
+  c.fillStyle = s.dark ? K.ink : K.paper; c.fillRect(0,0,W,H);
+  // one hairline rule under the tag, the only furniture on the tile
+  c.strokeStyle = fade(K.cyan, s.dark ? .45 : .35); c.lineWidth = Math.max(3, k*4);
+  c.beginPath(); c.moveTo(pad*1.4, pad*1.95); c.lineTo(pad*1.4 + Math.min(W,H)*0.10, pad*1.95);
+  c.stroke();
+
+  const wide = W/H > 1.25;
+  const artBox  = wide
+    ? { x: W*0.50, y: pad*1.3, w: W*0.46, h: H - pad*2.6 }
+    : { x: pad*1.1, y: pad*2.2, w: W - pad*2.2, h: H*0.44 };
+  const textBox = wide
+    ? { x: pad*1.4, y: pad*2.6, w: W*0.44 - pad, h: H - pad*4.4 }
+    : { x: pad*1.4, y: artBox.y + artBox.h + pad*0.6,
+        w: W - pad*2.8, h: H - (artBox.y + artBox.h) - pad*3.2 };
+
+  const pins = ART[s.art](c, artBox, { city:s.city, dark:s.dark });
+  if (s.overlay) overlayPins(c, pins, k * (wide ? 0.72 : 0.9));
+
+  // corner tag
+  if (s.tag) eyebrow(c, s.tag, { x: pad*1.4, y: pad*1.5,
+    size: Math.max(24, Math.round(Math.min(W,H)*0.0215)), color: K.cyan, track: 2.6 });
+
+  // headline and subline, bottom-anchored in the text box
+  const hlMax   = wide ? textBox.w*0.145 : W*0.082;
+  const subSize = Math.max(24, Math.round(hlMax*0.34));
+  font(c,{size:subSize, weight:500, family:K.body});
+  const subLines = s.subline ? wrap(c, s.subline, textBox.w) : [];
+  const subBlock = subLines.length
+    ? subSize*1.55 + (subLines.length-1)*subSize*1.34 : 0;
+
+  const hl    = fitText(c, s.headline, textBox.w, textBox.h - subBlock, { start: hlMax });
+  const headH = hl.size + (hl.lines-1)*hl.size*1.12;
+  const yTop  = textBox.y + textBox.h - (headH + subBlock);
+
+  textBlock(c, s.headline, { x: textBox.x, y: yTop + hl.size, maxW: textBox.w,
+    size: hl.size, weight: 800, color: fg, accent: K.cyan, lh: 1.12 });
+
+  if (subLines.length){
+    textBlock(c, s.subline, { x: textBox.x, y: yTop + headH + subSize*1.55,
+      maxW: textBox.w, size: subSize, weight: 500, family: K.body,
+      color: subCol, accent: K.teal, lh: 1.34 });
+  }
+
+  // wordmark, bottom right
+  font(c,{size: Math.max(24, Math.round(Math.min(W,H)*0.026)), weight:700, family:K.body});
+  const wm = 'kai.security';
+  c.fillStyle = K.cyan; c.textBaseline = 'alphabetic';
+  c.fillText(wm, W - pad*1.4 - c.measureText(wm).width, H - pad*1.25);
+}
+
+/* ---------------- wiring ---------------- */
+const $ = id => document.getElementById(id);
+const cv = $('tile'), ctx = cv.getContext('2d');
+
+function render(){
+  const [W,H] = FORMATS[st.format];
+  cv.width = W; cv.height = H;
+  const box = $('wrap').getBoundingClientRect();
+  const scale = Math.min(box.width / W, box.height / H, 1);
+  cv.style.width = (W*scale)+'px'; cv.style.height = (H*scale)+'px';
+  drawTile(ctx, W, H, st);
+  $('meta').textContent = `${st.format}  ·  ${st.art}${st.art==='City skyline' ? ' · '+st.city : ''}`
+    + `  ·  ${st.dark ? 'dark' : 'light'} ground  ·  overlay ${st.overlay ? 'on' : 'off'}`;
+  $('cityWrap').style.display = st.art === 'City skyline' ? 'block' : 'none';
+}
+
+function syncInputs(){
+  $('format').value = st.format;
+  $('art').value = st.art;
+  $('city').value = st.city;
+  $('headline').value = st.headline;
+  $('subline').value = st.subline;
+  $('tag').value = st.tag;
+  [...$('ground').children].forEach(b => b.setAttribute('aria-pressed', (b.dataset.v==='dark')===!!st.dark));
+  [...$('overlay').children].forEach(b => b.setAttribute('aria-pressed', (b.dataset.v==='on')===!!st.overlay));
+}
+
+Object.keys(FORMATS).forEach(f => $('format').add(new Option(f,f)));
+Object.keys(ART).forEach(a => $('art').add(new Option(a,a)));
+Object.keys(CITIES).forEach(c2 => $('city').add(new Option(c2,c2)));
+
+PRESETS.forEach(p => {
+  const b = document.createElement('button');
+  b.textContent = p.name;
+  b.onclick = () => { Object.assign(st, { city:'Sydney' }, p); syncInputs(); render(); };
+  $('presets').appendChild(b);
+});
+
+CUTS.forEach(([label, href]) => {
+  const a = document.createElement('a');
+  a.textContent = label; a.href = href; $('cutlinks').appendChild(a);
+});
+
+$('format').onchange  = e => { st.format = e.target.value; render(); };
+$('art').onchange     = e => { st.art = e.target.value; render(); };
+$('city').onchange    = e => { st.city = e.target.value; render(); };
+$('headline').oninput = e => { st.headline = e.target.value; render(); };
+$('subline').oninput  = e => { st.subline = e.target.value; render(); };
+$('tag').oninput      = e => { st.tag = e.target.value; render(); };
+$('ground').onclick   = e => { if(!e.target.dataset.v) return;
+  st.dark = e.target.dataset.v==='dark'; syncInputs(); render(); };
+$('overlay').onclick  = e => { if(!e.target.dataset.v) return;
+  st.overlay = e.target.dataset.v==='on'; syncInputs(); render(); };
+
+$('download').onclick = () => {
+  const [W,H] = FORMATS[st.format];
+  const o = document.createElement('canvas'); o.width = W; o.height = H;
+  drawTile(o.getContext('2d'), W, H, st);
+  const a = document.createElement('a');
+  a.download = 'kai-tile-' + st.format.split(' ')[0].replace(/[:.]/g,'-') + '.png';
+  a.href = o.toDataURL('image/png'); a.click();
+};
+
+/* saved tiles live in this browser */
+const KEY = 'kai-tiles-v1';
+const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+function drawSaved(){
+  const list = load(); const host = $('saved'); host.innerHTML = '';
+  if (!list.length){ host.innerHTML = '<p class="hint">Nothing saved yet.</p>'; return; }
+  list.forEach((s,i) => {
+    const row = document.createElement('div');
+    const b = document.createElement('button');
+    b.textContent = s.headline.replace(/\*/g,'');
+    b.title = `${s.format} · ${s.art}`;
+    b.onclick = () => { Object.assign(st, s); syncInputs(); render(); };
+    const x = document.createElement('button');
+    x.className = 'x'; x.textContent = '×'; x.title = 'Remove';
+    x.onclick = () => { const l = load(); l.splice(i,1);
+      localStorage.setItem(KEY, JSON.stringify(l)); drawSaved(); };
+    row.append(b,x); host.appendChild(row);
+  });
+}
+$('save').onclick = () => {
+  const l = load(); l.unshift({...st}); localStorage.setItem(KEY, JSON.stringify(l.slice(0,40)));
+  drawSaved();
+};
+
+addEventListener('resize', render);
+document.fonts.ready.then(() => { syncInputs(); drawSaved(); render(); });
+})();
+</script>
+</body>
+</html>

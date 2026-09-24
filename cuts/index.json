@@ -1,0 +1,30 @@
+[
+  {
+    "slug": "sydney",
+    "title": "Now in Sydney"
+  },
+  {
+    "slug": "san-diego",
+    "title": "Now in San Diego"
+  },
+  {
+    "slug": "san-jose",
+    "title": "Now in San Jose"
+  },
+  {
+    "slug": "ranked-not-closed",
+    "title": "Ranked is not the same as closed"
+  },
+  {
+    "slug": "one-line-two-owners",
+    "title": "One line, two owners"
+  },
+  {
+    "slug": "days-to-minutes",
+    "title": "From days to minutes"
+  },
+  {
+    "slug": "estate-owner",
+    "title": "92% have an owner"
+  }
+]

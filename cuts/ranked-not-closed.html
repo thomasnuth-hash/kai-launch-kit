@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kai — Ranked is not the same as closed</title>
+<link rel="stylesheet" href="../lib/kai.css">
+</head>
+<body class="stage">
+  <div class="frame"><canvas id="stage"></canvas></div>
+  <div id="bar"></div>
+  <p class="note">Product cut &middot; every figure is from your Exposure Management view.</p>
+<script type="module">
+import * as Kai from '../lib/kai.js';
+import * as S from '../lib/scenes.js';
+import { COPY } from '../lib/copy.js';
+const { K, W, H, TL, at, seg, clamp01, lerp, draw, pop, enter, easeOut, easeBoth,
+        fade, font, grad, roundRect, textBlock, eyebrow, mark, rail, ringNode,
+        feed, arrow, pill, card, ribbon, isoBlock, ground, signal, caption,
+        endCard, scene, mount, bar } = Kai;
+
+document.getElementById('bar').outerHTML = bar();
+
+
+const XA = 70, XB = 430, XC = 880, XD = 1012;
+
+function flow(c, t){
+  const p1 = at(t,'b1'), p2 = at(t,'b2'), p3 = at(t,'b3');
+
+  // the whole queue arrives
+  ribbon(c, XA, 560, 520, XB, 560, 520, p1, { color: fade(K.cyan,.18) });
+
+  if (p2 > 0){
+    // not reachable — the bulk of it, drifting away
+    ribbon(c, XB, 560,  380, XC, 470, 230, p2, { color: fade(K.line,.62) });
+    // what survives to be proven
+    ribbon(c, XB, 940,   80, XC, 840,  58, p2, { color: fade(K.cyan,.9) });
+    // no known exploit
+    ribbon(c, XB, 1020,  60, XC, 1120, 80, p2, { color: fade(K.line,.45) });
+  }
+  if (p3 > 0) ribbon(c, XC, 840, 58, XD, 852, 28, p3, { color: K.cyan });
+}
+
+function render(c, t){
+  ground(c, t);
+  signal(c, t, COPY.descriptor);
+
+  scene(c, t, TL.b1[0], TL.b3[0]+TL.b3[1]-0.15, () => flow(c, t));
+
+  // the queue keeps its number on screen for the whole cut
+  scene(c, t, TL.b1[0], TL.b3[0]+TL.b3[1]-0.15, () => {
+    S.statBig(c, { p: seg(t, TL.b1[0]+0.2, 0.6), x: 74, y: 492, value: '845.4K',
+                   label: 'IN THE QUEUE', size: 132 });
+  });
+
+  // what leaves, labelled where it leaves
+  scene(c, t, TL.b2[0]+0.3, TL.b3[0]+TL.b3[1]-0.15, () => {
+    const e1 = enter(seg(t, TL.b2[0]+0.45, 0.6), 22);
+    textBlock(c, '744.4K not reachable', { x: 1006, y: 432, maxW: 420,
+      size: 34, weight: 700, family: K.body, color: K.grey, align: 'right', alpha: e1.o });
+    const e2 = enter(seg(t, TL.b2[0]+0.7, 0.6), 22);
+    textBlock(c, '90.6K no known exploit', { x: 1006, y: 1262, maxW: 420,
+      size: 34, weight: 700, family: K.body, color: K.grey, align: 'right', alpha: e2.o });
+  });
+
+  scene(c, t, TL.b3[0]+0.2, TL.b3[0]+TL.b3[1], () => {
+    const p = at(t,'b3');
+    pill(c, 120, 1330, 400, 132, clamp01((p-0.15)/0.45), { label: '336 chain-critical', size: 34 });
+    pill(c, 560, 1330, 400, 132, clamp01((p-0.32)/0.45), { label: '129 chains broken',  size: 34, bg: K.blue });
+  });
+
+  caption(c, t, 'b1', 'The list gets better ordered every year.', { size: 64, bottom: 1810 });
+  caption(c, t, 'b2', 'Over *90%* removed before anyone triages.', { size: 70, bottom: 1810 });
+  caption(c, t, 'b3', '*Ranked* is not the same as closed.', { size: 80, bottom: 1810 });
+
+  endCard(c, t, 'Exposure proven. Exposure closed.');
+}
+
+
+mount({ slug:'ranked-not-closed', title:'Ranked is not the same as closed', render });
+</script>
+</body>
+</html>

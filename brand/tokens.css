@@ -1,0 +1,30 @@
+/* Kai — design tokens. Sampled from logo-kai.png and the Relay Track marketecture export. */
+:root{
+  /* ground */
+  --ink:        #080844;  /* wordmark navy, the one-record rail, dark ground */
+  --ink-2:      #0C1838;  /* secondary dark used in slide bodies */
+  --paper:      #FFFFFF;
+  --paper-tint: #F0F8FC;  /* pale section ground */
+
+  /* accent — the mark's gradient */
+  --cyan:       #00BCFC;  /* primary accent: continuous, live, "runs always" */
+  --cyan-soft:  #56BCF9;
+  --teal:       #74E8E8;  /* far end of the mark gradient */
+
+  /* handoff */
+  --blue:       #1C58D8;  /* stat blue, manual-remediation handoff */
+  --periwinkle: #8098FC;  /* auto-remediation handoff */
+
+  /* emphasis */
+  --crimson:    #E11D48;  /* "without Kai" / alert. APPROXIMATED — see notes */
+
+  /* text + rules */
+  --grey:       #586470;  /* body */
+  --line:       #CCD0DC;  /* hairlines, source feeds */
+
+  --grad-mark: linear-gradient(135deg, var(--teal), var(--cyan));
+  --grad-frame: linear-gradient(120deg, #74E8E8, #00BCFC 40%, #1C58D8 75%, #8098FC);
+
+  --font-display: Figtree, "Gilroy", "Hanken Grotesk", system-ui, sans-serif;
+  --font-body: Inter, system-ui, -apple-system, sans-serif;
+}

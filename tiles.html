@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kai — social tile generator</title>
+<link rel="stylesheet" href="lib/kai.css">
+<style>
+  body{
+    background:#05051f; color:#fff; font-family:var(--font-body);
+    display:grid; grid-template-columns:400px 1fr; grid-template-rows:100vh; gap:0; height:100vh;
+    margin:0; overflow:hidden;
+  }
+  aside{
+    overflow-y:auto; padding:22px 22px 60px; background:#0a0a2c;
+    border-right:1px solid rgba(255,255,255,.08);
+  }
+  main{ display:flex; flex-direction:column; align-items:center; justify-content:center;
+        gap:16px; padding:22px; min-width:0; min-height:0; overflow:hidden; }
+  h1{ font:900 21px/1.2 var(--font-display); margin:0 0 3px; letter-spacing:-.01em }
+  .sub{ font-size:12.5px; opacity:.5; margin:0 0 20px; line-height:1.5 }
+  h2{ font:800 10.5px/1 var(--font-body); letter-spacing:.14em; text-transform:uppercase;
+      color:var(--cyan); margin:22px 0 9px }
+  label{ display:block; font-size:11.5px; opacity:.6; margin:0 0 5px }
+  select,input[type=text],textarea{
+    width:100%; background:rgba(255,255,255,.07); color:#fff; font:500 13.5px/1.45 var(--font-body);
+    border:1px solid rgba(255,255,255,.15); border-radius:9px; padding:9px 11px; margin-bottom:11px;
+  }
+  textarea{ resize:vertical; min-height:60px }
+  select:focus,input:focus,textarea:focus{ outline:none; border-color:var(--cyan) }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px }
+  .chips button{
+    font:600 11.5px/1.25 var(--font-body); color:#cfe9ff; cursor:pointer; text-align:left;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
+    padding:7px 10px; border-radius:8px; max-width:100%;
+  }
+  .chips button:hover{ background:rgba(0,188,252,.22); border-color:var(--cyan); color:#fff }
+  .row{ display:flex; gap:8px; margin-bottom:11px }
+  .row > *{ flex:1; margin-bottom:0 }
+  .seg{ display:flex; border:1px solid rgba(255,255,255,.15); border-radius:9px; overflow:hidden }
+  .seg button{ flex:1; background:none; border:0; color:#fff; opacity:.55; cursor:pointer;
+               font:600 12.5px/1 var(--font-body); padding:10px 4px }
+  .seg button[aria-pressed=true]{ background:var(--cyan); color:#04263a; opacity:1 }
+  .actions{ display:flex; gap:8px; margin:16px 0 4px }
+  .actions button{ flex:1; font:700 13px/1 var(--font-body); cursor:pointer; padding:12px 8px;
+    border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff }
+  .actions button.pri{ background:var(--cyan); border-color:var(--cyan); color:#04263a }
+  .saved{ display:flex; flex-direction:column; gap:6px }
+  .saved div{ display:flex; gap:6px; align-items:center }
+  .saved button{ font:600 12px/1.3 var(--font-body); cursor:pointer; text-align:left; flex:1;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:#dfe9ff;
+    padding:8px 10px; border-radius:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+  .saved .x{ flex:0 0 30px; text-align:center; color:#ff8da6 }
+  .links{ display:flex; flex-direction:column; gap:5px; font-size:12.5px }
+  .links a{ color:var(--teal); text-decoration:none }
+  .links a:hover{ text-decoration:underline }
+  #wrap{ flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; width:100% }
+  #tile{ max-width:100%; max-height:100%; border-radius:10px; box-shadow:0 18px 60px rgba(0,0,0,.6) }
+  .meta{ font-size:12px; opacity:.45 }
+  .hint{ font-size:11px; opacity:.4; margin:-6px 0 12px; line-height:1.5 }
+</style>
+</head>
+<body>
+<aside>
+  <h1>Kai social tile generator</h1>
+  <p class="sub">Bookmark this page. Everything below is editable, and saved tiles stay in this browser.</p>
+
+  <h2>Start from</h2>
+  <div class="chips" id="presets"></div>
+
+  <h2>Format</h2>
+  <select id="format"></select>
+
+  <h2>Art</h2>
+  <select id="art"></select>
+  <div id="cityWrap"><label>City</label><select id="city"></select></div>
+  <div class="row">
+    <div class="seg" id="ground">
+      <button data-v="light" aria-pressed="true">Light</button>
+      <button data-v="dark"  aria-pressed="false">Dark</button>
+    </div>
+    <div class="seg" id="overlay">
+      <button data-v="off" aria-pressed="true">Overlay off</button>
+      <button data-v="on"  aria-pressed="false">On</button>
+    </div>
+  </div>
+
+  <h2>Copy</h2>
+  <p class="hint">Wrap a word in *asterisks* to set it in the emphasis colour.</p>
+  <label>Headline</label><textarea id="headline" rows="2"></textarea>
+  <label>Subline</label><textarea id="subline" rows="2"></textarea>
+  <label>Corner tag</label><input type="text" id="tag">
+
+  <div class="actions">
+    <button id="save">Save tile</button>
+    <button id="download" class="pri">Download PNG</button>
+  </div>
+
+  <h2>Saved tiles</h2>
+  <div class="saved" id="saved"></div>
+
+  <h2>Video cuts</h2>
+  <div class="links" id="cutlinks"></div>
+</aside>
+
+<main>
+  <div id="wrap"><canvas id="tile"></canvas></div>
+  <p class="meta" id="meta"></p>
+</main>
+
+<script type="module">
+import { K, fade, font, wrap, eyebrow, textBlock, roundRect, clamp01 } from './lib/kai.js';
+import { ART, CITIES, overlayPins } from './lib/tileart.js';
+
+const FORMATS = {
+  '9:16 · 1080×1920':  [1080,1920],
+  '4:5 · 1080×1350':   [1080,1350],
+  '1:1 · 1080×1080':   [1080,1080],
+  '16:9 · 1920×1080':  [1920,1080],
+  '1.91:1 · 1200×628': [1200,628],
+};
+
+/* One preset per headline. Every line is lifted from the platform and CTEM
+   pages — nothing here was written for the tile. */
+const PRESETS = [
+  { name:'Exposure proven',   headline:'Exposure proven. Exposure *closed*.',
+    subline:'Continuous Threat Exposure Management, carried end to end.',
+    art:'Sankey flow', dark:true,  overlay:false, tag:'The platform' },
+  { name:'Ranked ≠ closed',   headline:'*Ranked* is not the same as closed.',
+    subline:'Over 90% of findings removed on exploitability before anyone triages.',
+    art:'Sankey flow', dark:false, overlay:true,  tag:'Exposure management' },
+  { name:'One line',          headline:'One line, *two owners*.',
+    subline:'Kai carries the work from the first exposure to the planned change.',
+    art:'Relay rail',  dark:false, overlay:false, tag:'Autonomous exposure remediation' },
+  { name:'Days to minutes',   headline:'From days to *minutes*.',
+    subline:'Context resolves once, before the fork, and both teams work from that record.',
+    art:'Relay rail',  dark:true,  overlay:false, tag:'The autonomous defense cycle' },
+  { name:'Your stack',        headline:'Your stack, turned into *outcomes*.',
+    subline:'Nothing in your stack is replaced. Everything in it is read.',
+    art:'Sankey flow', dark:false, overlay:false, tag:'The platform' },
+  { name:'Now in…',           headline:'Now in *Sydney*.',
+    subline:'The Kai Autonomous Defense Platform.',
+    art:'City skyline', city:'Sydney', dark:false, overlay:false, tag:'Launch' },
+  { name:'A real owner',      headline:'How much of your estate has a *real owner*?',
+    subline:'92% of assets with an accountable owner, up from four percent.',
+    art:'City skyline', city:'San Jose', dark:false, overlay:true, tag:'Cyber asset attack surface management' },
+  { name:'Path to zero',      headline:'Machine-speed defense on the *path to zero*.',
+    subline:'3M+ analyst and engineering hours saved per year across 5K images.',
+    art:'Relay rail',  dark:true,  overlay:false, tag:'The Kai impact' },
+];
+
+const CUTS = [
+  ['Now in Sydney','cuts/sydney.html'],
+  ['Now in San Diego','cuts/san-diego.html'],
+  ['Now in San Jose','cuts/san-jose.html'],
+  ['Ranked is not the same as closed','cuts/ranked-not-closed.html'],
+  ['One line, two owners','cuts/one-line-two-owners.html'],
+  ['From days to minutes','cuts/days-to-minutes.html'],
+  ['92% have an owner','cuts/estate-owner.html'],
+];
+
+const st = { format:'9:16 · 1080×1920', art:'Sankey flow', city:'Sydney',
+             dark:false, overlay:false, ...PRESETS[1] };
+
+/* ---------------- rendering ---------------- */
+
+/* shrink until the wrapped block fits, never below the 24px floor */
+function fitText(c, text, maxW, maxH, { start, weight=800, family=K.display, lh=1.12 }){
+  let size = start;
+  const plain = String(text).replace(/\*/g,'');
+  while (size > 24){
+    font(c,{size,weight,family});
+    const lines = wrap(c, plain, maxW);
+    if (lines.length * size * lh <= maxH) return { size, lines: lines.length };
+    size -= 2;
+  }
+  font(c,{size:24,weight,family});
+  return { size:24, lines: wrap(c, plain, maxW).length };
+}
+
+function drawTile(c, W, H, s){
+  const fg      = s.dark ? K.paper : K.ink;
+  const subCol  = s.dark ? '#A8B6D8' : K.grey;
+  const pad     = Math.round(Math.min(W,H) * 0.072);
+  const k       = Math.min(W,H) / 1080;
+
+  c.clearRect(0,0,W,H);
+  c.fillStyle = s.dark ? K.ink : K.paper; c.fillRect(0,0,W,H);
+  // one hairline rule under the tag, the only furniture on the tile
+  c.strokeStyle = fade(K.cyan, s.dark ? .45 : .35); c.lineWidth = Math.max(3, k*4);
+  c.beginPath(); c.moveTo(pad*1.4, pad*1.95); c.lineTo(pad*1.4 + Math.min(W,H)*0.10, pad*1.95);
+  c.stroke();
+
+  const wide = W/H > 1.25;
+  const artBox  = wide
+    ? { x: W*0.50, y: pad*1.3, w: W*0.46, h: H - pad*2.6 }
+    : { x: pad*1.1, y: pad*2.2, w: W - pad*2.2, h: H*0.44 };
+  const textBox = wide
+    ? { x: pad*1.4, y: pad*2.6, w: W*0.44 - pad, h: H - pad*4.4 }
+    : { x: pad*1.4, y: artBox.y + artBox.h + pad*0.6,
+        w: W - pad*2.8, h: H - (artBox.y + artBox.h) - pad*3.2 };
+
+  const pins = ART[s.art](c, artBox, { city:s.city, dark:s.dark });
+  if (s.overlay) overlayPins(c, pins, k * (wide ? 0.72 : 0.9));
+
+  // corner tag
+  if (s.tag) eyebrow(c, s.tag, { x: pad*1.4, y: pad*1.5,
+    size: Math.max(24, Math.round(Math.min(W,H)*0.0215)), color: K.cyan, track: 2.6 });
+
+  // headline and subline, bottom-anchored in the text box
+  const hlMax   = wide ? textBox.w*0.145 : W*0.082;
+  const subSize = Math.max(24, Math.round(hlMax*0.34));
+  font(c,{size:subSize, weight:500, family:K.body});
+  const subLines = s.subline ? wrap(c, s.subline, textBox.w) : [];
+  const subBlock = subLines.length
+    ? subSize*1.55 + (subLines.length-1)*subSize*1.34 : 0;
+
+  const hl    = fitText(c, s.headline, textBox.w, textBox.h - subBlock, { start: hlMax });
+  const headH = hl.size + (hl.lines-1)*hl.size*1.12;
+  const yTop  = textBox.y + textBox.h - (headH + subBlock);
+
+  textBlock(c, s.headline, { x: textBox.x, y: yTop + hl.size, maxW: textBox.w,
+    size: hl.size, weight: 800, color: fg, accent: K.cyan, lh: 1.12 });
+
+  if (subLines.length){
+    textBlock(c, s.subline, { x: textBox.x, y: yTop + headH + subSize*1.55,
+      maxW: textBox.w, size: subSize, weight: 500, family: K.body,
+      color: subCol, accent: K.teal, lh: 1.34 });
+  }
+
+  // wordmark, bottom right
+  font(c,{size: Math.max(24, Math.round(Math.min(W,H)*0.026)), weight:700, family:K.body});
+  const wm = 'kai.security';
+  c.fillStyle = K.cyan; c.textBaseline = 'alphabetic';
+  c.fillText(wm, W - pad*1.4 - c.measureText(wm).width, H - pad*1.25);
+}
+
+/* ---------------- wiring ---------------- */
+const $ = id => document.getElementById(id);
+const cv = $('tile'), ctx = cv.getContext('2d');
+
+function render(){
+  const [W,H] = FORMATS[st.format];
+  cv.width = W; cv.height = H;
+  const box = $('wrap').getBoundingClientRect();
+  const scale = Math.min(box.width / W, box.height / H, 1);
+  cv.style.width = (W*scale)+'px'; cv.style.height = (H*scale)+'px';
+  drawTile(ctx, W, H, st);
+  $('meta').textContent = `${st.format}  ·  ${st.art}${st.art==='City skyline' ? ' · '+st.city : ''}`
+    + `  ·  ${st.dark ? 'dark' : 'light'} ground  ·  overlay ${st.overlay ? 'on' : 'off'}`;
+  $('cityWrap').style.display = st.art === 'City skyline' ? 'block' : 'none';
+}
+
+function syncInputs(){
+  $('format').value = st.format;
+  $('art').value = st.art;
+  $('city').value = st.city;
+  $('headline').value = st.headline;
+  $('subline').value = st.subline;
+  $('tag').value = st.tag;
+  [...$('ground').children].forEach(b => b.setAttribute('aria-pressed', (b.dataset.v==='dark')===!!st.dark));
+  [...$('overlay').children].forEach(b => b.setAttribute('aria-pressed', (b.dataset.v==='on')===!!st.overlay));
+}
+
+Object.keys(FORMATS).forEach(f => $('format').add(new Option(f,f)));
+Object.keys(ART).forEach(a => $('art').add(new Option(a,a)));
+Object.keys(CITIES).forEach(c2 => $('city').add(new Option(c2,c2)));
+
+PRESETS.forEach(p => {
+  const b = document.createElement('button');
+  b.textContent = p.name;
+  b.onclick = () => { Object.assign(st, { city:'Sydney' }, p); syncInputs(); render(); };
+  $('presets').appendChild(b);
+});
+
+CUTS.forEach(([label, href]) => {
+  const a = document.createElement('a');
+  a.textContent = label; a.href = href; $('cutlinks').appendChild(a);
+});
+
+$('format').onchange  = e => { st.format = e.target.value; render(); };
+$('art').onchange     = e => { st.art = e.target.value; render(); };
+$('city').onchange    = e => { st.city = e.target.value; render(); };
+$('headline').oninput = e => { st.headline = e.target.value; render(); };
+$('subline').oninput  = e => { st.subline = e.target.value; render(); };
+$('tag').oninput      = e => { st.tag = e.target.value; render(); };
+$('ground').onclick   = e => { if(!e.target.dataset.v) return;
+  st.dark = e.target.dataset.v==='dark'; syncInputs(); render(); };
+$('overlay').onclick  = e => { if(!e.target.dataset.v) return;
+  st.overlay = e.target.dataset.v==='on'; syncInputs(); render(); };
+
+$('download').onclick = () => {
+  const [W,H] = FORMATS[st.format];
+  const o = document.createElement('canvas'); o.width = W; o.height = H;
+  drawTile(o.getContext('2d'), W, H, st);
+  const a = document.createElement('a');
+  a.download = 'kai-tile-' + st.format.split(' ')[0].replace(/[:.]/g,'-') + '.png';
+  a.href = o.toDataURL('image/png'); a.click();
+};
+
+/* saved tiles live in this browser */
+const KEY = 'kai-tiles-v1';
+const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+function drawSaved(){
+  const list = load(); const host = $('saved'); host.innerHTML = '';
+  if (!list.length){ host.innerHTML = '<p class="hint">Nothing saved yet.</p>'; return; }
+  list.forEach((s,i) => {
+    const row = document.createElement('div');
+    const b = document.createElement('button');
+    b.textContent = s.headline.replace(/\*/g,'');
+    b.title = `${s.format} · ${s.art}`;
+    b.onclick = () => { Object.assign(st, s); syncInputs(); render(); };
+    const x = document.createElement('button');
+    x.className = 'x'; x.textContent = '×'; x.title = 'Remove';
+    x.onclick = () => { const l = load(); l.splice(i,1);
+      localStorage.setItem(KEY, JSON.stringify(l)); drawSaved(); };
+    row.append(b,x); host.appendChild(row);
+  });
+}
+$('save').onclick = () => {
+  const l = load(); l.unshift({...st}); localStorage.setItem(KEY, JSON.stringify(l.slice(0,40)));
+  drawSaved();
+};
+
+addEventListener('resize', render);
+document.fonts.ready.then(() => { syncInputs(); drawSaved(); render(); });
+</script>
+</body>
+</html>

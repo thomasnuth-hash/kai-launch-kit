@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --ink:#080844; --ink-2:#0C1838; --paper:#fff; --paper-tint:#F0F8FC;
+  --cyan:#00BCFC; --teal:#74E8E8; --blue:#1C58D8; --peri:#8098FC;
+  --crimson:#E11D48; --grey:#586470; --line:#CCD0DC;
+  --font-display:Figtree,"Gilroy","Hanken Grotesk",system-ui,sans-serif;
+  --font-body:Inter,system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body.stage{
+  background:#05051f; color:#fff; font-family:var(--font-body);
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+  padding:16px; overflow:hidden;
+}
+.frame{
+  position:relative; flex:1 1 auto; min-height:0;
+  display:flex; align-items:center; justify-content:center;
+}
+canvas#stage{
+  height:100%; width:auto; max-width:100%;
+  border-radius:14px; box-shadow:0 18px 60px rgba(0,0,0,.55);
+  background:#fff;
+}
+.bar{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  justify-content:center; font-size:13px;
+}
+.bar button{
+  font:600 13px/1 var(--font-body); color:#fff; cursor:pointer;
+  background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18);
+  padding:9px 15px; border-radius:999px; transition:background .15s;
+}
+.bar button:hover{background:rgba(255,255,255,.18)}
+.bar button.pri{background:var(--cyan); border-color:var(--cyan); color:#04263a}
+.bar button.pri:hover{background:#38cdff}
+.bar button.rec[data-on="1"]{background:var(--crimson); border-color:var(--crimson)}
+.bar .t{font-variant-numeric:tabular-nums; opacity:.62; min-width:76px; text-align:center}
+.bar a{color:var(--teal); text-decoration:none; font-weight:600}
+.bar a:hover{text-decoration:underline}
+input[type=range]{accent-color:var(--cyan); width:230px}
+.note{font-size:12px; opacity:.45; text-align:center; max-width:640px; line-height:1.5}
+
+/* editable copy field in the control bar */
+.bar .fld{ display:flex; align-items:center; gap:9px; font-size:12px; opacity:.72 }
+.bar .fld input{
+  font:600 13px/1 var(--font-body); color:#fff; width:320px;
+  background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18);
+  border-radius:8px; padding:9px 11px;
+}
+.bar .fld input:focus{ outline:none; border-color:var(--cyan) }
+.bar .hintline{ font-size:11.5px; opacity:.4 }

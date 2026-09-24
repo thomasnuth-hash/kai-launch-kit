@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kai — From days to minutes</title>
+<link rel="stylesheet" href="../lib/kai.css">
+</head>
+<body class="stage">
+  <div class="frame"><canvas id="stage"></canvas></div>
+  <div id="bar"></div>
+  <p class="note">Product cut &middot; counts from the Autonomous Defense Cycle.</p>
+<script type="module">
+import * as Kai from '../lib/kai.js';
+import * as S from '../lib/scenes.js';
+import { COPY } from '../lib/copy.js';
+const { K, W, H, TL, at, seg, clamp01, lerp, draw, pop, enter, easeOut, easeBoth,
+        fade, font, grad, roundRect, textBlock, eyebrow, mark, rail, ringNode,
+        feed, arrow, pill, card, ribbon, isoBlock, ground, signal, caption,
+        endCard, scene, mount, bar } = Kai;
+
+document.getElementById('bar').outerHTML = bar();
+
+
+const WITHOUT = [['20-30+','humans involved'],['15-20','tools in the chain'],['3-5','cross-team handoffs']];
+const WITH    = [['One','agentic platform'],['One','tool in the chain'],['None','cross-team handoffs']];
+
+function render(c, t){
+  ground(c, t);
+  signal(c, t, COPY.descriptor);
+
+
+  // section eyebrow, held for the three beats
+  scene(c, t, TL.b1[0], TL.b3[0]+TL.b3[1]-0.15, () => {
+    const e = enter(seg(t, TL.b1[0]+0.15, 0.5), 18);
+    eyebrow(c, 'The Autonomous Defense Cycle', { x: W/2, y: 330, size: 27, color: K.cyan,
+      align: 'center', alpha: e.o });
+  });
+
+  scene(c, t, TL.b1[0], TL.b3[0]+TL.b3[1]-0.15, () => {
+    // the crimson side steps back once Kai is on screen
+    const dim = 1 - 0.62*easeOut(seg(t, TL.b3[0], 0.55));
+    c.save(); c.globalAlpha = dim;
+    S.compareColumn(c, { p: at(t,'b1'), x: 74, w: 932, top: 400, rows: WITHOUT,
+      accent: K.crimson, headline: 'Without Kai', sub: 'Days to weeks' });
+    c.restore();
+  });
+
+  scene(c, t, TL.b2[0], TL.b3[0]+TL.b3[1]-0.15, () => {
+    S.compareColumn(c, { p: at(t,'b2'), x: 74, w: 932, top: 862, rows: WITH,
+      accent: K.blue, headline: 'With Kai', sub: 'Minutes' });
+  });
+
+  scene(c, t, TL.b3[0]+0.25, TL.b3[0]+TL.b3[1], () => {
+    const p = clamp01((at(t,'b3') - 0.15)/0.5);
+    pill(c, 74, 1340, 932, 118, p,
+      { bg: K.ink, label: 'Context resolves once, before the fork', size: 35 });
+  });
+
+  caption(c, t, 'b1', 'Two teams rebuild the same context, then reconcile.', { size: 56, bottom: 1810 });
+  caption(c, t, 'b2', 'With Kai the context resolves *once*.', { size: 62, bottom: 1800 });
+  caption(c, t, 'b3', 'From days to *minutes*.', { size: 86, bottom: 1790 });
+
+  endCard(c, t, 'One record, shared by every team.');
+}
+
+
+mount({ slug:'days-to-minutes', title:'From days to minutes', render });
+</script>
+</body>
+</html>

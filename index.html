@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kai — launch kit</title>
+<link rel="stylesheet" href="lib/kai.css">
+<style>
+  body{ background:#05051f; color:#fff; font-family:var(--font-body);
+        display:block; overflow:auto; margin:0; padding:0 }
+  .page{ max-width:1060px; margin:0 auto; padding:54px 28px 90px }
+  header{ display:flex; align-items:center; gap:18px; margin-bottom:12px }
+  header nav{ margin-left:auto; display:flex; align-items:center; gap:10px }
+  header nav a{ text-decoration:none; white-space:nowrap;
+    font:700 13.5px/1 var(--font-body); border-radius:999px; padding:12px 18px }
+  header nav a.cta{ background:var(--cyan); color:#04263a }
+  header nav a.cta:hover{ background:#38cdff }
+  header nav a.ghost{ color:#9fb0d4; border:1px solid rgba(255,255,255,.16) }
+  header nav a.ghost:hover{ color:#fff; border-color:var(--cyan) }
+  header img{ height:44px; filter:brightness(0) invert(1) }
+  header .mk{ height:44px }
+  h1{ font:900 40px/1.1 var(--font-display); margin:26px 0 10px; letter-spacing:-.02em }
+  .lede{ font-size:17px; line-height:1.6; color:#9fb0d4; max-width:620px; margin:0 0 8px }
+  h2{ font:800 11px/1 var(--font-body); letter-spacing:.16em; text-transform:uppercase;
+      color:var(--cyan); margin:54px 0 16px }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(248px,1fr)); gap:14px }
+  a.card{
+    display:block; text-decoration:none; color:inherit; border-radius:16px; overflow:hidden;
+    background:#0b0b30; border:1px solid rgba(255,255,255,.09); transition:.16s;
+  }
+  a.card:hover{ border-color:var(--cyan); transform:translateY(-2px) }
+  a.card .thumb{ height:112px; background:var(--grad-frame); position:relative }
+  a.card .thumb::after{
+    content:''; position:absolute; inset:5px; border-radius:11px; background:#0b0b30;
+  }
+  a.card .thumb canvas{ position:absolute; inset:5px; width:calc(100% - 10px);
+    height:calc(100% - 10px); border-radius:11px; z-index:1 }
+  a.card .body{ padding:14px 16px 17px }
+  a.card b{ display:block; font:800 16px/1.25 var(--font-display); margin-bottom:5px }
+  a.card span{ font-size:12.5px; color:#8fa0c8; line-height:1.5 }
+  a.big{
+    display:flex; gap:22px; align-items:center; text-decoration:none; color:inherit;
+    background:linear-gradient(115deg,#0d2b4d,#0b0b30 60%); border:1px solid rgba(0,188,252,.35);
+    border-radius:18px; padding:26px 28px;
+  }
+  a.big:hover{ border-color:var(--cyan) }
+  a.big b{ display:block; font:900 24px/1.2 var(--font-display); margin-bottom:6px }
+  a.big span{ font-size:14px; color:#9fb0d4; line-height:1.55 }
+  .sw{ display:flex; flex-wrap:wrap; gap:9px; margin-bottom:18px }
+  .sw div{ width:92px }
+  .sw i{ display:block; height:52px; border-radius:10px; border:1px solid rgba(255,255,255,.12) }
+  .sw code{ display:block; font-size:10.5px; color:#8fa0c8; margin-top:6px; font-style:normal }
+  .sw em{ display:block; font-size:10.5px; color:#5e6c92; font-style:normal }
+  table{ border-collapse:collapse; font-size:13.5px; color:#b9c6e4 }
+  td{ padding:5px 22px 5px 0; vertical-align:top }
+  td:first-child{ color:#5e6c92; white-space:nowrap }
+  .note{ font-size:12.5px; color:#5e6c92; line-height:1.65; max-width:640px; margin-top:16px }
+  .note b{ color:#9fb0d4 }
+  .copybox{ background:#0b0b30; border:1px solid rgba(255,255,255,.09);
+            border-radius:16px; padding:20px 22px 18px }
+  .copybox label{ display:block; font:700 13px/1.4 var(--font-body); margin-bottom:9px }
+  .copybox label em{ font-style:normal; font-weight:400; color:#5e6c92 }
+  .copyrow{ display:flex; gap:9px }
+  .copybox input{
+    flex:1; font:600 15px/1 var(--font-body); color:#fff;
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.16);
+    border-radius:10px; padding:12px 13px;
+  }
+  .copybox input:focus{ outline:none; border-color:var(--cyan) }
+  .copybox button{
+    font:600 13px/1 var(--font-body); color:#fff; cursor:pointer; white-space:nowrap;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18);
+    border-radius:10px; padding:0 16px;
+  }
+  .copybox button:hover{ border-color:var(--cyan) }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <canvas class="mk" id="mk" width="120" height="120"></canvas>
+    <span style="font:900 34px/1 var(--font-display)">Kai</span>
+    <nav>
+      <a class="ghost" href="PUBLISHING.md">Publishing guide</a>
+      <a class="cta" href="kai-tile-generator.html">Tile generator →</a>
+    </nav>
+  </header>
+
+  <h1>Launch kit</h1>
+  <p class="lede">Seven 9:16 cuts and a tile generator, built on one motion system —
+     enter, draw, pop — and the palette, motifs and copy taken from the platform
+     and CTEM pages.</p>
+
+  <h2>Launch cities</h2>
+  <div class="grid" id="cities"></div>
+
+  <h2>Product cuts</h2>
+  <div class="grid" id="products"></div>
+
+  <h2>Social tiles</h2>
+  <a class="big" href="kai-tile-generator.html">
+    <div>
+      <b>Tile generator →</b>
+      <span>Eight presets, five formats, three art options, light or dark ground.
+            Editable copy with <code style="color:var(--teal)">*asterisk*</code> emphasis,
+            tiles saved in your browser, PNG out at full size.<br>
+            <b style="font:600 13px var(--font-body);color:var(--teal)">Self-contained —
+            one file, no server. Bookmark it.</b></span>
+    </div>
+  </a>
+  <p class="note" style="margin-top:12px">
+    <a style="color:var(--teal)" href="tiles.html">tiles.html</a> is the same tool built
+    as modules against <code>lib/</code>. Edit that one, then run
+    <code>python3 tools/build_standalone.py</code> to refresh the single file.
+  </p>
+
+  <h2>Copy still in flight</h2>
+  <div class="copybox">
+    <label for="descriptor">Descriptor <em>— the line under the mark, on all seven cuts</em></label>
+    <div class="copyrow">
+      <input id="descriptor" type="text" spellcheck="false">
+      <button id="descriptor-reset" hidden>Reset to default</button>
+    </div>
+    <p class="note" style="margin-top:10px">
+      Saved in this browser and shared by every cut on this site — set it here
+      and all seven follow, including anything you record or export. It does not
+      change the files, so it will not show up as a commit. When the wording is
+      settled, tell me and I will make it the shipped default.
+    </p>
+  </div>
+
+  <h2>Design resources</h2>
+  <div class="sw" id="sw"></div>
+  <table>
+    <tr><td>Display</td><td>Figtree — substituted for the headline face in your PDFs (Gilroy, Hanken Grotesk as fallbacks)</td></tr>
+    <tr><td>Body</td><td>Inter</td></tr>
+    <tr><td>Motifs</td><td>relay rail · cyan ring node · rounded pill and card · Sankey ribbon · isometric block · gradient frame · stat block</td></tr>
+    <tr><td>Wordmark</td><td>kai.security</td></tr>
+    <tr><td>Files</td><td><a style="color:var(--teal)" href="brand/brand-notes.md">brand/brand-notes.md</a> ·
+        <a style="color:var(--teal)" href="brand/tokens.css">brand/tokens.css</a> ·
+        <a style="color:var(--teal)" href="assets/logo-kai.png">logo</a> · <a style="color:var(--teal)" href="assets/kai-marketecture-relay-track.png">marketecture</a></td></tr>
+  </table>
+
+  <p class="note">
+    <b>Two things to confirm.</b> The emphasis red is approximated at
+    <code>#E11D48</code> — the CTEM PDF rasterises to <code>#C43E64</code>, which is a
+    colour-managed render rather than the source value. And the display face is a
+    substitute. Both are single-token swaps in <code>brand/tokens.css</code> and
+    <code>lib/kai.js</code>.
+  </p>
+</div>
+
+<script type="module">
+import { K, mark } from './lib/kai.js';
+import { ART } from './lib/tileart.js';
+import { ownerRing } from './lib/scenes.js';
+import { COPY, set as setCopy, reset as resetCopy, isOverridden } from './lib/copy.js';
+
+const mc = document.getElementById('mk').getContext('2d');
+mark(mc, 60, 60, 104, 1);
+
+const skyline = city => (c,box) => ART['City skyline'](c, box, { city, dark:true });
+const CITIES = [
+  ['Now in Sydney','sydney','Opera House cue over an isometric estate. Closes on “Exposure proven. Exposure closed.”', skyline('Sydney')],
+  ['Now in San Diego','san-diego','Surfboard cue. Same three beats, same close.', skyline('San Diego')],
+  ['Now in San Jose','san-jose','Stepped towers cue, in the estate’s own accent.', skyline('San Jose')],
+];
+const flow  = (c,box) => ART['Sankey flow'](c, box, { dark:true });
+const relay = (c,box) => ART['Relay rail'](c, box, { dark:true });
+const ring  = (c,box) => ownerRing(c, { p:1, x:box.x+box.w/2, y:box.y+box.h/2,
+                                        r:box.h*0.33, from:0.92, to:0.92 });
+const PRODUCTS = [
+  ['Ranked is not the same as closed','ranked-not-closed','845.4K in the queue, most of it removed before anyone triages. 336 chain-critical, 129 chains broken.', flow],
+  ['One line, two owners','one-line-two-owners','Four sources into one record, three continuous stages, one handoff coloured by who receives it.', relay],
+  ['From days to minutes','days-to-minutes','20-30+ humans, 15-20 tools, 3-5 handoffs — against one, one, none.', relay],
+  ['92% have an owner','estate-owner','Four percent to 92% across 250,000 assets in under twelve hours.', ring],
+];
+
+function cards(host, list){
+  list.forEach(([title, slug, desc, art]) => {
+    const a = document.createElement('a');
+    a.className = 'card'; a.href = `cuts/${slug}.html`;
+    a.innerHTML = `<div class="thumb"><canvas width="500" height="224"></canvas></div>
+      <div class="body"><b>${title}</b><span>${desc}</span></div>`;
+    host.appendChild(a);
+    const c = a.querySelector('canvas').getContext('2d');
+    c.fillStyle = K.ink; c.fillRect(0,0,500,224);
+    art(c, { x:22, y:16, w:456, h:162 });
+    c.font = '700 15px Inter, system-ui, sans-serif'; c.fillStyle = K.cyan;
+    const s = '17s · 9:16 · silent';
+    c.fillText(s, 250 - c.measureText(s).width/2, 204);
+  });
+}
+cards(document.getElementById('cities'), CITIES);
+cards(document.getElementById('products'), PRODUCTS);
+
+const dEl = document.getElementById('descriptor');
+const dReset = document.getElementById('descriptor-reset');
+const syncCopy = () => { dEl.value = COPY.descriptor;
+                         dReset.hidden = !isOverridden('descriptor'); };
+dEl.oninput = e => { setCopy('descriptor', e.target.value);
+                     dReset.hidden = !isOverridden('descriptor'); };
+dReset.onclick = () => { resetCopy('descriptor'); syncCopy(); };
+syncCopy();
+
+const SW = [
+  ['ink','#080844','ground'],['cyan','#00BCFC','accent'],['teal','#74E8E8','gradient'],
+  ['blue','#1C58D8','handoff'],['periwinkle','#8098FC','auto'],['crimson','#E11D48','emphasis*'],
+  ['grey','#586470','body'],['line','#CCD0DC','hairline'],['tint','#F0F8FC','section'],
+];
+const sw = document.getElementById('sw');
+SW.forEach(([n,hex,role]) => {
+  const d = document.createElement('div');
+  d.innerHTML = `<i style="background:${hex}"></i><code>${hex}</code><em>${n} · ${role}</em>`;
+  sw.appendChild(d);
+});
+</script>
+</body>
+</html>
