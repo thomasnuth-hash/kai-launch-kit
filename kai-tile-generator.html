@@ -8,11 +8,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
 
 :root{
-  --ink:#080844; --ink-2:#0C1838; --paper:#fff; --paper-tint:#F0F8FC;
-  --cyan:#00BCFC; --teal:#74E8E8; --blue:#1C58D8; --peri:#8098FC;
+  --ink:#080943; --ink-2:#0C1838; --paper:#fff; --paper-tint:#F0F8FC;
+  --cyan:#11C4FD; --teal:#8AF0E6; --blue:#00BFFF; --peri:#8098FC;
   --crimson:#E11D48; --grey:#586470; --line:#CCD0DC;
-  --font-display:Figtree,"Gilroy","Hanken Grotesk",system-ui,sans-serif;
-  --font-body:Inter,system-ui,-apple-system,sans-serif;
+  --font-display:Roboto,system-ui,sans-serif;
+  --font-body:"Wix Madefor Text",system-ui,-apple-system,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -228,19 +228,43 @@ function reset(key){
 
 const isOverridden = key => COPY[key] !== DEFAULTS[key];
 
+/* The Kai mark — the authored vector, lifted from the tile maker's LOGO_SVG
+   by tools/extract_brand_svg.py. Not a trace of the PNG.
+   Normalised: centred on (0,0), longest side 1.0, so drawing at `size`
+   means scaling by `size`. MARK_GRAD is the gradient the brand defines for
+   it, along the bounding-box diagonal. */
+const MARK_VIEWBOX = [0.0019192592592596203, 0.00019073486328126388, 109.64948238299336, 101.99814074074074];
+const MARK_GRAD = [[0.0, "#00BFFF"], [0.55, "#11C4FD"], [1.0, "#8AF0E6"]];
+const MARK_D = "M108.805 44.0738C104.685 32.6272 86.5164 28.3317 65.8261 32.9166C68.4671 17.6791 65.1563 4.83331 56.4701 1.07357C47.406 -2.84881 35.1291 4.26647 25.6416 17.691C17.4865 16.5813 10.3577 18.2148 5.60912 22.9647C-6.0123 34.5836 1.00646 60.4402 21.2877 80.717C41.569 100.994 67.4313 108.011 79.0527 96.3921C83.263 92.1827 85.0237 86.1054 84.5979 79.1026C102.372 69.4497 112.79 55.1522 108.802 44.0738H108.805ZM27.4716 30.1063C33.7584 31.2304 40.7317 34.3564 47.4275 39.2211C29.5361 47.6638 17.7879 60.8252 18.1922 71.9945C15.4411 64.8313 16.666 52.6744 22.0221 40.3069C23.6297 36.595 25.4789 33.1677 27.4716 30.1087V30.1063ZM23.235 77.823C23.1106 77.7704 22.9886 77.713 22.869 77.6532C22.3618 76.9668 21.9552 76.2254 21.6681 75.4265C18.3621 66.2424 31.4618 53.1216 50.9249 46.1187C52.066 45.7074 53.2047 45.3295 54.3363 44.9779C54.341 44.9827 54.3482 44.9874 54.353 44.9946C53.5756 47.6327 52.5995 50.3305 51.4273 53.0379C43.9779 70.2413 31.3542 81.3388 23.2326 77.8254L23.235 77.823ZM60.1183 51.1437C66.771 59.1535 70.9072 67.821 72.0507 75.405C69.2063 76.8663 66.1395 78.2033 62.8956 79.3704C48.6978 84.4791 35.0358 84.9192 27.3999 81.2192C38.3754 81.3316 51.9034 69.2392 60.1183 51.1413V51.1437ZM50.2145 15.5194C54.9248 17.5571 57.0849 24.0649 56.6161 32.5267C49.7863 26.9541 42.6 22.8117 35.7176 20.2765C40.8681 15.6964 46.1142 13.7448 50.2145 15.5194ZM10.4653 34.0287C12.6279 31.8666 15.422 30.5297 18.6348 29.9604C18.4218 30.4268 18.2113 30.898 18.0056 31.3716C12.3815 44.3561 10.7715 57.343 12.8695 66.8093C5.03019 53.9755 3.63313 40.8618 10.4677 34.0287H10.4653ZM32.6938 87.519C42.8321 90.5827 57.116 89.8532 71.754 84.7565C71.0747 87.3874 69.8283 89.6906 67.9839 91.5346C60.7068 98.8101 46.296 96.7533 32.6938 87.5166V87.519ZM82.5597 68.67C79.8134 60.0288 74.4381 50.7754 66.8021 42.2585C79.5766 40.6968 89.7794 43.4664 92.1525 50.065C94.1356 55.5731 90.2148 62.497 82.5597 68.67Z";
+const N = 109.6475631237341, CX = 54.825700821126304, CY = 50.99916573780201;
+
+let _p = null;
+function markPath(){
+  if (!_p){
+    const m = new DOMMatrix().scale(1 / N, 1 / N).translate(-CX, -CY);
+    _p = new Path2D(); _p.addPath(new Path2D(MARK_D), m);
+  }
+  return _p;
+}
+
 /* Kai launch kit — shared render engine.
    One motion system: enter / draw / pop. Nothing else.
    Every cut is a pure function of t (seconds), so export and scrub agree. */
 
+/* The brand, not an approximation of it. Every value here comes from
+   brand/design-language.json, which is lifted from the tile maker — the same
+   palette and faces the tiles use. */
 const K = {
-  ink:'#080844', ink2:'#0C1838', paper:'#FFFFFF', tint:'#F0F8FC',
-  cyan:'#00BCFC', teal:'#74E8E8', blue:'#1C58D8', peri:'#8098FC',
+  ink:'#080943', ink2:'#0C1838', paper:'#FFFFFF', tint:'#F0F8FC',
+  deep:'#027FA8', blue:'#00BFFF', cyan:'#11C4FD', mint:'#8AF0E6',
+  seafoam:'#50C7AC', lime:'#BEFF78', acid:'#D6FF20',
   crimson:'#E11D48', grey:'#586470', line:'#CCD0DC',
-  display:'Figtree, Gilroy, "Hanken Grotesk", system-ui, sans-serif',
-  body:'Inter, system-ui, -apple-system, sans-serif',
+  display:'Roboto, system-ui, sans-serif',
+  body:'"Wix Madefor Text", system-ui, -apple-system, sans-serif',
 };
 
 const W = 1080, H = 1920;
+
 
 /* ---------- timing ---------- */
 const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
@@ -351,34 +375,30 @@ function eyebrow(c, text, {x,y,size=26,color=K.cyan,align='left',alpha=1,track=3
 
 /* ---------- brand primitives ---------- */
 
-/* The woven orb, as geometry so it can be *drawn* rather than faded in.
-   Four ribbons crossing a common centre, teal at the lower left, cyan at the
-   upper right — matching assets/logo-kai.png. */
-const RIBBONS = [            // angle°, rx, ry, cx, cy — all as a fraction of size
-  [  40, .500, .285,  .000,  .000],   // the big outer sweep
-  [ -20, .455, .235, -.015,  .015],
-  [  85, .425, .215,  .018, -.008],
-  [ 132, .440, .205, -.008, -.020],
-];
+/* The mark, traced from the supplied artwork rather than approximated.
+   The ribbons are tapered filled shapes, so this is a fill, not a stroke —
+   and the "draw" of the motion system becomes a wipe along the gradient axis,
+   so the mark paints itself on in the direction its colour runs. */
+/* The brand defines this gradient for the mark: bounding-box diagonal,
+   #00BFFF → #11C4FD → #8AF0E6. MARK_GRAD comes straight from the artwork. */
+const MARK_ANGLE = 45 * Math.PI / 180;
 
-function mark(c, x, y, size, p=1, {alpha=1, spin=0}={}){
+function mark(c, x, y, size, p = 1, { alpha = 1, spin = 0 } = {}){
   if (p <= 0) return;
   c.save();
-  c.translate(x,y); c.rotate(spin);
-  // built after the transform: canvas resolves gradient coords at paint time
-  const g = grad(c, -size*.5, size*.5, size*.5, -size*.5,
-    [[0,fade('#8FF0E2',alpha)],[.34,fade(K.teal,alpha)],
-     [.72,fade('#2ED0F6',alpha)],[1,fade(K.cyan,alpha)]]);
-  c.strokeStyle = g; c.lineWidth = size*.095; c.lineCap='round';
-  RIBBONS.forEach(([deg,rx,ry,cx,cy],i) => {
-    const RX = size*rx, RY = size*ry, CX = size*cx, CY = size*cy;
-    const circ = Math.PI * (3*(RX+RY) - Math.sqrt((3*RX+RY)*(RX+3*RY)));
-    // stagger the four ribbons so the mark knits itself together
-    const lp = draw(clamp01((p - i*.12) / .64));
-    if (lp <= 0) return;
-    c.setLineDash([circ,circ]); c.lineDashOffset = circ*(1-lp);
-    c.beginPath(); c.ellipse(CX,CY,RX,RY, deg*Math.PI/180, 0, Math.PI*2); c.stroke();
-  });
+  c.translate(x, y); c.rotate(spin); c.scale(size, size);
+
+  if (p < 1){                                     // wipe, low-t end first
+    const q = easeBoth(clamp01(p));
+    c.rotate(MARK_ANGLE);
+    c.beginPath(); c.rect(-1, -0.78, 2, 1.56 * q); c.clip();
+    c.rotate(-MARK_ANGLE);
+  }
+
+  const g = c.createLinearGradient(-0.5, -0.5, 0.5, 0.5);
+  MARK_GRAD.forEach(([at, col]) => g.addColorStop(at, fade(col, alpha)));
+  c.fillStyle = g;
+  c.fill(markPath(), 'evenodd');
   c.restore();
 }
 
@@ -592,7 +612,7 @@ function endCard(c, t, closing){
   const cl = enter(seg(t, TL.end[0]+.95, .6), 28);
   textBlock(c, closing, {
     x:W/2, y:1370, maxW:840, size:44, weight:500, family:K.body,
-    color:K.paper, accent:K.teal, align:'center', alpha:cl.o*.82, lh:1.32
+    color:K.paper, accent:K.mint, align:'center', alpha:cl.o*.82, lh:1.32
   });
 }
 
@@ -769,7 +789,7 @@ function operaHouse(c, p, {ox, oy, u, alpha=1, dark=false}){
     // the podium the shells sit on
     const bp = clamp01((q-.45)/.5);
     if (bp>0){
-      c.strokeStyle = pass ? fade(K.teal, alpha) : ground;
+      c.strokeStyle = pass ? fade(K.mint, alpha) : ground;
       c.lineWidth = (pass ? 5 : 24)/k;
       c.beginPath(); c.moveTo(-66, 7); c.lineTo(-66+232*bp, 7); c.stroke();
     }
@@ -792,7 +812,7 @@ function surfboard(c, p, {ox, oy, u, alpha=1, dark=false}){
     c.stroke(); c.setLineDash([]);
     const st = clamp01((q-.5)/.5);
     if (st>0){
-      c.strokeStyle = pass ? fade(K.teal, alpha) : ground;
+      c.strokeStyle = pass ? fade(K.mint, alpha) : ground;
       c.lineWidth = (pass ? 5 : 22)/k;
       c.setLineDash([290,290]); c.lineDashOffset = 290*(1-st);
       c.beginPath(); c.moveTo(32,-248); c.lineTo(32,30); c.stroke(); c.setLineDash([]);
@@ -901,7 +921,7 @@ function ownerRing(c, {p, x, y, r, from=0.04, to=0.92, showTo=true}){
   c.save(); c.translate(x,y); c.scale(s,s);
   c.strokeStyle = fade(K.line,.8); c.lineWidth = 34;
   c.beginPath(); c.arc(0,0,r,0,Math.PI*2); c.stroke();
-  c.strokeStyle = grad(c,-r,-r,r,r,[[0,K.teal],[1,K.cyan]]);
+  c.strokeStyle = grad(c,-r,-r,r,r,[[0,K.mint],[1,K.cyan]]);
   c.lineWidth = 34; c.lineCap='round';
   c.beginPath(); c.arc(0,0,r,-Math.PI/2, -Math.PI/2 + Math.PI*2*val); c.stroke();
   if (showTo){
@@ -1032,7 +1052,7 @@ function artRelay(c, box, { dark=false }={}){
   c.strokeStyle = ink; c.lineWidth = w;
   c.beginPath(); c.moveTo(x0,y); c.lineTo(x1,y); c.stroke();
   // the fork, coloured by the team that receives it
-  [[-1,K.cyan],[0,K.blue],[1,K.peri]].forEach(([d,col]) => {
+  [[-1,K.cyan],[0,K.blue],[1,K.seafoam]].forEach(([d,col]) => {
     const ey = y + d*box.h*0.20, ex = box.x + box.w*0.96;
     c.strokeStyle = col; c.lineWidth = w*0.74; c.lineCap='round';
     c.beginPath(); c.moveTo(x1,y);
@@ -1201,7 +1221,7 @@ function drawTile(c, W, H, s){
   if (subLines.length){
     textBlock(c, s.subline, { x: textBox.x, y: yTop + headH + subSize*1.55,
       maxW: textBox.w, size: subSize, weight: 500, family: K.body,
-      color: subCol, accent: K.teal, lh: 1.34 });
+      color: subCol, accent: K.mint, lh: 1.34 });
   }
 
   // wordmark, bottom right

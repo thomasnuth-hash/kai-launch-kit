@@ -7,37 +7,59 @@ sampled from. They are gitignored, so they exist in your local copy but are not
 published — see `.gitignore` to change that.
 
 ## Mark
-A woven / knotted orb — four looping ribbons crossing over an implied sphere, drawn in a
-teal-to-cyan gradient, set left of a heavy navy "Kai" wordmark.
+A woven / knotted orb — looping tapered ribbons crossing over an implied sphere, in a
+cyan-to-mint gradient, set left of a heavy navy "Kai" wordmark.
+
+Everything on screen uses the real artwork, not an approximation: `lib/mark.js`
+is traced from `assets/logo-kai.png` by `tools/trace_mark.py` (potrace over the
+alpha channel). Measured against the source it scores **0.983 IoU** — 247 extra
+and 27 missing pixels out of 15,880, which is edge anti-aliasing.
+
+The gradient is sampled from the artwork too: **120°**, running
+`#03C0FE` → `#28CDF7` → `#46D8F2` → `#6CE5EB` → `#AEF0EB`, cyan at the upper
+right to mint at the lower left.
+
+Because the ribbons are filled shapes rather than strokes, the "draw" move is a
+wipe along that same 120° axis — the mark paints itself on in the direction its
+colour runs.
 
 ## Palette
-Sampled from the native PNG exports (see `tokens.css`).
+
+The authored values, from `design-language.json`. Nothing here is sampled.
 
 | Token | Hex | Role |
 |---|---|---|
-| ink | `#080844` | wordmark navy, the one-record rail, dark ground |
-| ink-2 | `#0C1838` | secondary dark |
-| paper | `#FFFFFF` | |
-| paper-tint | `#F0F8FC` | pale section ground |
-| cyan | `#00BCFC` | primary accent — "runs continuously" |
-| teal | `#74E8E8` | far end of the mark gradient |
-| blue | `#1C58D8` | stat blue, manual-remediation handoff |
-| periwinkle | `#8098FC` | auto-remediation handoff |
-| crimson | `#E11D48` | emphasis / "without Kai" |
+| ink | `#080943` | wordmark navy, dark ground |
+| deep | `#027FA8` | gradient start |
+| blue | `#00BFFF` | handoff, stat blue |
+| cyan | `#11C4FD` | primary accent |
+| mint | `#8AF0E6` | gradient end |
+| seafoam | `#50C7AC` | auto-remediation handoff |
+| lime | `#BEFF78` | news |
+| acid | `#D6FF20` | far end of the brand strip |
 | grey | `#586470` | body text |
-| line | `#CCD0DC` | hairlines, source feeds |
+| line | `#CCD0DC` | hairlines |
 
-**Crimson is approximated.** The red in `ctem.pdf` rasterises to `#C43E64`, which is a
-colour-managed render rather than the source value. Give me the real hex and it is a
-one-token swap.
+`#E11D48` is used for the "without Kai" side of the comparison cut. It is not
+a brand token — it is the one colour on screen the brand does not define, and
+it is there because that cut needs a negative. Say the word and it goes.
 
 ## Type
-The licensed faces were not supplied. Substituted:
-- Display — **Figtree** (geometric grotesk, double-storey `a`, rounded terminals; the
-  closest free match to the headline face in both PDFs). Fallbacks: Gilroy, Hanken Grotesk.
-- Body — **Inter**.
 
-Name the real faces and both are one-line swaps.
+- Display and numerals — **Roboto**
+- Body and labels — **Wix Madefor Text**
+
+Both are what the tile maker uses. The earlier Figtree/Inter substitution is gone.
+
+## Mark
+
+The authored vector, taken from `LOGO_SVG` in the tile maker and written to
+`brand/kai-mark.svg` and `lib/mark.js` by `tools/extract_brand_svg.py`. It is
+not a trace. Its gradient is the brand's own: `#00BFFF` → `#11C4FD` at 0.55 →
+`#8AF0E6`, along the bounding-box diagonal.
+
+Because the ribbons are filled shapes rather than strokes, the "draw" move is
+a wipe along that diagonal.
 
 ## Motifs to reuse
 1. **The relay rail** — thick navy horizontal line; thin grey source feeds curving in from

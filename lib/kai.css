@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Wix+Madefor+Text:wght@400;500;600;700&display=swap');
 
 :root{
-  --ink:#080844; --ink-2:#0C1838; --paper:#fff; --paper-tint:#F0F8FC;
-  --cyan:#00BCFC; --teal:#74E8E8; --blue:#1C58D8; --peri:#8098FC;
+  --ink:#080943; --ink-2:#0C1838; --paper:#fff; --paper-tint:#F0F8FC;
+  --cyan:#11C4FD; --teal:#8AF0E6; --blue:#00BFFF; --peri:#8098FC;
   --crimson:#E11D48; --grey:#586470; --line:#CCD0DC;
-  --font-display:Figtree,"Gilroy","Hanken Grotesk",system-ui,sans-serif;
-  --font-body:Inter,system-ui,-apple-system,sans-serif;
+  --font-display:Roboto,system-ui,sans-serif;
+  --font-body:"Wix Madefor Text",system-ui,-apple-system,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}

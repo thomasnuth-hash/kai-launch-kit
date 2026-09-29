@@ -82,7 +82,7 @@
     <span style="font:900 34px/1 var(--font-display)">Kai</span>
     <nav>
       <a class="ghost" href="PUBLISHING.md">Publishing guide</a>
-      <a class="cta" href="kai-tile-generator.html">Tile generator →</a>
+      <a class="cta" href="tile-maker/kai-social-tile-maker.html">Tile Maker →</a>
     </nav>
   </header>
 
@@ -98,20 +98,26 @@
   <div class="grid" id="products"></div>
 
   <h2>Social tiles</h2>
-  <a class="big" href="kai-tile-generator.html">
+  <a class="big" href="tile-maker/kai-social-tile-maker.html">
     <div>
-      <b>Tile generator →</b>
-      <span>Eight presets, five formats, three art options, light or dark ground.
-            Editable copy with <code style="color:var(--teal)">*asterisk*</code> emphasis,
-            tiles saved in your browser, PNG out at full size.<br>
+      <b>Social Tile Maker →</b>
+      <span>Blog thumbnails, stat tiles, announcements and carousels, brand-locked.
+            Eight categories across Editorial and Announcements, animated stat tiles,
+            and export to PNG, GIF, SVG or PDF. Paste a blog post and it finds the
+            stats for you.<br>
             <b style="font:600 13px var(--font-body);color:var(--teal)">Self-contained —
-            one file, no server. Bookmark it.</b></span>
+            one file, no server.</b></span>
     </div>
   </a>
   <p class="note" style="margin-top:12px">
-    <a style="color:var(--teal)" href="tiles.html">tiles.html</a> is the same tool built
-    as modules against <code>lib/</code>. Edit that one, then run
-    <code>python3 tools/build_standalone.py</code> to refresh the single file.
+    Before changing it, run the render suite:
+    <a style="color:var(--teal)" href="tile-maker/rendertest.html">tile-maker/rendertest.html</a>
+    — every category × shape × variant through the render path with the layout
+    asserted numerically. Baseline is 1054/1054 clean.
+    <br><br>
+    <a style="color:var(--teal)" href="kai-tile-generator.html">kai-tile-generator.html</a>
+    is the earlier, simpler generator I wrote before this one surfaced. Superseded —
+    kept only because the seven cuts share its render engine.
   </p>
 
   <h2>Copy still in flight</h2>
@@ -132,8 +138,8 @@
   <h2>Design resources</h2>
   <div class="sw" id="sw"></div>
   <table>
-    <tr><td>Display</td><td>Figtree — substituted for the headline face in your PDFs (Gilroy, Hanken Grotesk as fallbacks)</td></tr>
-    <tr><td>Body</td><td>Inter</td></tr>
+    <tr><td>Display</td><td>Roboto — the real brand face, same as the tile maker</td></tr>
+    <tr><td>Body</td><td>Wix Madefor Text</td></tr>
     <tr><td>Motifs</td><td>relay rail · cyan ring node · rounded pill and card · Sankey ribbon · isometric block · gradient frame · stat block</td></tr>
     <tr><td>Wordmark</td><td>kai.security</td></tr>
     <tr><td>Files</td><td><a style="color:var(--teal)" href="brand/brand-notes.md">brand/brand-notes.md</a> ·
@@ -142,11 +148,10 @@
   </table>
 
   <p class="note">
-    <b>Two things to confirm.</b> The emphasis red is approximated at
-    <code>#E11D48</code> — the CTEM PDF rasterises to <code>#C43E64</code>, which is a
-    colour-managed render rather than the source value. And the display face is a
-    substitute. Both are single-token swaps in <code>brand/tokens.css</code> and
-    <code>lib/kai.js</code>.
+    <b>These are the real values.</b> The palette, the two faces and the mark all
+    come from <code>brand/design-language.json</code> and the authored
+    <code>LOGO_SVG</code>, both lifted out of the tile maker — so the cuts and the
+    tiles draw from one source. Nothing here is sampled or substituted any more.
   </p>
 </div>
 
@@ -204,9 +209,10 @@ dReset.onclick = () => { resetCopy('descriptor'); syncCopy(); };
 syncCopy();
 
 const SW = [
-  ['ink','#080844','ground'],['cyan','#00BCFC','accent'],['teal','#74E8E8','gradient'],
-  ['blue','#1C58D8','handoff'],['periwinkle','#8098FC','auto'],['crimson','#E11D48','emphasis*'],
-  ['grey','#586470','body'],['line','#CCD0DC','hairline'],['tint','#F0F8FC','section'],
+  ['ink','#080943','ground'],['deep','#027FA8','gradient start'],['blue','#00BFFF','handoff'],
+  ['cyan','#11C4FD','accent'],['mint','#8AF0E6','gradient end'],['seafoam','#50C7AC','auto'],
+  ['lime','#BEFF78','news'],['acid','#D6FF20','strip end'],['grey','#586470','body'],
+  ['line','#CCD0DC','hairline'],['tint','#F0F8FC','section'],
 ];
 const sw = document.getElementById('sw');
 SW.forEach(([n,hex,role]) => {

@@ -1,30 +1,32 @@
-/* Kai — design tokens. Sampled from logo-kai.png and the Relay Track marketecture export. */
+/* Kai — design tokens.
+   The real brand values, from brand/design-language.json and the authored
+   LOGO_SVG, both lifted out of the tile maker. The tiles and the video cuts
+   draw from this one source. */
 :root{
   /* ground */
-  --ink:        #080844;  /* wordmark navy, the one-record rail, dark ground */
-  --ink-2:      #0C1838;  /* secondary dark used in slide bodies */
+  --ink:        #080943;  /* wordmark navy, the one-record rail, dark ground */
+  --ink-2:      #0C1838;
   --paper:      #FFFFFF;
-  --paper-tint: #F0F8FC;  /* pale section ground */
+  --paper-tint: #F0F8FC;
 
-  /* accent — the mark's gradient */
-  --cyan:       #00BCFC;  /* primary accent: continuous, live, "runs always" */
-  --cyan-soft:  #56BCF9;
-  --teal:       #74E8E8;  /* far end of the mark gradient */
+  /* the gradient family */
+  --deep:       #027FA8;  /* gradient start */
+  --blue:       #00BFFF;
+  --cyan:       #11C4FD;  /* primary accent */
+  --mint:       #8AF0E6;  /* gradient end */
+  --seafoam:    #50C7AC;
+  --lime:       #BEFF78;  /* news */
+  --acid:       #D6FF20;  /* far end of the brand strip */
 
-  /* handoff */
-  --blue:       #1C58D8;  /* stat blue, manual-remediation handoff */
-  --periwinkle: #8098FC;  /* auto-remediation handoff */
+  /* emphasis, text, rules */
+  --crimson:    #E11D48;  /* not a brand token — used only for the "without Kai" side */
+  --grey:       #586470;
+  --line:       #CCD0DC;
 
-  /* emphasis */
-  --crimson:    #E11D48;  /* "without Kai" / alert. APPROXIMATED — see notes */
+  /* the mark's own gradient, along the bounding-box diagonal */
+  --grad-mark:  linear-gradient(135deg, #00BFFF, #11C4FD 55%, #8AF0E6);
+  --grad-strip: linear-gradient(90deg, #00BFFF, #11C4FD 45%, #8AF0E6 75%, #D6FF20);
 
-  /* text + rules */
-  --grey:       #586470;  /* body */
-  --line:       #CCD0DC;  /* hairlines, source feeds */
-
-  --grad-mark: linear-gradient(135deg, var(--teal), var(--cyan));
-  --grad-frame: linear-gradient(120deg, #74E8E8, #00BCFC 40%, #1C58D8 75%, #8098FC);
-
-  --font-display: Figtree, "Gilroy", "Hanken Grotesk", system-ui, sans-serif;
-  --font-body: Inter, system-ui, -apple-system, sans-serif;
+  --font-display: Roboto, system-ui, sans-serif;
+  --font-body: "Wix Madefor Text", system-ui, -apple-system, sans-serif;
 }

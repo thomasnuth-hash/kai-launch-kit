@@ -38,7 +38,7 @@ HEADER = r"""/* Kai — social tile generator. Self-contained: no imports, no se
 ALIASES = "\nconst setCopy = set, resetCopy = reset;\n"
 
 js = "\n\n".join(strip_module((ROOT / f).read_text())
-                 for f in ("lib/copy.js", "lib/kai.js", "lib/scenes.js", "lib/tileart.js"))
+                 for f in ("lib/copy.js", "lib/mark.js", "lib/kai.js", "lib/scenes.js", "lib/tileart.js"))
 
 # Everything lands in one scope, so a top-level name declared twice is a
 # SyntaxError at load. Catch it here rather than in the browser.

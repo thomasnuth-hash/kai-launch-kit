@@ -16,18 +16,20 @@ of what to edit for what, are in [PUBLISHING.md](PUBLISHING.md).
 ## What is here
 
 ```
-index.html        the hub: every cut, the generator, the design resources
+index.html        the hub: the tile maker, every cut, the design resources
+tile-maker/       the Social Tile Maker — the main tool, see its own README
 kai-tile-generator.html   the generator, self-contained — bookmark this one
 tiles.html        the same generator, as modules against lib/
 cuts/*.html       seven video cuts, one file each
 lib/kai.js        the render engine: tokens, motion, primitives, the runner
 lib/scenes.js     reusable scenes — skyline, landmark cues, relay, Sankey, rings
 lib/tileart.js    the three art options a tile can use
-lib/logo.js       the supplied lockup, inlined as a data URI
+lib/mark.js       the Kai mark, traced from the artwork (generated)
 brand/            tokens.css and brand-notes.md
 assets/           the files you sent, unchanged
 tools/build_cuts.py       regenerates cuts/ from one shared shell
 tools/build_standalone.py flattens the generator into the single file
+tools/trace_mark.py       re-traces lib/mark.js from assets/logo-kai.png
 build.command             double-click: runs both of the above
 preview.command           double-click: serves the folder and opens a browser
 PUBLISHING.md             how to publish and how to update it
@@ -54,6 +56,10 @@ otherwise (Chrome). Still @2x writes a 2160×3840 PNG of the current frame. Ask
 and I will add a GIF export.
 
 ## The tile generator
+
+> **Superseded.** `tile-maker/kai-social-tile-maker.html` is the tool to use —
+> more capable, and it carries the real brand SVGs. What follows describes the
+> earlier generator, kept because the seven video cuts share its render engine.
 
 **`kai-tile-generator.html` is the one to keep.** Everything is inlined — styles,
 engine, scenes, art — so it is a single file with no imports and no module
@@ -103,15 +109,23 @@ that is the version everyone gets.
 
 Adding another editable line is two lines in `lib/copy.js`.
 
-## Two things to confirm
+## The brand
 
-- **The emphasis red is approximated** at `#E11D48`. Your CTEM PDF rasterises to
-  `#C43E64`, which is a colour-managed render rather than the source value.
-- **The display face is a substitute.** Figtree stands in for the headline face
-  in your PDFs, with Gilroy and Hanken Grotesk as fallbacks.
+Palette, both typefaces and the mark all come from the tile maker, which is
+brand-locked to the marketing site — so the cuts and the tiles draw from one
+source.
 
-Both are single-token swaps: `--crimson` in `brand/tokens.css` plus `K.crimson`
-and `K.display` in `lib/kai.js`.
+- Ink `#080943`, and the gradient family `#027FA8 · #00BFFF · #11C4FD ·
+  #8AF0E6 · #50C7AC · #BEFF78 · #D6FF20`
+- **Roboto** for display and numerals, **Wix Madefor Text** for body
+- The mark is the authored vector from `LOGO_SVG`, not a trace, with the
+  brand's own gradient
+
+`#E11D48` is the one colour on screen the brand doesn't define. It is used for
+the "without Kai" side of the comparison cut, which needs a negative. Say the
+word and it goes.
+
+See `brand/README.md` for how the token files work.
 
 ## Assumption worth flagging
 

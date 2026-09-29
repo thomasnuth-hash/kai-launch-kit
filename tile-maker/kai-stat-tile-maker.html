@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kai Stat Tile Maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Wix+Madefor+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --kai-deep:#027FA8; --kai-blue:#00BFFF; --kai-mint:#8AF0E6; --kai-navy:#080943;
+    --ink:#101828; --muted:#667085; --line:#E4E7EC;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#F5F7FA;color:var(--ink);font:400 14px/1.5 "Wix Madefor Text",system-ui,sans-serif}
+  header{padding:20px 28px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:14px}
+  header h1{margin:0;font:600 18px/1 "Wix Madefor Text",sans-serif}
+  header span{color:var(--muted);font-size:13px}
+  .wrap{display:grid;grid-template-columns:392px 1fr;gap:28px;padding:28px;align-items:start}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
+  .panel h2{margin:0 0 14px;font:600 13px/1 "Wix Madefor Text",sans-serif;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  label{display:block;margin:0 0 12px}
+  label>span{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+  input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:7px;font:400 14px/1.4 "Wix Madefor Text",sans-serif;background:#fff}
+  textarea{resize:vertical;min-height:52px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .check{display:flex;align-items:center;gap:8px;margin:2px 0 12px}
+  .check input{width:auto}
+  button{appearance:none;border:0;border-radius:8px;padding:11px 16px;font:600 14px/1 "Wix Madefor Text",sans-serif;cursor:pointer}
+  .primary{background:var(--kai-navy);color:#fff;width:100%}
+  .primary:disabled{opacity:.5;cursor:progress}
+  .ghost{background:#EEF2F6;color:var(--ink);width:100%;margin-top:8px}
+  canvas{width:100%;height:auto;display:block;border-radius:10px;box-shadow:0 8px 28px rgba(16,24,40,.14)}
+  .stage{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;position:sticky;top:28px}
+  .bar{display:flex;gap:10px;align-items:center;margin-top:14px}
+  .bar button{flex:0 0 auto;margin:0}
+  .status{color:var(--muted);font-size:13px;min-height:19px}
+  .presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .presets button{background:#EEF2F6;color:var(--ink);font-size:12px;padding:6px 9px;border-radius:999px}
+  .note{font-size:12px;color:var(--muted);line-height:1.5;margin:14px 0 0}
+  .warn{font-size:12px;color:#B54708;line-height:1.5;margin:8px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>Kai Stat Tile Maker</h1>
+  <span>1200&times;630 animated tile &middot; LinkedIn &amp; X</span>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <h2>Stat</h2>
+    <div class="presets" id="presets"></div>
+    <div class="row3">
+      <label><span>Prefix</span><input id="prefix" value="" placeholder="$"></label>
+      <label><span>Start</span><input id="from" value="0"></label>
+      <label><span>End</span><input id="to" value="77"></label>
+    </div>
+    <div class="row3">
+      <label><span>Suffix</span><input id="suffix" value="%"></label>
+      <label><span>Decimals</span><input id="decimals" type="number" min="0" max="2" value="0"></label>
+      <label><span>Separators</span><select id="grouping"><option value="1">1,000</option><option value="0">1000</option></select></label>
+    </div>
+
+    <h2 style="margin-top:20px">Copy</h2>
+    <label><span>Eyebrow</span><input id="eyebrow" value="Research"></label>
+    <label><span>Headline (white)</span><textarea id="head">of CISOs say vulnerability management contributes to burnout.</textarea></label>
+    <label><span>Emphasis (navy, optional)</span><textarea id="emph"></textarea></label>
+    <label><span>Source line</span><input id="source" value="Kai 2026 State of Autonomous Defense Report, n=500 security leaders"></label>
+
+    <h2 style="margin-top:20px">Motion</h2>
+    <div class="row">
+      <label><span>Data reveal</span><select id="reveal">
+        <option value="none">None — number only</option>
+        <option value="bar">Progress bar (bottom edge)</option>
+        <option value="ring">Ring (right side)</option>
+        <option value="clock">Clock collapse (scene)</option>
+      </select></label>
+      <label><span>Scale max</span><input id="scalemax" value="" placeholder="auto"></label>
+    </div>
+    <div class="row" id="clockFields">
+      <label><span>Before value</span><input id="beforeLabel" value="3 weeks"></label>
+      <label><span>Collapses to (% of track)</span><input id="collapsePct" type="number" min="2" max="80" value="12"></label>
+    </div>
+    <label><span>Ambient drift</span><select id="ambient">
+      <option value="0">Off — static background (smallest file)</option>
+      <option value="1">Subtle — watermark breathes</option>
+      <option value="2">Medium — more movement</option>
+    </select></label>
+    <div class="row">
+      <label><span>Count (s)</span><input id="dur" type="number" min="0.4" max="6" step="0.1" value="1.6"></label>
+      <label><span>Hold (s)</span><input id="hold" type="number" min="0.5" max="10" step="0.5" value="4"></label>
+    </div>
+    <div class="row">
+      <label><span>Frame rate</span><select id="fps"><option value="25">25 fps</option><option value="20">20 fps</option><option value="12.5">12.5 fps (small file)</option></select></label>
+      <label><span>Size</span><select id="size"><option value="1200">1200&times;630</option><option value="900">900&times;473</option><option value="600">600&times;315</option></select></label>
+    </div>
+    <div class="check"><input type="checkbox" id="loop"><label for="loop" style="margin:0"><span style="color:var(--ink);font-size:13px">Loop forever in feed</span></label></div>
+    <div id="ambientWarn"></div>
+
+    <button class="primary" id="make">Download GIF</button>
+    <button class="ghost" id="png">Download final frame (PNG)</button>
+    <button class="ghost" id="reset">Reset to defaults</button>
+    <p class="note">Brand spec is locked to the blog-thumbnail template in <em>Marketing Site &rsaquo; Sandbox | Blog Images</em>: gradient #027FA8 &rarr; #00BFFF &rarr; #8AF0E6, Roboto Medium, Wix Madefor Text eyebrow, navy #080943.</p>
+  </div>
+
+  <div class="stage">
+    <canvas id="cv" width="1200" height="630"></canvas>
+    <div class="bar">
+      <button class="ghost" id="play">Replay</button>
+      <div class="status" id="status"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ *
+ * Kai brand constants — read from Figma node 3595:18497
+ * ------------------------------------------------------------------ */
+const BASE_W = 1200, BASE_H = 630;
+const GRAD = {
+  x0: 154, y0: -1626, x1: 2081, y1: -895,            // Figma gradientTransform, solved
+  stops: [[0, '#027FA8'], [0.615, '#00BFFF'], [0.769, '#8AF0E6'], [1, '#8AF0E6']]
+};
+const NAVY = '#080943', WHITE = '#ffffff', EYEBROW_FILL = '#F8F8F8';
+const AMBIENT_PERIOD = 4;                             // seconds per drift cycle
+
+const LOGO_SVG = `<svg width="244" height="102" viewBox="0 0 244 102" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M185.585 42.7422C193.431 38.0962 205.381 41.1391 209.172 49.5938L209.573 41.4893H220.092V86.6396H209.573L209.35 78.8252C206.351 84.1675 201.189 87.7363 194.953 87.7363C191.328 87.7363 187.969 86.8152 184.879 84.9746C181.789 83.1339 179.291 80.4594 177.39 76.9531C173.474 69.5038 173.534 58.9276 177.39 51.4688C179.291 47.9048 182.375 44.6429 185.585 42.7422ZM136.45 53.5391L160.432 26.8477H174.338L149.49 53.4463L176.389 86.5508H161.503L141.615 61.8721L136.45 67.3994V86.5508H124.949V26.8477H136.45V53.5391ZM242.755 86.5508H232.236V50.7295H227.178V41.6387H242.755V86.5508ZM196.694 50.7217C194.502 50.7217 192.559 51.3174 190.864 52.5078C189.222 53.6406 187.925 55.2268 186.979 57.2666C186.031 59.2514 185.559 61.546 185.559 64.1523C185.559 66.7586 186.034 69.0821 186.979 71.1221C187.925 73.1043 189.22 74.6905 190.864 75.8809C192.557 77.0136 194.5 77.5801 196.694 77.5801C198.889 77.58 200.956 77.0136 202.898 75.8809C204.891 74.6906 206.634 73.1042 208.13 71.1221C209.626 69.0821 210.747 66.7587 211.494 64.1523C210.747 61.546 209.626 59.249 208.13 57.2666C206.634 55.2268 204.891 53.6405 202.898 52.5078C200.954 51.3175 198.886 50.7217 196.694 50.7217ZM236.916 22.4385C240.801 22.4386 243.951 25.5872 243.951 29.4707C243.951 33.3541 240.801 36.5018 236.916 36.502C233.031 36.502 229.881 33.3542 229.881 29.4707C229.881 25.5871 233.031 22.4385 236.916 22.4385Z" fill="white"/><path d="M108.805 44.0738C104.685 32.6272 86.5164 28.3317 65.8261 32.9166C68.4671 17.6791 65.1563 4.83331 56.4701 1.07357C47.406 -2.84881 35.1291 4.26647 25.6416 17.691C17.4865 16.5813 10.3577 18.2148 5.60912 22.9647C-6.0123 34.5836 1.00646 60.4402 21.2877 80.717C41.569 100.994 67.4313 108.011 79.0527 96.3921C83.263 92.1827 85.0237 86.1054 84.5979 79.1026C102.372 69.4497 112.79 55.1522 108.802 44.0738H108.805ZM27.4716 30.1063C33.7584 31.2304 40.7317 34.3564 47.4275 39.2211C29.5361 47.6638 17.7879 60.8252 18.1922 71.9945C15.4411 64.8313 16.666 52.6744 22.0221 40.3069C23.6297 36.595 25.4789 33.1677 27.4716 30.1087V30.1063ZM23.235 77.823C23.1106 77.7704 22.9886 77.713 22.869 77.6532C22.3618 76.9668 21.9552 76.2254 21.6681 75.4265C18.3621 66.2424 31.4618 53.1216 50.9249 46.1187C52.066 45.7074 53.2047 45.3295 54.3363 44.9779C54.341 44.9827 54.3482 44.9874 54.353 44.9946C53.5756 47.6327 52.5995 50.3305 51.4273 53.0379C43.9779 70.2413 31.3542 81.3388 23.2326 77.8254L23.235 77.823ZM60.1183 51.1437C66.771 59.1535 70.9072 67.821 72.0507 75.405C69.2063 76.8663 66.1395 78.2033 62.8956 79.3704C48.6978 84.4791 35.0358 84.9192 27.3999 81.2192C38.3754 81.3316 51.9034 69.2392 60.1183 51.1413V51.1437ZM50.2145 15.5194C54.9248 17.5571 57.0849 24.0649 56.6161 32.5267C49.7863 26.9541 42.6 22.8117 35.7176 20.2765C40.8681 15.6964 46.1142 13.7448 50.2145 15.5194ZM10.4653 34.0287C12.6279 31.8666 15.422 30.5297 18.6348 29.9604C18.4218 30.4268 18.2113 30.898 18.0056 31.3716C12.3815 44.3561 10.7715 57.343 12.8695 66.8093C5.03019 53.9755 3.63313 40.8618 10.4677 34.0287H10.4653ZM32.6938 87.519C42.8321 90.5827 57.116 89.8532 71.754 84.7565C71.0747 87.3874 69.8283 89.6906 67.9839 91.5346C60.7068 98.8101 46.296 96.7533 32.6938 87.5166V87.519ZM82.5597 68.67C79.8134 60.0288 74.4381 50.7754 66.8021 42.2585C79.5766 40.6968 89.7794 43.4664 92.1525 50.065C94.1356 55.5731 90.2148 62.497 82.5597 68.67Z" fill="white"/></svg>`;
+
+const MARK_SVG = `<svg width="710" height="630" viewBox="0 0 710 630" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M453.012 -67.6357C512.157 -98.5851 570.663 -106.882 620.327 -86.4561C667.917 -66.8784 700.814 -23.634 718.19 34.6299C735.567 92.8956 737.411 166.153 722.909 245.674L722.812 246.2L723.337 246.09C836.965 222.159 943.651 221.409 1027.57 241.564C1111.27 261.667 1172.25 302.547 1194.97 361.89H1194.94L1195.13 362.377C1216.97 420.061 1199.38 486.18 1151.87 550.516C1104.36 614.847 1026.96 677.341 929.353 727.725L929.144 727.833L929.158 728.067C933.832 801.121 914.505 864.468 868.342 908.333C804.627 968.876 701.817 980.911 587.016 951.304C472.227 921.7 345.529 850.479 234.146 744.643C122.763 638.805 47.8135 518.42 16.6611 409.355C-14.2504 301.134 -2.02483 204.137 60.3945 143.5L61.8779 142.075C113.946 92.5744 192.149 75.519 281.69 87.0996L281.899 87.126L282.025 86.957C334.124 16.8947 393.868 -36.6874 453.012 -67.6357ZM788.283 786.745C627.553 839.934 470.739 847.551 359.441 815.622C359.434 815.617 359.426 815.612 359.418 815.607L358.863 815.249V816.205L359.123 816.28C359.129 816.282 359.136 816.283 359.143 816.285C433.869 864.492 510.825 893.975 579.117 901.908C647.441 909.845 707.137 896.216 747.22 858.129C767.537 838.823 781.263 814.713 788.743 787.182L788.919 786.535L788.283 786.745ZM660.645 435.993L660.224 435.898C615.112 530.355 555.415 609.13 491.94 664.141C428.459 719.157 361.234 750.374 301.059 749.788L300.905 750.476C342.927 769.827 401.493 778.339 469.039 775.35C536.591 772.36 613.152 757.867 691.181 731.183C726.836 718.99 760.547 705.023 791.813 689.756L792.053 689.639L792.011 689.376C779.433 610.094 733.948 519.522 660.819 435.842L660.645 435.993ZM596.917 371.346C584.48 375.018 571.963 378.966 559.42 383.264C452.458 419.841 362.963 472.401 304.743 527.828C247.003 582.798 219.921 640.7 237.322 688.653L237.741 689.784C240.909 698.163 245.396 705.936 250.988 713.13L251.041 713.198L251.118 713.234C252.271 713.782 253.447 714.309 254.644 714.803L254.617 714.829L255.131 715.04C299.942 733.464 357.073 713.552 413.162 666.687C469.273 619.804 524.441 545.872 565.384 456.008C578.269 427.722 589 399.535 597.547 371.972L597.599 371.804L597.497 371.659C597.445 371.585 597.385 371.53 597.344 371.495C597.287 371.446 597.285 371.448 597.267 371.43L597.116 371.287L596.917 371.346ZM301.483 216.306C279.601 248.244 259.295 284.02 241.641 322.764C212.202 387.368 194.113 451.43 187.166 508.702C180.219 565.969 184.409 616.474 199.553 653.951L200.246 653.803C198.03 595.62 229.12 532.19 285.376 472.265C341.625 412.346 422.999 355.969 521.256 311.902L521.839 311.641L521.313 311.278C447.709 260.454 371.041 227.786 301.904 216.037L301.483 215.965V216.306ZM916.21 351.751C867.321 337.929 804.155 334.777 733.945 342.936L733.233 343.019L733.726 343.54C817.596 432.447 876.626 529.035 906.781 619.215L906.941 619.692L907.342 619.386C949.421 587.136 981.259 552.909 999.851 519.528C1018.44 486.147 1023.8 453.577 1012.86 424.687C999.765 390.079 965.09 365.571 916.21 351.751ZM204.689 214.513C169.332 220.467 138.561 234.455 114.739 257.091L114.086 257.712H114.118C76.9465 293.468 62.1957 345.406 67.3896 405.043C72.6135 465.023 98.011 532.819 141.101 599.864L141.754 599.588C118.725 500.833 136.391 365.297 198.163 229.753C200.422 224.81 202.735 219.892 205.073 215.023L205.374 214.397L204.689 214.513ZM551.867 63.7314C506.621 45.1195 448.831 65.6155 392.214 113.467L391.733 113.873L392.327 114.081C467.907 140.541 546.833 183.779 621.848 241.951L622.388 242.37L622.427 241.688C625.005 197.472 620.358 158.337 608.575 127.58C596.791 96.82 577.86 74.4187 551.867 63.7314Z" stroke="white" stroke-width="0.7197"/></svg>`;
+
+const PRESETS = [
+  {n:'77% burnout', to:'77', suffix:'%', head:'of CISOs say vulnerability management contributes to burnout.', eyebrow:'Research', reveal:'ring', source:'Kai 2026 State of Autonomous Defense Report, n=500 security leaders'},
+  {n:'52% trust gap', to:'52', suffix:'%', head:'name lack of trust in automated decisions as the biggest barrier to autonomous remediation.', eyebrow:'Research', reveal:'ring', source:'Kai 2026 State of Autonomous Defense Report, n=500 security leaders'},
+  {n:'17 → 93%', from:'17', to:'93', suffix:'%', head:'asset classification and ownership across 150,000 assets.', emph:'In under six hours.', eyebrow:'Customer outcome', reveal:'bar', source:'Kai customer results, as published in Kai product materials'},
+  {n:'10M findings', to:'10', suffix:'M', head:'infrastructure findings triaged and investigated in 3.5 hours.', eyebrow:'Customer outcome', reveal:'none', source:'Kai customer results, as published in Kai product materials'},
+  {n:'20 a day', to:'20', head:'vulnerabilities a day is what a skilled analyst can investigate.', emph:'That is arithmetic, not skill.', eyebrow:'Blog', reveal:'none', source:'“What a Security Team Does When the Backlog Is Gone,” kai.security'},
+  {n:'3 weeks → 18 min', to:'18', suffix:' min', head:'mean time to detection, down from three weeks.', eyebrow:'Customer outcome', reveal:'clock', before:'3 weeks', collapse:'6', source:'Kai customer results, as published in Kai product materials'}
+];
+
+/* ------------------------------------------------------------------ *
+ * Rendering
+ * ------------------------------------------------------------------ */
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d', {willReadFrequently:true});
+let logoImg = null, markImg = null, ready = false;
+
+function svgToImage(svg){
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => res(img);
+    img.onerror = rej;
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  });
+}
+
+function state(){
+  const v = id => document.getElementById(id).value;
+  const s = {
+    prefix: v('prefix'), suffix: v('suffix'),
+    from: parseFloat(v('from')) || 0, to: parseFloat(v('to')) || 0,
+    decimals: Math.max(0, Math.min(2, parseInt(v('decimals'), 10) || 0)),
+    grouping: v('grouping') === '1',
+    eyebrow: v('eyebrow'), head: v('head'), emph: v('emph'), source: v('source'),
+    reveal: v('reveal'), ambient: parseInt(v('ambient'), 10) || 0,
+    beforeLabel: v('beforeLabel'), collapsePct: parseFloat(v('collapsePct')) || 12,
+    dur: Math.max(0.4, parseFloat(v('dur')) || 1.6),
+    hold: Math.max(0.5, parseFloat(v('hold')) || 4),
+    fps: parseFloat(v('fps')) || 25,
+    size: parseInt(v('size'), 10) || 1200,
+    loop: document.getElementById('loop').checked
+  };
+  const sm = parseFloat(v('scalemax'));
+  s.scaleMax = isFinite(sm) && sm > 0 ? sm : (s.suffix.trim() === '%' ? 100 : Math.max(Math.abs(s.from), Math.abs(s.to)) || 1);
+  return s;
+}
+
+const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+function fmt(n, s){
+  const opts = {minimumFractionDigits: s.decimals, maximumFractionDigits: s.decimals, useGrouping: s.grouping};
+  return s.prefix + n.toLocaleString('en-US', opts) + s.suffix;
+}
+
+function wrap(ctx, text, maxW){
+  const out = [];
+  for (const para of String(text).split('\n')) {
+    const words = para.split(/\s+/).filter(Boolean);
+    if (!words.length) continue;
+    let line = words[0];
+    for (let i = 1; i < words.length; i++) {
+      const t = line + ' ' + words[i];
+      if (ctx.measureText(t).width > maxW) { out.push(line); line = words[i]; }
+      else line = t;
+    }
+    out.push(line);
+  }
+  return out;
+}
+
+function roundRect(c, x, y, w, h, r){
+  c.beginPath();
+  c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + h, r);
+  c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r);
+  c.arcTo(x, y, x + w, y, r);
+  c.closePath();
+  c.fill();
+}
+
+/**
+ * Draws one frame.
+ *   progress — 0..1, drives the counter and the data reveal
+ *   amb      — 0..1, phase of the ambient drift cycle
+ */
+function drawFrame(c, W, s, progress, amb){
+  const S = W / BASE_W, H = Math.round(BASE_H * S);
+  c.save();
+  c.clearRect(0, 0, W, H);
+
+  // background gradient
+  const g = c.createLinearGradient(GRAD.x0*S, GRAD.y0*S, GRAD.x1*S, GRAD.y1*S);
+  for (const [p, col] of GRAD.stops) g.addColorStop(p, col);
+  c.fillStyle = g;
+  c.fillRect(0, 0, W, H);
+
+  // watermark — drawn oversized so the drift never exposes a cut edge,
+  // and dimmed when a graphic sits on top of it
+  if (markImg) {
+    const a = s.ambient ? (s.ambient === 2 ? 20 : 10) : 0;
+    const dx = a ? Math.sin(amb * Math.PI * 2) * a : 0;
+    const dy = a ? Math.cos(amb * Math.PI * 2) * a * 0.65 : 0;
+    const pulse = a ? 1 + Math.sin(amb * Math.PI * 2) * 0.012 : 1;
+    const bw = 740 * pulse, bh = 660 * pulse;
+    c.globalAlpha = (s.reveal === 'ring' || s.reveal === 'clock') ? 0.5 : 1;
+    c.drawImage(markImg, (491 - 15 + dx)*S, (-15 + dy)*S, bw*S, bh*S);
+    c.globalAlpha = 1;
+  }
+  if (logoImg) c.drawImage(logoImg, 40*S, 51*S, 244*S, 102*S);
+
+  const M = 40*S;
+  const ring = s.reveal === 'ring';
+  const maxW = (ring || s.reveal === 'clock' ? 640 : 1120) * S;
+
+  const val = s.from + (s.to - s.from) * easeOutCubic(progress);
+  const pct = Math.max(0, Math.min(1, val / s.scaleMax));
+
+  // ---- data reveal ----
+  if (ring) {
+    const cx = 946*S, cy = 292*S, r = 148*S, lw = 22*S;
+    c.lineWidth = lw; c.lineCap = 'butt';
+    c.strokeStyle = 'rgba(255,255,255,0.32)';
+    c.beginPath(); c.arc(cx, cy, r, 0, Math.PI*2); c.stroke();
+    if (pct > 0.001) {
+      c.strokeStyle = NAVY; c.lineCap = 'round';
+      c.beginPath(); c.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + Math.PI*2*pct); c.stroke();
+    }
+  } else if (s.reveal === 'clock') {
+    // A time axis that collapses: the old duration stays marked at the far end,
+    // the new one lands where the bar stops. Both values are labelled, because
+    // the track is a diagram of the change, not a measured scale.
+    const sx = 700*S, sw = 452*S, cy = 300*S, th = 16*S;
+    const floor = Math.max(0.02, Math.min(0.8, s.collapsePct / 100));
+    const cur = 1 - (1 - floor) * easeOutCubic(progress);
+    const edge = Math.max(th, sw * cur);
+
+    c.fillStyle = 'rgba(255,255,255,0.26)';                    // time ticks
+    for (let i = 0; i <= 8; i++) c.fillRect(sx + i*sw/8 - 1*S, cy - 42*S, 2*S, 14*S);
+
+    c.fillStyle = 'rgba(255,255,255,0.30)';                    // full span
+    roundRect(c, sx, cy - th/2, sw, th, th/2);
+    c.fillStyle = NAVY;                                        // collapsing span
+    roundRect(c, sx, cy - th/2, edge, th, th/2);
+    c.fillStyle = 'rgba(255,255,255,0.92)';                    // leading edge
+    c.fillRect(sx + edge - 2*S, cy - th/2 - 7*S, 3*S, th + 14*S);
+
+    c.fillStyle = 'rgba(255,255,255,0.45)';                    // "before" marker
+    c.fillRect(sx + sw - 1.5*S, cy - 28*S, 3*S, 56*S);
+    c.font = `500 ${19*S}px "Wix Madefor Text", sans-serif`;
+    c.textAlign = 'right'; c.textBaseline = 'alphabetic';
+    c.fillStyle = 'rgba(255,255,255,0.62)';
+    c.fillText(s.beforeLabel.trim().toUpperCase(), sx + sw, cy + 58*S);
+    c.textAlign = 'left';
+
+    const fade = Math.max(0, Math.min(1, (easeOutCubic(progress) - 0.45) / 0.55));
+    if (fade > 0) {                                            // "after" value
+      c.globalAlpha = fade;
+      c.fillStyle = NAVY;
+      c.font = `500 ${21*S}px "Wix Madefor Text", sans-serif`;
+      c.fillText(fmt(s.to, s).toUpperCase(), sx + edge + 16*S, cy + 58*S);
+      c.globalAlpha = 1;
+    }
+  } else if (s.reveal === 'bar') {
+    const by = 606*S, bh = 12*S;
+    c.fillStyle = 'rgba(255,255,255,0.32)';
+    roundRect(c, M, by, 1120*S, bh, bh/2);
+    if (pct > 0.004) {
+      c.fillStyle = NAVY;
+      roundRect(c, M, by, Math.max(bh, 1120*S*pct), bh, bh/2);
+    }
+  }
+
+  // ---- measure the stacked block (eyebrow / number / copy) ----
+  const eyeFont = `500 ${21.6*S}px "Wix Madefor Text", sans-serif`;
+  const srcFont = `400 ${17*S}px "Wix Madefor Text", sans-serif`;
+
+  // The counter is sized against its widest value so the layout never jumps.
+  let numPx = 168;
+  const widest = fmt(Math.max(Math.abs(s.from), Math.abs(s.to)), s);
+  for (; numPx > 88; numPx -= 4) {
+    c.font = `500 ${numPx*S}px Roboto, sans-serif`;
+    if (c.measureText(widest).width <= maxW) break;
+  }
+  const numFont = `500 ${numPx*S}px Roboto, sans-serif`;
+
+  const eyeH = s.eyebrow.trim() ? 22*S : 0;
+  const gap1 = 16*S, gap2 = 22*S;
+  const blockBottom = (s.reveal === 'bar' ? 536 : 556) * S, safeTop = 176*S;
+  let copyPx = 44, headLines = [], emphLines = [], copyLH = 0, copyH = 0, blockH = 0;
+  for (; copyPx >= 26; copyPx -= 2) {
+    c.font = `500 ${copyPx*S}px Roboto, sans-serif`;
+    headLines = s.head.trim() ? wrap(c, s.head.trim(), maxW) : [];
+    emphLines = s.emph.trim() ? wrap(c, s.emph.trim(), maxW) : [];
+    copyLH = copyPx * 1.15 * S;
+    copyH = (headLines.length + emphLines.length) * copyLH;
+    blockH = eyeH + (eyeH ? gap1 : 0) + numPx*S + (copyH ? gap2 : 0) + copyH;
+    if (blockBottom - blockH >= safeTop) break;
+  }
+  const copyFont = `500 ${copyPx*S}px Roboto, sans-serif`;
+  let y = Math.max(safeTop, blockBottom - blockH);
+
+  // eyebrow
+  if (eyeH) {
+    c.font = eyeFont;
+    c.fillStyle = EYEBROW_FILL;
+    c.textBaseline = 'top';
+    let x = M;
+    for (const ch of s.eyebrow.trim().toUpperCase()) { c.fillText(ch, x, y); x += c.measureText(ch).width + 21.6*S*0.2; }
+    y += eyeH + gap1;
+  }
+
+  // number
+  c.font = numFont;
+  c.fillStyle = WHITE;
+  c.textBaseline = 'alphabetic';
+  c.fillText(fmt(val, s), M, y + numPx*0.774*S);
+  y += numPx*S + (copyH ? gap2 : 0);
+
+  // copy
+  c.font = copyFont;
+  c.textBaseline = 'top';
+  for (const ln of headLines) { c.fillStyle = WHITE; c.fillText(ln, M, y); y += copyLH; }
+  for (const ln of emphLines) { c.fillStyle = NAVY;  c.fillText(ln, M, y); y += copyLH; }
+
+  // source
+  if (s.source.trim()) {
+    c.font = srcFont;
+    c.fillStyle = 'rgba(255,255,255,0.78)';
+    c.textBaseline = 'alphabetic';
+    c.fillText(s.source.trim(), M, (s.reveal === 'bar' ? 578 : 598) * S);
+  }
+  c.restore();
+}
+
+/* ------------------------------------------------------------------ *
+ * Timeline — shared by the preview and the encoder so they always match
+ * ------------------------------------------------------------------ */
+function timeline(s){
+  // With ambient drift the whole clip has to loop, so the run time is
+  // rounded up to a whole number of drift cycles.
+  const total = s.ambient
+    ? Math.max(AMBIENT_PERIOD, Math.ceil((s.dur + 0.8) / AMBIENT_PERIOD) * AMBIENT_PERIOD)
+    : s.dur;
+  return {total, loops: !!s.ambient || s.loop};
+}
+
+/* ------------------------------------------------------------------ *
+ * Live preview
+ * ------------------------------------------------------------------ */
+let raf = null;
+function play(){
+  if (!ready) return;
+  const s = state();
+  const {total} = timeline(s);
+  cv.width = BASE_W; cv.height = BASE_H;
+  cancelAnimationFrame(raf);
+  const t0 = performance.now();
+  const step = () => {
+    const el = (performance.now() - t0) / 1000;
+    const p = Math.min(1, el / s.dur);
+    const amb = s.ambient ? (el % AMBIENT_PERIOD) / AMBIENT_PERIOD : 0;
+    drawFrame(ctx, BASE_W, s, p, amb);
+    if (s.ambient) raf = requestAnimationFrame(step);                 // loops forever
+    else if (el < total + s.hold) raf = requestAnimationFrame(step);  // settles and stops
+  };
+  step();
+  updateWarn();
+}
+
+/* ------------------------------------------------------------------ *
+ * GIF encoder (GIF89a, global palette, per-frame dirty rectangles)
+ * ------------------------------------------------------------------ */
+function medianCut(samples, maxColors){
+  let boxes = [samples];
+  const range = box => {
+    const mn = [255,255,255], mx = [0,0,0];
+    for (const p of box) for (let i=0;i<3;i++){ if (p[i]<mn[i]) mn[i]=p[i]; if (p[i]>mx[i]) mx[i]=p[i]; }
+    return [mx[0]-mn[0], mx[1]-mn[1], mx[2]-mn[2]];
+  };
+  while (boxes.length < maxColors) {
+    let bi = -1, bs = -1, bc = 0;
+    for (let i=0;i<boxes.length;i++){
+      if (boxes[i].length < 2) continue;
+      const r = range(boxes[i]);
+      const m = Math.max(r[0], r[1], r[2]);
+      const score = m * Math.log(boxes[i].length + 1);
+      if (score > bs) { bs = score; bi = i; bc = r.indexOf(m); }
+    }
+    if (bi < 0 || bs <= 0) break;
+    const box = boxes[bi];
+    box.sort((a,b) => a[bc] - b[bc]);
+    const mid = box.length >> 1;
+    boxes.splice(bi, 1, box.slice(0, mid), box.slice(mid));
+  }
+  return boxes.filter(b => b.length).map(box => {
+    let r=0,g=0,b=0;
+    for (const p of box){ r+=p[0]; g+=p[1]; b+=p[2]; }
+    const n = box.length;
+    return [Math.round(r/n), Math.round(g/n), Math.round(b/n)];
+  });
+}
+
+function buildPalette(frames, W, H){
+  const samples = [];
+  const perFrame = Math.max(4000, Math.round(160000 / frames.length));
+  const stride = Math.max(1, Math.floor((W*H) / perFrame));
+  for (const f of frames) {
+    const d = f.data;
+    for (let i = 0, px = 0; i < d.length; i += 4, px++) {
+      if (px % stride) continue;
+      samples.push([d[i], d[i+1], d[i+2]]);
+    }
+  }
+  let pal = medianCut(samples, 256);
+  while (pal.length < 256) pal.push(pal[pal.length-1] || [0,0,0]);
+  return pal.slice(0, 256);
+}
+
+function makeMapper(pal){
+  const cache = new Map();
+  return (r, g, b) => {
+    const key = (r << 16) | (g << 8) | b;
+    const hit = cache.get(key);
+    if (hit !== undefined) return hit;
+    let best = 0, bd = Infinity;
+    for (let i = 0; i < pal.length; i++) {
+      const p = pal[i];
+      const dr = r - p[0], dg = g - p[1], db = b - p[2];
+      const d = dr*dr*2 + dg*dg*4 + db*db;   // luma-ish weighting
+      if (d < bd) { bd = d; best = i; }
+    }
+    cache.set(key, best);
+    return best;
+  };
+}
+
+function indexFrame(imgData, map, W, H){
+  const d = imgData.data, out = new Uint8Array(W*H);
+  for (let i = 0, px = 0; px < W*H; i += 4, px++) out[px] = map(d[i], d[i+1], d[i+2]);
+  return out;
+}
+
+/* Follows the classic Weiner/giflib ordering: the code width grows inside
+   output(), one code AFTER the dictionary entry that filled the range. */
+function lzw(minCodeSize, ind){
+  const clear = 1 << minCodeSize, eoi = clear + 1, MAXMAX = 4096;
+  let codeSize = minCodeSize + 1, maxcode = (1 << codeSize) - 1;
+  let next = eoi + 1, clearFlag = false;
+  let dict = new Map();
+  const bytes = [];
+  let cur = 0, curBits = 0;
+  const output = code => {
+    cur |= code << curBits; curBits += codeSize;
+    while (curBits >= 8) { bytes.push(cur & 255); cur >>= 8; curBits -= 8; }
+    if (next > maxcode || clearFlag) {
+      if (clearFlag) { codeSize = minCodeSize + 1; maxcode = (1 << codeSize) - 1; clearFlag = false; }
+      else { codeSize++; maxcode = codeSize === 12 ? MAXMAX : (1 << codeSize) - 1; }
+    }
+  };
+  output(clear);
+  let prefix = ind[0];
+  for (let i = 1; i < ind.length; i++) {
+    const k = ind[i], key = prefix * 4096 + k;
+    const found = dict.get(key);
+    if (found !== undefined) { prefix = found; continue; }
+    output(prefix);
+    prefix = k;
+    if (next < MAXMAX) { dict.set(key, next); next++; }
+    else { dict = new Map(); next = eoi + 1; clearFlag = true; output(clear); }
+  }
+  output(prefix); output(eoi);
+  if (curBits > 0) bytes.push(cur & 255);
+  return bytes;
+}
+
+function subBlocks(bytes, out){
+  for (let i = 0; i < bytes.length; i += 255) {
+    const chunk = bytes.slice(i, i + 255);
+    out.push(chunk.length, ...chunk);
+  }
+  out.push(0);
+}
+
+function dirtyRect(prev, curr, W, H){
+  if (!prev) return {x:0, y:0, w:W, h:H};
+  let x0 = W, y0 = H, x1 = -1, y1 = -1;
+  for (let y = 0; y < H; y++) {
+    const row = y * W;
+    for (let x = 0; x < W; x++) {
+      if (prev[row + x] !== curr[row + x]) {
+        if (x < x0) x0 = x;
+        if (x > x1) x1 = x;
+        if (y < y0) y0 = y;
+        if (y > y1) y1 = y;
+      }
+    }
+  }
+  if (x1 < 0) return null;
+  return {x:x0, y:y0, w:x1 - x0 + 1, h:y1 - y0 + 1};
+}
+
+const tick = () => new Promise(r => setTimeout(r, 0));
+
+async function encodeGIF(frames, delays, W, H, loop, onProgress){
+  const report = async t => { if (onProgress) { onProgress(t); await tick(); } };
+  await report('Building colour palette…');
+  const pal = buildPalette(frames, W, H);
+  const map = makeMapper(pal);
+
+  const indexed = [];
+  for (let i = 0; i < frames.length; i++) {
+    indexed.push(indexFrame(frames[i], map, W, H));
+    if (i % 4 === 0) await report(`Quantising frame ${i+1} of ${frames.length}…`);
+  }
+
+  const out = [];
+  const u16 = n => out.push(n & 255, (n >> 8) & 255);
+  for (const ch of 'GIF89a') out.push(ch.charCodeAt(0));
+  u16(W); u16(H);
+  out.push(0xF7, 0, 0);                       // global table, 256 colours
+  for (const p of pal) out.push(p[0], p[1], p[2]);
+  if (loop) {
+    out.push(0x21, 0xFF, 0x0B);
+    for (const ch of 'NETSCAPE2.0') out.push(ch.charCodeAt(0));
+    out.push(0x03, 0x01, 0, 0, 0);
+  }
+
+  let prev = null;
+  for (let i = 0; i < indexed.length; i++) {
+    const rect = dirtyRect(prev, indexed[i], W, H) || {x:0, y:0, w:1, h:1};
+    const sub = new Uint8Array(rect.w * rect.h);
+    for (let y = 0; y < rect.h; y++)
+      for (let x = 0; x < rect.w; x++)
+        sub[y * rect.w + x] = indexed[i][(rect.y + y) * W + rect.x + x];
+
+    out.push(0x21, 0xF9, 0x04, 0x04);         // GCE, disposal = 1 (leave in place)
+    u16(Math.max(2, Math.round(delays[i] / 10)));
+    out.push(0, 0);
+    out.push(0x2C);
+    u16(rect.x); u16(rect.y); u16(rect.w); u16(rect.h);
+    out.push(0);
+    out.push(8);
+    subBlocks(lzw(8, sub), out);
+    prev = indexed[i];
+    if (i % 4 === 0) await report(`Compressing frame ${i+1} of ${indexed.length}…`);
+  }
+  out.push(0x3B);
+  return new Uint8Array(out);
+}
+
+/* ------------------------------------------------------------------ *
+ * Build + download
+ * ------------------------------------------------------------------ */
+const statusEl = document.getElementById('status');
+const say = t => { statusEl.textContent = t; };
+
+function frameCount(s){
+  const {total} = timeline(s);
+  return s.ambient ? Math.round(total * s.fps) : Math.max(2, Math.round(s.dur * s.fps));
+}
+
+function updateWarn(){
+  const s = state();
+  document.getElementById('clockFields').style.display = s.reveal === 'clock' ? 'grid' : 'none';
+  const host = document.getElementById('ambientWarn');
+  if (!s.ambient) {
+    host.innerHTML = s.reveal === 'clock'
+      ? '<p class="note">The track is a diagram of the change, not a measured axis &mdash; set the collapse ratio for legibility, and keep both the before and after values labelled on the tile.</p>'
+      : '';
+    return;
+  }
+  const n = frameCount(s);
+  const est = (n * s.size * s.size * 0.525 * 0.00006 / 1024).toFixed(1);
+  host.innerHTML = `<p class="warn">Ambient drift animates the background, so every frame carries new pixels &mdash; roughly ${n} frames, around ${est} MB at this size. 900&times;473 at 12.5&nbsp;fps keeps it comfortably under the platform limits. Looping is forced on so the drift never jumps.</p>`;
+}
+
+function renderFrames(s){
+  const W = s.size, H = Math.round(BASE_H * W / BASE_W);
+  const off = document.createElement('canvas');
+  off.width = W; off.height = H;
+  const oc = off.getContext('2d', {willReadFrequently:true});
+  const {total} = timeline(s);
+  const n = frameCount(s);
+  const frames = [], delays = [];
+  for (let i = 0; i < n; i++) {
+    const t = s.ambient ? (i / n) * total : (i / (n - 1)) * s.dur;
+    const p = Math.min(1, t / s.dur);
+    const amb = s.ambient ? (t % AMBIENT_PERIOD) / AMBIENT_PERIOD : 0;
+    drawFrame(oc, W, s, p, amb);
+    frames.push(oc.getImageData(0, 0, W, H));
+    delays.push(1000 / s.fps);
+  }
+  if (!s.ambient) delays[delays.length - 1] = s.hold * 1000;  // settle on the number
+  return {frames, delays, W, H};
+}
+
+function download(blob, name){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
+function slug(s){
+  return (s.prefix + s.to + s.suffix + '-' + s.head).toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48) || 'kai-stat';
+}
+
+document.getElementById('make').addEventListener('click', async () => {
+  const btn = document.getElementById('make');
+  btn.disabled = true;
+  try {
+    const s = state();
+    say('Rendering frames…');
+    await tick();
+    const {frames, delays, W, H} = renderFrames(s);
+    const bytes = await encodeGIF(frames, delays, W, H, timeline(s).loops, say);
+    download(new Blob([bytes], {type:'image/gif'}), slug(s) + '.gif');
+    say(`Done — ${frames.length} frames, ${(bytes.length/1024/1024).toFixed(2)} MB`);
+  } catch (e) {
+    say('Error: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('png').addEventListener('click', () => {
+  const s = state();
+  const W = s.size, H = Math.round(BASE_H * W / BASE_W);
+  const off = document.createElement('canvas');
+  off.width = W; off.height = H;
+  drawFrame(off.getContext('2d'), W, s, 1, 0);
+  off.toBlob(b => download(b, slug(s) + '.png'), 'image/png');
+});
+
+document.getElementById('play').addEventListener('click', play);
+
+/* ------------------------------------------------------------------ *
+ * Fields, presets, persistence
+ * ------------------------------------------------------------------ */
+const FIELDS = ['prefix','from','to','suffix','decimals','grouping','eyebrow','head','emph','source',
+                'reveal','scalemax','beforeLabel','collapsePct','ambient','dur','hold','fps','size'];
+const DEFAULTS = {};
+FIELDS.forEach(id => DEFAULTS[id] = document.getElementById(id).value);
+
+function save(){
+  try {
+    const o = {};
+    FIELDS.forEach(id => o[id] = document.getElementById(id).value);
+    o.loop = document.getElementById('loop').checked;
+    localStorage.setItem('kai-stat-tile', JSON.stringify(o));
+  } catch(e){}
+}
+function restore(){
+  try {
+    const o = JSON.parse(localStorage.getItem('kai-stat-tile') || '{}');
+    FIELDS.forEach(id => { if (o[id] !== undefined) document.getElementById(id).value = o[id]; });
+    if (o.loop !== undefined) document.getElementById('loop').checked = o.loop;
+  } catch(e){}
+}
+FIELDS.concat(['loop']).forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => { save(); play(); });
+  el.addEventListener('change', () => { save(); play(); });
+});
+document.getElementById('reset').addEventListener('click', () => {
+  FIELDS.forEach(id => document.getElementById(id).value = DEFAULTS[id]);
+  save(); play();
+});
+
+function buildPresets(){
+  const host = document.getElementById('presets');
+  PRESETS.forEach(p => {
+    const b = document.createElement('button');
+    b.textContent = p.n;
+    b.addEventListener('click', () => {
+      const set = (id, v) => document.getElementById(id).value = v;
+      set('from', p.from || '0'); set('to', p.to);
+      set('prefix', p.prefix || ''); set('suffix', p.suffix || '');
+      set('eyebrow', p.eyebrow); set('head', p.head); set('emph', p.emph || '');
+      set('source', p.source); set('reveal', p.reveal || 'none'); set('scalemax', '');
+      set('beforeLabel', p.before || '3 weeks'); set('collapsePct', p.collapse || '12');
+      save(); play();
+    });
+    host.appendChild(b);
+  });
+}
+
+async function init(){
+  [logoImg, markImg] = await Promise.all([svgToImage(LOGO_SVG), svgToImage(MARK_SVG)]);
+  if (document.fonts) {
+    try {
+      await Promise.all([
+        document.fonts.load('500 168px Roboto'),
+        document.fonts.load('500 44px Roboto'),
+        document.fonts.load('500 22px "Wix Madefor Text"'),
+        document.fonts.ready
+      ]);
+    } catch(e){}
+  }
+  ready = true;
+  restore();
+  buildPresets();
+  play();
+}
+
+init();
+</script>
+</body>
+</html>

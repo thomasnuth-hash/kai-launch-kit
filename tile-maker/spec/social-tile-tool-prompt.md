@@ -1,0 +1,166 @@
+# Prompt: build a brand-locked social tile generator
+
+Paste everything below into Claude (Cowork, or Claude Code with a Figma connector).
+Fill in the **Brand inputs** block first — the rest is reusable as-is.
+
+---
+
+## Brand inputs
+
+```
+Company:              {{COMPANY}}
+Brand source of truth: {{FIGMA_FILE_URL or brand asset folder}}
+  - Tile/thumbnail frames: {{FIGMA_NODE_ID, e.g. 3025-15}}
+  - Icon library:          {{LIBRARY NAME or icon page}}
+Website:              {{URL}}
+Display font:         {{e.g. Roboto, weights 500/700}}
+Label/UI font:        {{e.g. Wix Madefor Text, weights 400/500}}
+Categories:           {{e.g. Blog, Press, News, Report}}
+Formats needed:       {{e.g. 1200×1200 square, 1920×1080, 1200×630 OG, 1080×1350}}
+Colours to avoid:     {{e.g. none / no purple / no red}}
+```
+
+If any field is unknown, extract it rather than guessing — see Phase 1.
+
+---
+
+## What to build
+
+A **single self-contained HTML file** that runs offline in a browser (no build step, no
+install, no backend) and generates on-brand social tiles as **animated GIF**, **SVG with
+editable text**, and **PNG**. It is a tool a marketer opens and uses, not a one-off image.
+
+Deliver the file to the user's folder. Do not paste the code into chat.
+
+---
+
+## Phase 1 — extract the brand, do not approximate it
+
+**Do this before writing any code.** Every visual value must come from the real source.
+
+1. **Read the existing tiles.** Open the brand file and inspect a recent, approved tile.
+   Pull exact values, not impressions:
+   - background gradient: every stop (position + hex) **and** the gradient transform
+   - type: family, weight, size, line height, letter spacing, case, per text layer
+   - fills per text range (headlines often carry two colours in one text node)
+   - geometry: frame size, margins, logo position and size, element positions
+2. **Export the vectors.** Logo, background watermark/graphic, and the icon set — export
+   as SVG and inline them in the tool. Substitute the fill/stroke colour with a token you
+   can swap at draw time, so a single asset re-tints per theme.
+3. **Collect every category variant.** Colour themes usually differ by an extra gradient
+   fill layered over a base — read the topmost gradient, not the first one.
+4. **Note which categories use dark type vs light type.** Do not assume; read the text
+   fills on the light-background variants.
+
+**Extraction gotchas**
+- MCP responses have a size ceiling. Request small slices — one node, a few properties —
+  and keep returned payloads under a few KB. A metadata dump of a whole page will fail.
+- Word/Figma text often contains U+2028 (line separator) and U+00A0 (nbsp). A raw U+2028
+  in a returned string can break the transport's JSON parsing; return character codes
+  when a read mysteriously fails.
+- `fills`, `fontName` and `fontSize` return a mixed-value symbol on multi-style text.
+  Guard every access, or read `getStyledTextSegments([...])` instead.
+
+---
+
+## Phase 2 — the tool
+
+### Controls
+- **Tile type**: stat (large figure + supporting copy) · headline (thumbnail-style)
+- **Shape toggle**: square · rectangle · portrait — a first-class control, with the exact
+  sizes filtered underneath it
+- **Category**: sets gradient, ink colours, and its own icon
+- **Copy**: eyebrow, headline, emphasis (accent colour), source line
+- **Emphasis mode**: its own line, or inline continuing the sentence
+- **Icon**: locked to the category; only placement is choosable (badge / large accent)
+- **Data reveal** (stat tiles): none · progress bar · ring · before→after collapse
+- **Authors**: up to three — name, headshot, bio URL
+- **CTA**: label, link, colour, position (bottom-right default)
+- **Motion**: animate duration, hold, frame rate, loop, ambient drift
+- **Export**: GIF · SVG · PNG, plus a copy-the-caption button
+
+### Layout rules that matter
+- **Type ramps per shape.** Scaling everything by width alone makes a square look like a
+  stretched link card. A square has ~2× the vertical room, so the figure should be much
+  larger — roughly 25% of tile width on a square versus 14% on a link card. Give each
+  shape its own ramp: figure, copy, eyebrow, source, logo, avatar, gaps, line height.
+- **Fit by shrinking, not overflowing.** Auto-fit must be able to shrink *both* the copy
+  and the figure. If only the copy shrinks, a tall stack silently runs past its bottom
+  limit and collides with whatever sits below.
+- **Stack upward from the bottom edge.** Source line, then CTA, then byline, then the copy
+  block. Derive each element's position from the one beneath it. Positioning them
+  independently guarantees an eventual overlap.
+- **Solve the gradient, don't stretch it.** Scaling the reference frame's endpoints by
+  width and height independently distorts the ramp — a square ends up showing only the
+  pale tail and light type disappears. Instead: keep the direction, then place the axis so
+  every format spans the same slice of the ramp the reference frame does. Verify the
+  solver reproduces the reference frame exactly.
+- **Contrast guard.** Sample the background under the text block and check contrast; if the
+  theme colour fails, swap to whichever brand neutral reads. Calibrate the threshold to the
+  brand's own precedent, not a generic WCAG figure — many brands run white on mid-tone at
+  ~2.4:1 and that is their deliberate look. Also ensure the figure never resolves to the
+  same colour as the copy.
+
+### GIF encoding (write it inline; no CDN, no worker)
+- GIF89a, global colour table via median cut, ~256 colours.
+- **Per-frame dirty rectangles** with disposal method 1. Only the counter region changes on
+  most frames, so a 40-frame 1200×630 tile lands around 110 KB instead of megabytes.
+- **LZW code-width ordering is the classic trap.** Follow the Weiner/giflib order: the code
+  width grows *inside* the output routine, one code **after** the dictionary entry that
+  filled the range — not immediately when the entry is added. Getting this wrong produces a
+  file that looks valid, has a correct header and frame count, and fails on pixel decode.
+- Ambient/background motion makes every frame fully dirty. Warn the user about file size
+  and force looping so the cycle doesn't jump.
+- Encode asynchronously with progress, yielding to the event loop, or the tab freezes.
+
+### SVG export
+Real `<text>` elements so Figma imports editable type, `<tspan>` for a colour change inside
+a line, the background as a genuine `linearGradient`, logo/watermark/icons as paths, and
+headshots embedded as data URLs so the file is self-contained when dragged onto a canvas.
+Measure text with a canvas context so wrapping matches the raster output exactly.
+
+### Content import (optional but valuable)
+Let the user drop the source `.docx` in: walk the ZIP central directory, inflate
+`word/document.xml` with `DecompressionStream('deflate-raw')`, strip tags, then regex out
+candidate figures — percentages, ranges ("17% to 93%"), durations ("3 weeks to 18 minutes"),
+large counts — and offer them as one-click presets with the right reveal preselected.
+No upload, no library, nothing leaves the machine.
+
+### Honest constraints to surface in the UI
+- A tile is an image: nothing on it is clickable. The CTA is a visual prompt; the links
+  belong in the post. Provide a "copy post text" button that assembles caption + author
+  bio links + article URL.
+- Headshots stay in memory, not `localStorage` — base64 photos blow the quota.
+- Webfonts must be loaded (`document.fonts.load` + `document.fonts.ready`) before the first
+  canvas render, or measurements are taken against a fallback face.
+
+---
+
+## Phase 3 — verify before delivering
+
+Do not claim it works because it looks right. Check:
+
+1. **Syntax**: extract the `<script>` and run a parser over it. Watch for raw U+2028 inside
+   regex literals — it is a line terminator in JS source and breaks the parse silently.
+2. **Bindings**: every `getElementById` target and every persisted field id exists in the
+   markup.
+3. **GIF validity**: generate a test GIF headlessly and decode it with an independent
+   decoder (Pillow). Confirm frame count, dimensions, per-frame compositing, and durations.
+   Measure quantisation error against the source pixels — mean absolute error should be
+   ≈ 0–1 per channel on a smooth gradient.
+4. **Layout**: render the SVG for every shape × every category × the on/off combinations of
+   byline and CTA, and assert numerically that elements clear each other.
+5. **Contrast**: assert the resolved type colour against the sampled background for each
+   category.
+
+---
+
+## Working style
+
+- Research first, build second. Gather all brand values before opening a file.
+- Ask before inventing: if a colour, ratio or treatment is a judgement call the brand owner
+  should make, ask — offer a control rather than picking silently.
+- Say plainly when something cannot work (a sandboxed page cannot reach a private
+  SharePoint; an image cannot hold a hyperlink) and offer the route that does.
+- Never reproduce another company's visual identity. Take structural ideas, not their
+  illustration style, palette or motifs.

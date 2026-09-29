@@ -1,0 +1,248 @@
+PROMPT: BUILD A BRAND-LOCKED SOCIAL TILE STUDIO FOR PARAMETER.AI
+=================================================================
+
+Paste everything below into Claude (Cowork, or Claude Code with the Figma
+connector). Fill in the BRAND INPUTS block first. Everything else is reusable.
+
+-----------------------------------------------------------------
+BRAND INPUTS (fill in)
+-----------------------------------------------------------------
+Company:                 Parameter (parameter.ai)
+Website:                 https://parameter.ai
+Figma brand file:        {{FIGMA_FILE_URL}}
+  - Brand guidelines page / node:     {{NODE_ID}}
+  - Logo, wordmark and mark variants: {{NODE_ID}}
+  - Colour and type styles:           {{NODE_ID or "use local styles/variables"}}
+  - Icon or glyph library:            {{LIBRARY NAME or NODE_ID}}
+  - Existing social / OG / hero art:  {{NODE_ID(s)}}
+  - Illustration / pattern assets:    {{NODE_ID(s)}}
+Written brand guidelines (PDF/doc/URL): {{LINK}}
+Tone of voice notes:      {{e.g. precise, confident, technical, no hype}}
+Recent social posts to match cadence: {{LinkedIn / X profile URLs}}
+Categories we post:       {{e.g. Blog, Research, Changelog, Customer story,
+                             Press, Partnership, New hire, Launch, Event,
+                             Speaker, Webinar}}
+Formats needed:           {{e.g. 1200x1200 LinkedIn, 1200x630 link card,
+                             1080x1350 4:5, 1920x1080, 1080x1920 story}}
+Colours never to use:     {{e.g. none / no red / no gradients}}
+Where this will live:     {{SharePoint / Notion / Drive URL}}
+
+If any field is unknown, EXTRACT it from Figma and the guidelines rather than
+guessing. Ask me before inventing anything a brand owner should decide.
+
+-----------------------------------------------------------------
+WHAT TO BUILD
+-----------------------------------------------------------------
+A single self-contained HTML file (no build step, no install, no backend) that
+runs in a browser and produces on-brand social tiles as animated GIF, PNG and
+SVG with editable text (for dragging into Figma), plus a LinkedIn carousel as a
+PDF. It is a tool the marketing team opens and uses daily, not a one-off image.
+Deliver the file to my folder and publish it as a hosted page others can open.
+Do not paste the code into chat.
+
+IMPORTANT ON ORIGINALITY: This tool exists elsewhere for another company. Do
+not reuse its layouts, motifs, colour treatments or animation ideas. Design
+Parameter's compositions from Parameter's own brand system. The feature list
+below is what to build; the look must come only from Parameter's assets and
+guidelines. Where the guidelines are silent, propose 3 to 5 options with a
+one-line rationale each and let me pick, rather than defaulting to a
+convention you have used before.
+
+-----------------------------------------------------------------
+PHASE 1: EXTRACT THE BRAND. DO NOT APPROXIMATE IT.
+-----------------------------------------------------------------
+Do this before writing any code. Every visual value comes from the real source.
+
+1. Read the brand guidelines end to end. Write back a one-page summary of the
+   system in your own words: palette (with roles: ground, ink, accent, signal),
+   type (families, weights, sizes, tracking, case rules), logo rules (clear
+   space, minimum size, allowed colourways, the mark vs the wordmark),
+   iconography style, illustration / pattern language, photography treatment,
+   layout principles (grid, margins, alignment habits), and motion principles
+   if any. Ask me to confirm before designing.
+2. Inspect existing approved artwork in Figma (social, OG, hero, ads). Pull
+   exact values, not impressions: fills and every gradient stop plus its
+   transform, type per layer (family, weight, size, line height, letter
+   spacing, case), fills per text range, frame sizes, margins, logo position
+   and size, how photos are treated, how partner logos are placed.
+3. Export the vectors: logo variants, the mark alone, any watermark or pattern,
+   and the icon set as SVG. Inline them in the tool and swap the fill/stroke
+   colour to a token at draw time so one asset re-tints per theme.
+4. Read colour and type as Figma variables or local styles where they exist,
+   so names match what designers use.
+5. Note which categories or contexts use dark type vs light type. Read it from
+   the artwork, do not assume.
+
+Extraction gotchas (these have all bitten before):
+- MCP responses have a size ceiling around 19 KB. Request small slices, a few
+  properties of one node at a time. A metadata dump of a page will fail.
+- Text can contain U+2028 and U+00A0. A raw U+2028 in a returned string breaks
+  the transport; return character codes when a read mysteriously fails.
+- fills, fontName and fontSize return a mixed-value symbol on multi-style text.
+  Guard every access or use getStyledTextSegments.
+- Component icons: importComponentByKeyAsync then exportAsync as SVG.
+
+-----------------------------------------------------------------
+PHASE 2: DESIGN THE SYSTEM (PROPOSE, THEN BUILD)
+-----------------------------------------------------------------
+Before coding the layouts, show me a design proposal in the chat: for each
+category, a short description of the composition, the colour scheme, the type
+treatment, the graphic or motif language and the motion idea, all derived from
+Phase 1. Offer alternatives where the brand allows more than one answer. Wait
+for my sign-off, then build.
+
+Two families of tile, visibly different from each other:
+
+EDITORIAL (e.g. Blog, Research, Changelog, Press, News, Report)
+- Types: Stat (large counting figure with supporting copy), Headline (thumbnail
+  style), Quote (pull quote with attribution: an opening mark in the accent
+  colour, the quote text, a short rule, then the attribution in a secondary
+  face and colour).
+- Each category owns a colour scheme and an icon. The icon is locked to the
+  category and rides beside the eyebrow as a badge.
+- Press and News get a Publication block: publication name plus logo. The
+  logo sits opposite the company mark at matching weight; with no logo, a
+  small "As seen in {name}" caption sits there instead.
+- Data reveals for stat tiles (offer a set that fits the brand: e.g. progress,
+  ring, tally, columns, timeline). Ambient background motion in three levels.
+- Report is the only category that prints a source or report title along the
+  bottom.
+
+ANNOUNCEMENTS (e.g. Partnership, New hire, Launch, Event, Speaker, Webinar)
+- A completely different design ethos and motion system from editorial, and
+  each announcement category gets its own composition. They draw their own
+  artwork: no stat rings, tally grids or editorial accent icons may leak in.
+- Partnership: co-brand lockup with partner logo upload; the two marks at
+  equal visual weight. No connector glyph between them unless the brand uses
+  one.
+- New hire: up to three people, name and title required, round headshots as
+  the hero, an editable optional welcome line, no headline field otherwise,
+  no button, no source line. Square and 4:5 only. No carousel.
+- Launch: product name, tagline, up to three or four features, a product
+  screenshot with three treatments (e.g. framed window at fixed 16:10, bleed
+  crop, full background with scrim). Under a dark scrim the type always
+  switches to the light set regardless of colour scheme.
+- Event: name, location (pin glyph), date and time (calendar glyph), optional
+  booth / session / extra as separate cells rendered as one quiet accent line
+  under the date (not pills), an activities checklist rendered as pills
+  (offer a sensible default list and ask what to add), event logo upload at a
+  real size, city or venue photo upload with three treatments. Button default
+  "Meet us" with a working position control.
+- Speaker: up to three speakers, each with name, title, company, headshot and
+  optional company logo. Captions (name, "Title, Company", logo) sit under
+  each person's own portrait, never elsewhere. No "featured speaker" label.
+- Webinar: headline, subtitle, up to three speakers with headshots, platform
+  line ("Join us live on {platform}") with platform logo upload, date, and a
+  button. If you are tempted to use a diagonal stripe or band, do not; find
+  the composition in Parameter's own hero and pattern language.
+- Every announcement eyebrow states what the tile is (Partnership, New hire,
+  Launch, Event, Speaker, Webinar) and follows the category on every switch.
+- Colour schemes for announcements come from the brand's own hero or
+  background frames; offer them as a named picker. Flag any colour in those
+  frames that conflicts with my "never use" list and ask.
+
+CONTROLS (both families)
+- Tile type, shape toggle (square / rectangle / portrait) with exact sizes
+  filtered beneath it, category picker grouped Editorial vs Announcements with
+  live colour swatches, colour scheme, per-category default copy that is
+  restored by a "Reset copy to this category" button, eyebrow motion,
+  emphasis text that differs in font or weight from the headline, source text
+  import (.docx drop or paste) that extracts candidate statistics as one-click
+  presets, up to three authors with round headshots and bio URLs (editorial
+  only), CTA button (label, link, colour, position; the button never overlaps
+  copy), "Copy post text with links", motion settings (animate, hold, fps,
+  loop, ambient level), and export buttons.
+- Every image picker (headshot, logos, screenshot, photo) has a Remove button.
+- Uploaded raster logos get a white card knocked out and margins trimmed;
+  SVG logos are kept as vectors so they stay crisp at any size.
+- The panel never disappears: category-specific blocks show and hide, but
+  the main controls and the category picker are always reachable.
+- LinkedIn carousel on its own tab with a per-page editor (kind, category,
+  copy), add / duplicate / delete / reorder, bulk add from lines, "fill from
+  the source text", page size, PDF download, and a written step-by-step
+  "How to build a carousel" guide inside the tab. Carousel controls must not
+  appear on the Tile tab. Categories that are single-image posts (New hire,
+  Speaker) have no carousel.
+
+-----------------------------------------------------------------
+LAYOUT RULES THAT MATTER (learned the hard way)
+-----------------------------------------------------------------
+- Type ramps per shape. A square has roughly twice the vertical room of a link
+  card, so figures and headlines should be much larger there. Give each shape
+  its own ramp for every size, gap and line height.
+- Fit by shrinking, then shedding, never overflowing. Every block has a
+  readable type floor (about 10.5 px at 1200 wide, scaled). When the floor is
+  reached, shed content in a stated order (pills, then detail lines, then
+  second lines of subtitles, then headline lines) instead of shrinking further.
+- Stack upward from the bottom edge: source line, button, byline, then copy.
+  Derive each element's position from the one below it.
+- Logos can never sit on text and text can never sit on logos. Keep brand
+  clear space around every mark. Exactly one company logo per tile.
+- Solve gradients, do not stretch them: keep the reference frame's slice of
+  the ramp on every aspect ratio. Verify the solver reproduces the reference
+  frame exactly.
+- Contrast guard: sample the ground under the type and swap to the readable
+  neutral if the theme colour fails. Calibrate the threshold to the brand's
+  own precedent.
+- Product screenshots always in a fixed aspect frame, never stretched.
+- People captions belong under their own portrait; one or two people are
+  centred in their column, three fill it.
+
+-----------------------------------------------------------------
+ENGINEERING NOTES
+-----------------------------------------------------------------
+- GIF89a encoder inline: median-cut palette, per-frame dirty rectangles with
+  disposal 1, LZW code width grows inside the output routine one code after
+  the dictionary entry that filled the range (Weiner / giflib order). Encode
+  asynchronously with progress. Warn that ambient motion makes every frame
+  dirty and force looping so the cycle does not jump.
+- SVG export with real <text> and <tspan>, the background as a genuine
+  gradient, logos and icons as paths, headshots as data URLs. Measure text
+  with a canvas so wrapping matches the raster.
+- PDF writer for the carousel (JPEG pages, DCTDecode).
+- .docx reader: ZIP central directory plus DecompressionStream('deflate-raw'),
+  then a regex stat extractor (percentages, ranges, durations, large counts).
+- Webfonts must be loaded before the first render; show a banner if they are
+  blocked. No localStorage for photos; small logos and the carousel deck may
+  be remembered.
+- Hosted builds: escape all non-ASCII in the script (the wrapper controls the
+  head, so mojibake otherwise), and guard the control panel with a CSS rule
+  so it can never be hidden by a stray class.
+
+-----------------------------------------------------------------
+PHASE 3: TEST EVERY RENDER BEFORE GOING LIVE. NON-NEGOTIABLE.
+-----------------------------------------------------------------
+Build a render test suite as a Node script saved next to the tool (not in a
+temp folder) and run it before every publish. It must:
+1. Parse the tool's script and run drawFrame for every category x shape x
+   variant (short and very long copy, each image treatment with and without
+   pictures, each button position, one / two / three people, each colour
+   scheme, wide and square logos, quote tiles, publication with logo / name)
+   against a recording canvas stub that logs text boxes, rectangles, arcs
+   (recording line width at stroke time) and images.
+2. Assert numerically: nothing off the tile; exactly one company logo; text
+   keeps clear space from logos and photos; no text under the button; the
+   button inside the tile; the source line only where allowed; announcement
+   tiles carry no editorial reveal artwork; the category badge sits on the
+   eyebrow line; people are captioned under their own ring; rings never
+   overlap (except by-design lockups); company marks that were supplied are
+   drawn; product frame stays 16:10; no type under the readable floor; lines
+   of copy never overprint each other.
+3. Check syntax of the extracted script, that every getElementById target
+   exists, and validate a generated GIF and PDF with an independent decoder.
+4. Print pass/fail per case. Publish only at 100 percent. When I report a
+   visual bug, add an assertion that would have caught it, then fix it.
+
+-----------------------------------------------------------------
+WORKING STYLE
+-----------------------------------------------------------------
+- Research first, propose second, build third. Ask before inventing.
+- When I say text should be a default, make it the category default and make
+  "Reset copy to this category" restore it. Defaults apply on a fresh load or
+  when the field holds stock text; hand-typed copy is kept.
+- Say plainly what cannot work (an image cannot hold a link; a sandboxed page
+  cannot reach a private SharePoint) and offer the route that does.
+- Never reproduce another company's visual identity. Take structural ideas
+  about what a tile must contain; the look comes only from Parameter's brand.
+- After each change, tell me in two or three sentences what changed and what
+  the suite reports. Keep the hosted page and the file in my folder in sync.
