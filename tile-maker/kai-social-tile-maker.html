@@ -68,6 +68,14 @@
   .panel.plannerMode > #plannerPanel{display:block}
   #plannerPanel{display:none}
   .wrap.plannerWide{grid-template-columns:1fr}
+.pl-three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+@media(max-width:1200px){.pl-three{grid-template-columns:1fr}}
+.pl-fw{font-size:12px;line-height:1.55;color:var(--muted)}
+.pl-fw b{color:var(--ink)}
+.pl-fw ul{margin:4px 0 10px;padding-left:16px}
+.pl-fw li{margin:2px 0}
+.pl-fw .src{display:block;margin:3px 0;font-size:11px;word-break:break-all}
+.pl-cell.draft{border-style:dashed}
   .wrap.plannerWide > .stage{display:none}
   .pl-eyebrow{font:500 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);
               letter-spacing:.04em;margin:34px 0 8px}
@@ -198,8 +206,6 @@
     <div class="swatches" id="swatches" style="margin-bottom:4px"></div>
     <div class="swLabel">Announcements <span>&mdash; partnerships, hires, launches, speakers, web events, events</span></div>
     <div class="swatches" id="swatches2"></div>
-    <div class="swLabel">Concept animation <span>&mdash; the cycle, the funnel, the collapse</span></div>
-    <div class="swatches" id="concepts"></div>
     <label id="washRow"><span>Colour scheme</span><select id="wash"></select></label>
     <button class="ghost" id="applyDefaults" style="margin:0 0 14px">Reset copy to this category</button>
     <details id="gradWrap"><summary style="font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:8px">Adjust this theme’s gradient</summary>
@@ -455,13 +461,9 @@ Routes what needs a human"></textarea></label>
         <option value="grid">Tally grid — 100 cells</option>
         <option value="columns">Before / after columns</option>
         <option value="clock">Timeline collapse</option>
-        <optgroup label="AI security concepts">
-          <option value="cycle">CTEM cycle \u2014 the loop closes</option>
-          <option value="funnel">Exposure funnel \u2014 noise removed</option>
-          <option value="collapse">Days to minutes \u2014 the chain collapses</option>
-        </optgroup>
       </select></label>
       <label><span>Scale max</span><input id="scalemax" value="" placeholder="auto"></label>
+      <input type="hidden" id="postConcept" value="">
     </div>
     <div class="row" id="clockFields">
       <label><span>Before value</span><input id="beforeLabel" value="3 weeks"></label>
@@ -496,25 +498,50 @@ Routes what needs a human"></textarea></label>
     <p class="note">Gradients, type, logo, watermark and the 12 icons are exported from <em>Marketing Site</em> and <em>Library | Product</em>. Nothing here is redrawn by hand.</p>
 
     <div id="plannerPanel">
+      <div class="pl-eyebrow">[ the brief ]</div>
+      <h3 class="pl-h">What should the next posts be about?</h3>
+      <p class="pl-sub">Everything below steers the next planning run &mdash; the ideas it picks up,
+         the copy it writes, and the illustration it draws. Add a destination here and it becomes
+         a CTA you can attach to any post.</p>
+      <div class="pl-three">
+        <div class="pl-card">
+          <span class="pl-tag">post ideas</span>
+          <label><span>A launch, an event, a customer win, a blog post, an angle to push</span>
+            <textarea id="plInputText" rows="3"
+              placeholder="e.g. We are at Black Hat Europe in December. Push the chain-chokepoint angle that week."></textarea></label>
+          <label><span>Source link (optional)</span>
+            <input type="text" id="plInputLink" placeholder="https://"></label>
+          <button class="primary" id="plAddInput" style="width:auto;padding:11px 20px">Add idea</button>
+          <p class="pl-note">An idea can augment the next planning run, or go straight onto the
+             calendar as a draft post &mdash; each one is marked with the post it became.</p>
+          <div id="plInputs"></div>
+        </div>
+        <div class="pl-card">
+          <span class="pl-tag">messaging framework</span>
+          <div id="plFramework"></div>
+        </div>
+        <div class="pl-card">
+          <span class="pl-tag">CTA destinations</span>
+          <p class="pl-note" style="margin-top:0">Where posts send people. These fill the CTA link
+             on every post, and the next run matches a destination to the topic.</p>
+          <label><span>Label</span>
+            <input type="text" id="plCtaLabel" placeholder="e.g. CTEM page"></label>
+          <label><span>URL</span>
+            <input type="text" id="plCtaUrl" placeholder="https://kai.security/..."></label>
+          <button class="primary" id="plAddCta" style="width:auto;padding:11px 20px">Add destination</button>
+          <div id="plCtas"></div>
+        </div>
+      </div>
+      <div class="pl-acts" style="margin:14px 0 26px">
+        <button type="button" class="go" id="plCopyBrief">Copy brief for Claude</button>
+        <button type="button" id="plResetBrief">Clear the brief</button>
+      </div>
+
       <div class="pl-eyebrow">[ calendar ]</div>
       <h3 class="pl-h">Monday &middot; Tuesday &middot; Thursday &middot; Friday</h3>
       <p class="pl-sub" id="plIntro"></p>
       <div class="pl-cal" id="plCal"></div>
       <div id="plDetail"></div>
-
-      <div class="pl-eyebrow">[ inputs ]</div>
-      <h3 class="pl-h">Kai is working on something big&hellip;</h3>
-      <p class="pl-sub">Drop in a launch, an event, a customer win, a new blog post, or a link.
-         The next planning run works it in and marks the input with the post it became.</p>
-      <div class="pl-input">
-        <label><span>What should we post about?</span>
-          <textarea id="plInputText" rows="3"
-            placeholder="e.g. We are at Black Hat Europe in December. Push the chain-chokepoint angle that week."></textarea></label>
-        <label><span>Link (optional): a kai.security page, a doc, or an artifact</span>
-          <input type="text" id="plInputLink" placeholder="https://"></label>
-        <button class="primary" id="plAddInput" style="width:auto;padding:11px 20px">Add input</button>
-      </div>
-      <div id="plInputs"></div>
 
       <div class="pl-eyebrow">[ how this works ]</div>
       <h3 class="pl-h">How this planner works</h3>
@@ -1370,40 +1397,8 @@ const shapeOf = (W, H) => { const r = W / H; return r >= 1.4 ? 'wide' : (r >= 0.
 const rampOf  = (W, H) => RAMPS[shapeOf(W, H)];
 
 /* ---- LinkedIn plan: generated from brand/linkedin-plan.json ---- */
-const PLAN = {"_comment": "Topic bank for the LinkedIn Planner. Four posts a week, three weeks, rotating across the three programme goals.", "_sourcing": "Nothing here is sourced from material that would need third-party permission to reproduce. Licensed analyst research was used only as an education tool — to understand topics, categories, buyer sentiment and the shape of available solutions. No analyst text is quoted, paraphrased or attributed, and no analyst figure, quadrant or radar appears. Every number below is either one of Kai's three cross-checked metrics or already published on kai.security, and each post names its source.", "_positioning": "Kai associates the Autonomous Defense Platform with four categories: CTEM, CAASM, Threat Intelligence and Autonomous Remediation. Every post carries a primary pillar, and most carry a secondary, so a week never sits on one.", "_pillars": {"CTEM": "Continuous Threat Exposure Management — the shared language with buyers, never the category.", "CAASM": "Cyber Asset Attack Surface Management — the asset record, ownership, coverage.", "Threat Intelligence": "Intel to exposures to detection, in one pass.", "Autonomous Remediation": "The category Kai owns. Carried at the level of the gap it fills and what closing the loop means — never as a claim that automated remediation delivery is shipped. See _claims_guard.", "_theme_map": "Each pillar pins a bright brand gradient. The Press category is never used here — it starts on #080943 and renders as near-black, which is not how these posts should look. CTEM → blue, CAASM → report, Threat Intelligence → green, Autonomous Remediation → blue with its own stops #00BFFF → #8AF0E6 → #BEFF78, so four posts a week still read as four."}, "_claims_guard": "Automated remediation delivery is claimable as available — ruled by Thomas Nuth, 2 Oct 2026, superseding Decision #1 and the Zafran battlecard line that said never to present it as shipped. The public site already said available; internal CompIntel said roadmap. That conflict is resolved in favour of available.\n\nSeparately, and by design rather than by caution: the reshare posts still carry no product claim. Goal 1 is reshares through vendor-agnostic thought leadership, and a post that names the product does not get reshared by people who do not work here. Product claims belong in the traffic posts.", "_goals": {"reshare": "Vendor-agnostic thought leadership. No product claim, no link in the post body.", "follow": "Establishes a recurring point of view worth subscribing to.", "traffic": "Earns the click. Names Kai and links to the page that proves the point."}, "cadence": {"postsPerWeek": 4, "weeks": 3, "mix": "Each week carries one post per pillar — CTEM, CAASM, Threat Intelligence, Autonomous Remediation — and a goal mix of roughly two reshare, one traffic, one follow. Reshare leads because the other two depend on it."}, "posts": [{"id": "prioritisation-not-sufficient", "week": 1, "slot": 1, "goal": "reshare", "scene": "funnel", "theme": "Prioritisation is necessary, not sufficient", "eyebrow": "Exposure management", "headline": "A better-ordered backlog is still a backlog.", "linkedin": "Every exposure programme has more findings than it can act on, so every programme added a prioritisation layer. The list got better ordered. It did not get shorter.\n\nA rank tells you what to do first. It does not tell you whose asset it is, whether the finding is reachable in your environment, what the fix actually is, or when that team can take a change.\n\nThose four answers are the difference between a report and a closed finding. None of them come from a scanner, and none of them come from sorting.\n\nWhat is your team's actual bottleneck — the ranking, or the four answers after it?", "x": "A rank tells you what to do first. It doesn't tell you whose asset it is, whether it's reachable, what the fix is, or when that team can take a change.\n\nBetter-ordered isn't shorter.", "cta": "If this matches what you're seeing, pass it on.", "ctaUrl": "", "source": "Kai CTEM page — 'Ranked is not the same as closed'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline", "reveal": "funnel", "theme": "blue"}}, {"id": "ownership-blocker", "week": 1, "slot": 2, "goal": "traffic", "scene": "ring", "theme": "Ownership is the hidden blocker", "eyebrow": "Asset ownership", "headline": "You cannot fix what has no owner.", "linkedin": "Most remediation programmes stall on a question nobody tracks: who owns this asset?\n\nAt one Fortune 50 energy company, 4% of assets had an accountable owner. After rebuilding the asset record from evidence rather than reconciling what the CMDB already believed, that went to 92% across 250,000 assets in under twelve hours — including roughly 30,000 assets the endpoint tooling had marked unmanaged.\n\nOwnership is not an inventory problem. It is the thing standing between a validated finding and a change that ships. Once the owner is known, the change can be authored and delivered autonomously inside the boundary you set, with a rollback path recorded.", "x": "4% of assets had an accountable owner. Then 92% across 250,000 assets in under 12 hours.\n\nOwnership isn't an inventory problem. It's the thing between a finding and a fix.", "cta": "See an exposure go from found to fixed →", "ctaUrl": "https://kai.security/platform", "source": "Kai platform page — Fortune 50 energy company, 4%→92%, 250k assets, <12h, ~30k unmanaged", "pillar": "CAASM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "stat", "reveal": "ring", "from": 4, "to": 92, "suffix": "%", "scaleMax": 100, "head": "of assets have an accountable owner, up from four percent", "theme": "report"}}, {"id": "detection-tax", "week": 1, "slot": 3, "goal": "follow", "scene": "columns", "theme": "The detection tax nobody budgets for", "eyebrow": "Detection engineering", "headline": "74% of alerts were false positives. Then 12%.", "linkedin": "Every detection rule you write is a standing cost. It fires, someone triages it, and the ones that were never real spend your analysts' attention anyway.\n\nAutonomous detection engineering moved one SOC's false-positive rate from 74% to 12%. The interesting part is not the number, it is where the saving comes from: rules written against confirmed exposures rather than against every published technique.\n\nCoverage is easy to add and expensive to own. Precision is the thing worth engineering for.\n\nI write about exposure management and detection weekly — follow along if that is your problem too.", "x": "74% of alerts were false positives. Then 12%.\n\nThe saving isn't from more rules. It's from writing them against confirmed exposures instead of every published technique.", "cta": "Follow for more on exposure management and detection.", "ctaUrl": "", "source": "Cross-checked metric — 74% → 12% SOC false-positive rate", "pillar": "Threat Intelligence", "tile": {"type": "stat", "reveal": "columns", "from": 74, "to": 12, "suffix": "%", "scaleMax": 100, "beforeLabel": "before", "head": "of SOC alerts were false positives. Then twelve.", "theme": "green"}}, {"id": "handoff-is-the-cost", "week": 1, "slot": 4, "goal": "reshare", "scene": "collapse", "theme": "The handoff is where the time goes", "eyebrow": "Mean time to remediate", "headline": "The gap between finding and fixing is where risk lives.", "linkedin": "Count the people in your remediation chain, end to end. Then the tools. Then the cross-team handoffs.\n\nIn most enterprises the honest answer is twenty to thirty people, fifteen to twenty tools, and three to five handoffs. None of that is incompetence. It is what happens when two teams rebuild the same context from the same intelligence and then reconcile with each other.\n\nThe time does not go into deciding what to fix. It goes into the spaces between the teams that fix it.\n\nIf you have measured your own chain, I would genuinely like to know what you found.", "x": "Twenty to thirty people. Fifteen to twenty tools. Three to five handoffs.\n\nThe time doesn't go into deciding what to fix. It goes into the gaps between the teams that fix it.", "cta": "Worth comparing notes — reshare if your chain looks like this.", "ctaUrl": "", "source": "Kai CTEM page — Autonomous Defense Cycle, 20-30+ / 15-20 / 3-5", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline", "reveal": "collapse", "theme": "blue", "stops": [[0, "#00BFFF"], [0.5, "#8AF0E6"], [1, "#BEFF78"]]}}, {"id": "ctem-is-a-programme", "week": 2, "slot": 1, "goal": "reshare", "scene": "cycle", "theme": "CTEM is a programme, not a product", "eyebrow": "The cycle", "headline": "Five phases everyone defines. What closes the loop?", "linkedin": "Scope, discover, prioritise, validate, mobilise. Five phases, defined the same way across the industry, and most programmes can name all five.\n\nAsk a harder question: what closes the loop? Mobilisation hands work to another team and the cycle stops there. The next pass starts from a standing start, because nothing carried the exposure from found to fixed to covered.\n\nA cycle that does not close is a queue with better vocabulary.\n\nWhere does your loop actually break — at validation, at mobilisation, or at the handoff after it?", "x": "Scope, discover, prioritise, validate, mobilise.\n\nFive phases everyone can name. But what closes the loop?\n\nA cycle that doesn't close is a queue with better vocabulary.", "cta": "Curious where others see the break. Reply or reshare.", "ctaUrl": "", "source": "Kai CTEM page — 'Five phases everyone defines. Two more that close the loop.'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline", "reveal": "cycle", "theme": "blue"}}, {"id": "shadow-assets", "week": 2, "slot": 2, "goal": "traffic", "scene": "none", "theme": "The assets your tooling marked unmanaged", "eyebrow": "Asset coverage", "headline": "30,000 assets nobody was counting.", "linkedin": "A coverage gap is not an absence of data. It is data your tooling decided not to count.\n\nScanning agentlessly across one estate surfaced roughly 30,000 shadow IT and OT assets that existing endpoint tooling had marked unmanaged. Nothing new was deployed to find them.\n\nThe uncomfortable part is what that does to every percentage you report. A coverage figure calculated against a denominator that silently excludes 30,000 assets is not a coverage figure.\n\nRaise the gap as a finding. Do not drop it from the denominator.", "x": "~30,000 shadow IT and OT assets that endpoint tooling had marked unmanaged. Found agentlessly, nothing deployed.\n\nA coverage % against a denominator that excludes them isn't a coverage %.", "cta": "See an asset record rebuilt from evidence →", "ctaUrl": "https://kai.security/platform", "source": "Cross-checked metric — 30,000 shadow IT and OT assets discovered agentlessly", "pillar": "CAASM", "tile": {"type": "stat", "reveal": "none", "from": 0, "to": 30000, "grouping": 1, "head": "shadow IT and OT assets, found agentlessly", "theme": "report"}}, {"id": "detection-as-stopgap", "week": 2, "slot": 3, "goal": "reshare", "scene": "cycle", "theme": "Detection as a stopgap while the fix waits", "eyebrow": "Compensating coverage", "headline": "Some fixes have to wait. The exposure should not be uncovered while they do.", "linkedin": "Not everything can be patched this week. Maintenance windows exist, dependencies exist, and some systems genuinely cannot take a change on your timetable.\n\nThe question is what happens in the meantime. In most programmes the honest answer is nothing: the finding sits in a queue marked accepted-risk and the gap is simply open.\n\nThere is a better default. If the fix has to wait, a detection written specifically for that exposure can stand in for the patch until the change lands — and then be retired.\n\nTreating detection as temporary cover rather than permanent coverage is, I think, an underrated move.", "x": "Not everything can be patched this week.\n\nThe question is what covers the gap until it is. A detection written for that exposure can stand in for the patch — then retire.", "cta": "If your programme does this already, say so — I'd like to hear how.", "ctaUrl": "", "source": "Kai platform page — 'a detection stands in for as long as the fix has to wait'", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline", "reveal": "cycle", "theme": "green"}}, {"id": "queue-never-shrinks", "week": 2, "slot": 4, "goal": "follow", "scene": "collapse", "theme": "Why the queue never shrinks", "eyebrow": "The throughput gap", "headline": "Exposure programmes are not failing at detection.", "linkedin": "Exposure programmes are not failing at detection. Every enterprise of any size finds more than it can act on, and most have added a layer on top to sort it.\n\nThe list gets better ordered every year. The backlog does not shrink. That is a throughput problem wearing a prioritisation costume.\n\nThroughput is set by the slowest step, and the slowest step is almost never the ranking. It is ownership, or the change window, or the reconciliation between the team that found it and the team that has to fix it.\n\nAutonomous remediation is how that step stops being the constraint — the change authored and delivered inside the boundary you set, rather than queued for someone else's sprint.\n\nI post about this most weeks. Follow if measuring throughput rather than volume is where your head is.", "x": "Exposure programmes aren't failing at detection.\n\nThe list gets better ordered every year. The backlog doesn't shrink.\n\nThat's a throughput problem in a prioritisation costume.", "cta": "Follow for more on throughput over volume.", "ctaUrl": "", "source": "Kai CTEM page — 'Ranked is not the same as closed'; Auto Remediation available per 2026-07-29 release", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline", "reveal": "collapse", "theme": "blue", "stops": [[0, "#00BFFF"], [0.5, "#8AF0E6"], [1, "#BEFF78"]]}}, {"id": "exploitability-before-severity", "week": 3, "slot": 1, "goal": "reshare", "scene": "funnel", "theme": "Exploitability before severity", "eyebrow": "Validation", "headline": "Critical in the abstract is not critical on your asset.", "linkedin": "A CVSS score describes a vulnerability. It does not describe your environment.\n\nThe same critical finding can be unreachable on one asset, exploitable on another, and part of a chain on a third. Treating those three as one queue item is how teams end up arguing about severity instead of about evidence.\n\nCut on exploitability per asset, not severity in the abstract. The list gets smaller and, more usefully, the conversation with the owning team changes: you are no longer asking them to trust a score.\n\nProof travels further than priority.", "x": "A CVSS score describes a vulnerability, not your environment.\n\nSame critical finding: unreachable on one asset, exploitable on another, part of a chain on a third.\n\nProof travels further than priority.", "cta": "Pass it on if your severity debates sound like this.", "ctaUrl": "", "source": "Kai CTEM page — 'Cut on exploitability per asset, not severity in the abstract'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline", "reveal": "funnel", "theme": "blue"}}, {"id": "scanning-is-table-stakes", "week": 3, "slot": 2, "goal": "reshare", "scene": "none", "theme": "Scanning is table stakes", "eyebrow": "A straight answer", "headline": "Discovery is solved. The work after it is not.", "linkedin": "A point against my own interest, because it is true: scanning is table stakes.\n\nYour existing vulnerability and cloud posture tools find things perfectly well. Nobody needs another discovery engine, and a vendor telling you otherwise is selling you a second inventory to reconcile against the first.\n\nThe hard part was never finding. It is everything between a finding and a change that shipped: whether it is reachable, who owns the asset, what the fix is, and when that team can take it.\n\nBe suspicious of anyone whose answer to the second problem is a better version of the first.", "x": "A point against my own interest: scanning is table stakes.\n\nThe hard part was never finding. It's everything between a finding and a change that shipped.", "cta": "Reshare if you've bought the second inventory and regretted it.", "ctaUrl": "", "source": "Kai messaging — 'Scanning is table stakes', conceded position", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline", "reveal": "none", "theme": "report"}}, {"id": "intel-to-rule", "week": 3, "slot": 3, "goal": "traffic", "scene": "bar", "theme": "From intelligence to a deployed rule", "eyebrow": "Detection intelligence", "headline": "70+ rules, generated and tuned, in two hours.", "linkedin": "Threat intelligence tells you what is being exploited. Detection engineering turns that into a rule. Between the two sits a queue, and that queue is usually measured in weeks.\n\nDoing both in one pass — scoped to the exposures you actually have rather than every published technique — produced 70+ detection rules, generated and tuned, in two hours.\n\nThe constraint was never the writing. It was the context: knowing which exposures are real in this estate before deciding what to detect.\n\nSame intelligence, same team. Different order of operations.", "x": "Threat intel tells you what's exploited. Detection engineering makes it a rule. Between them sits a queue measured in weeks.\n\n70+ rules, generated and tuned, in two hours.", "cta": "See detection written for your environment →", "ctaUrl": "https://kai.security/platform", "source": "Cross-checked metric — 70+ rules generated and tuned in 2 hours", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "stat", "reveal": "bar", "from": 0, "to": 70, "suffix": "+", "scaleMax": 100, "head": "detection rules, generated and tuned, in two hours", "theme": "green"}}, {"id": "reachability-maths", "week": 3, "slot": 4, "goal": "traffic", "scene": "funnel", "theme": "Reachability changes the arithmetic", "eyebrow": "Exploitability", "headline": "Over 90% of findings are removed before anyone triages.", "linkedin": "Severity is assigned in the abstract. Reachability is a fact about your environment.\n\nWhen you prove whether a finding is reachable — on the asset, in the code path, and from outside — most of the queue stops being work. In Kai's deployments that removes over 90% of findings before a human triages anything, and up to 99% depending on environment, language ecosystem and scanner mix.\n\nThe remaining list is small enough to argue about from evidence rather than from a CVSS score.\n\nThat is the whole case for proving exploitability before you prioritise.", "x": "Severity is assigned in the abstract. Reachability is a fact about your environment.\n\nProving it removes 90%+ of findings before anyone triages.", "cta": "See what exposure management looks like when it closes →", "ctaUrl": "https://kai.security/platform", "source": "Kai platform page + Ladder 'Live': reachability cuts findings 90%+, up to 99%", "pillar": "CTEM", "tile": {"type": "headline", "reveal": "funnel", "theme": "blue"}}], "_tile_modes": "Each post declares how it renders. A post whose story is a number is a stat tile and animates the count; a post whose story is an argument is a headline tile carrying a concept diagram. The stat graphics — ring, columns, grid, clock, bar — only draw on stat tiles, because they visualise a from/to."};
+const PLAN = {"_comment": "Topic bank for the LinkedIn Planner. Four posts a week, three weeks, rotating across the three programme goals.", "_sourcing": "Nothing here is sourced from material that would need third-party permission to reproduce. Licensed analyst research was used only as an education tool — to understand topics, categories, buyer sentiment and the shape of available solutions. No analyst text is quoted, paraphrased or attributed, and no analyst figure, quadrant or radar appears. Every number below is either one of Kai's three cross-checked metrics or already published on kai.security, and each post names its source. Messaging is taken from the Kai Messaging Framework and the Q3/Q4 Campaign Brief in SharePoint and the Master Sales Playbook in Confluence; see `framework.sources`. Analyst material in those systems is excluded.", "_positioning": "Kai associates the Autonomous Defense Platform with four categories: CTEM, CAASM, Threat Intelligence and Autonomous Remediation. Every post carries a primary pillar, and most carry a secondary, so a week never sits on one.", "_pillars": {"CTEM": "Continuous Threat Exposure Management — the shared language with buyers, never the category.", "CAASM": "Cyber Asset Attack Surface Management — the asset record, ownership, coverage.", "Threat Intelligence": "Intel to exposures to detection, in one pass.", "Autonomous Remediation": "The category Kai owns. Carried at the level of the gap it fills and what closing the loop means — never as a claim that automated remediation delivery is shipped. See _claims_guard."}, "_claims_guard": "Automated remediation delivery is claimable as available — ruled by Thomas Nuth, 2 Oct 2026, superseding Decision #1 and the Zafran battlecard line that said never to present it as shipped. The public site already said available; internal CompIntel said roadmap. That conflict is resolved in favour of available.\n\nSeparately, and by design rather than by caution: the reshare posts still carry no product claim. Goal 1 is reshares through vendor-agnostic thought leadership, and a post that names the product does not get reshared by people who do not work here. Product claims belong in the traffic posts.", "_goals": {"reshare": "Vendor-agnostic thought leadership. No product claim, no link in the post body.", "follow": "Establishes a recurring point of view worth subscribing to.", "traffic": "Earns the click. Names Kai and links to the page that proves the point."}, "cadence": {"postsPerWeek": 4, "weeks": 5, "mix": "Each week carries one post per pillar — CTEM, CAASM, Threat Intelligence, Autonomous Remediation — and a goal mix of roughly two reshare, one traffic, one follow. Reshare leads because the other two depend on it."}, "posts": [{"id": "prioritisation-not-sufficient", "week": 1, "slot": 1, "goal": "reshare", "scene": "reorder-not-shorter", "theme": "Prioritisation is necessary, not sufficient", "eyebrow": "Exposure management", "headline": "A better-ordered backlog is still a backlog.", "linkedin": "Every exposure programme has more findings than it can act on, so every programme added a prioritisation layer. The list got better ordered. It did not get shorter.\n\nA rank tells you what to do first. It does not tell you whose asset it is, whether the finding is reachable in your environment, what the fix actually is, or when that team can take a change.\n\nThose four answers are the difference between a report and a closed finding. None of them come from a scanner, and none of them come from sorting.\n\nWhat is your team's actual bottleneck — the ranking, or the four answers after it?", "x": "A rank tells you what to do first. It doesn't tell you whose asset it is, whether it's reachable, what the fix is, or when that team can take a change.\n\nBetter-ordered isn't shorter.", "cta": "If this matches what you're seeing, pass it on.", "ctaUrl": "", "source": "Kai CTEM page — 'Ranked is not the same as closed'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "reorder-not-shorter"}, {"id": "ownership-blocker", "week": 1, "slot": 2, "goal": "traffic", "scene": "owner-fills", "theme": "Ownership is the hidden blocker", "eyebrow": "Asset ownership", "headline": "You cannot fix what has no owner.", "linkedin": "Most remediation programmes stall on a question nobody tracks: who owns this asset?\n\nAt one Fortune 50 energy company, 4% of assets had an accountable owner. After rebuilding the asset record from evidence rather than reconciling what the CMDB already believed, that went to 92% across 250,000 assets in under twelve hours — including roughly 30,000 assets the endpoint tooling had marked unmanaged.\n\nOwnership is not an inventory problem. It is the thing standing between a validated finding and a change that ships. Once the owner is known, the change can be authored and delivered autonomously inside the boundary you set, with a rollback path recorded.", "x": "4% of assets had an accountable owner. Then 92% across 250,000 assets in under 12 hours.\n\nOwnership isn't an inventory problem. It's the thing between a finding and a fix.", "cta": "See an exposure go from found to fixed →", "ctaUrl": "https://kai.security/platform", "source": "Kai platform page — Fortune 50 energy company, 4%→92%, 250k assets, <12h, ~30k unmanaged", "pillar": "CAASM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "owner-fills"}, {"id": "detection-tax", "week": 1, "slot": 3, "goal": "follow", "scene": "alert-stream", "theme": "The detection tax nobody budgets for", "eyebrow": "Detection engineering", "headline": "74% of alerts were false positives. Then 12%.", "linkedin": "Every detection rule you write is a standing cost. It fires, someone triages it, and the ones that were never real spend your analysts' attention anyway.\n\nAutonomous detection engineering moved one SOC's false-positive rate from 74% to 12%. The interesting part is not the number, it is where the saving comes from: rules written against confirmed exposures rather than against every published technique.\n\nCoverage is easy to add and expensive to own. Precision is the thing worth engineering for.\n\nI write about exposure management and detection weekly — follow along if that is your problem too.", "x": "74% of alerts were false positives. Then 12%.\n\nThe saving isn't from more rules. It's from writing them against confirmed exposures instead of every published technique.", "cta": "Follow for more on exposure management and detection.", "ctaUrl": "", "source": "Cross-checked metric — 74% → 12% SOC false-positive rate", "pillar": "Threat Intelligence", "tile": {"type": "headline"}, "concept": "alert-stream"}, {"id": "handoff-is-the-cost", "week": 1, "slot": 4, "goal": "reshare", "scene": "handoff-gap", "theme": "The handoff is where the time goes", "eyebrow": "Mean time to remediate", "headline": "The gap between finding and fixing is where risk lives.", "linkedin": "Count the people in your remediation chain, end to end. Then the tools. Then the cross-team handoffs.\n\nIn most enterprises the honest answer is twenty to thirty people, fifteen to twenty tools, and three to five handoffs. None of that is incompetence. It is what happens when two teams rebuild the same context from the same intelligence and then reconcile with each other.\n\nThe time does not go into deciding what to fix. It goes into the spaces between the teams that fix it.\n\nIf you have measured your own chain, I would genuinely like to know what you found.", "x": "Twenty to thirty people. Fifteen to twenty tools. Three to five handoffs.\n\nThe time doesn't go into deciding what to fix. It goes into the gaps between the teams that fix it.", "cta": "Worth comparing notes — reshare if your chain looks like this.", "ctaUrl": "", "source": "Kai CTEM page — Autonomous Defense Cycle, 20-30+ / 15-20 / 3-5", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "handoff-gap"}, {"id": "ctem-is-a-programme", "week": 2, "slot": 1, "goal": "reshare", "scene": "loop-closes", "theme": "CTEM is a programme, not a product", "eyebrow": "The cycle", "headline": "Five phases everyone defines. What closes the loop?", "linkedin": "Scope, discover, prioritise, validate, mobilise. Five phases, defined the same way across the industry, and most programmes can name all five.\n\nAsk a harder question: what closes the loop? Mobilisation hands work to another team and the cycle stops there. The next pass starts from a standing start, because nothing carried the exposure from found to fixed to covered.\n\nA cycle that does not close is a queue with better vocabulary.\n\nWhere does your loop actually break — at validation, at mobilisation, or at the handoff after it?", "x": "Scope, discover, prioritise, validate, mobilise.\n\nFive phases everyone can name. But what closes the loop?\n\nA cycle that doesn't close is a queue with better vocabulary.", "cta": "Curious where others see the break. Reply or reshare.", "ctaUrl": "", "source": "Kai CTEM page — 'Five phases everyone defines. Two more that close the loop.'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "loop-closes"}, {"id": "shadow-assets", "week": 2, "slot": 2, "goal": "traffic", "scene": "beyond-the-line", "theme": "The assets your tooling marked unmanaged", "eyebrow": "Asset coverage", "headline": "30,000 assets nobody was counting.", "linkedin": "A coverage gap is not an absence of data. It is data your tooling decided not to count.\n\nScanning agentlessly across one estate surfaced roughly 30,000 shadow IT and OT assets that existing endpoint tooling had marked unmanaged. Nothing new was deployed to find them.\n\nThe uncomfortable part is what that does to every percentage you report. A coverage figure calculated against a denominator that silently excludes 30,000 assets is not a coverage figure.\n\nRaise the gap as a finding. Do not drop it from the denominator.", "x": "~30,000 shadow IT and OT assets that endpoint tooling had marked unmanaged. Found agentlessly, nothing deployed.\n\nA coverage % against a denominator that excludes them isn't a coverage %.", "cta": "See an asset record rebuilt from evidence →", "ctaUrl": "https://kai.security/platform", "source": "Cross-checked metric — 30,000 shadow IT and OT assets discovered agentlessly", "pillar": "CAASM", "tile": {"type": "headline"}, "concept": "beyond-the-line"}, {"id": "detection-as-stopgap", "week": 2, "slot": 3, "goal": "reshare", "scene": "cover-until", "theme": "Detection as a stopgap while the fix waits", "eyebrow": "Compensating coverage", "headline": "Some fixes have to wait. The exposure should not be uncovered while they do.", "linkedin": "Not everything can be patched this week. Maintenance windows exist, dependencies exist, and some systems genuinely cannot take a change on your timetable.\n\nThe question is what happens in the meantime. In most programmes the honest answer is nothing: the finding sits in a queue marked accepted-risk and the gap is simply open.\n\nThere is a better default. If the fix has to wait, a detection written specifically for that exposure can stand in for the patch until the change lands — and then be retired.\n\nTreating detection as temporary cover rather than permanent coverage is, I think, an underrated move.", "x": "Not everything can be patched this week.\n\nThe question is what covers the gap until it is. A detection written for that exposure can stand in for the patch — then retire.", "cta": "If your programme does this already, say so — I'd like to hear how.", "ctaUrl": "", "source": "Kai platform page — 'a detection stands in for as long as the fix has to wait'", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "cover-until"}, {"id": "queue-never-shrinks", "week": 2, "slot": 4, "goal": "follow", "scene": "throughput-gap", "theme": "Why the queue never shrinks", "eyebrow": "The throughput gap", "headline": "Exposure programmes are not failing at detection.", "linkedin": "Exposure programmes are not failing at detection. Every enterprise of any size finds more than it can act on, and most have added a layer on top to sort it.\n\nThe list gets better ordered every year. The backlog does not shrink. That is a throughput problem wearing a prioritisation costume.\n\nThroughput is set by the slowest step, and the slowest step is almost never the ranking. It is ownership, or the change window, or the reconciliation between the team that found it and the team that has to fix it.\n\nAutonomous remediation is how that step stops being the constraint — the change authored and delivered inside the boundary you set, rather than queued for someone else's sprint.\n\nI post about this most weeks. Follow if measuring throughput rather than volume is where your head is.", "x": "Exposure programmes aren't failing at detection.\n\nThe list gets better ordered every year. The backlog doesn't shrink.\n\nThat's a throughput problem in a prioritisation costume.", "cta": "Follow for more on throughput over volume.", "ctaUrl": "", "source": "Kai CTEM page — 'Ranked is not the same as closed'; Auto Remediation available per 2026-07-29 release", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "throughput-gap"}, {"id": "exploitability-before-severity", "week": 3, "slot": 1, "goal": "reshare", "scene": "same-score-different-answer", "theme": "Exploitability before severity", "eyebrow": "Validation", "headline": "Critical in the abstract is not critical on your asset.", "linkedin": "A CVSS score describes a vulnerability. It does not describe your environment.\n\nThe same critical finding can be unreachable on one asset, exploitable on another, and part of a chain on a third. Treating those three as one queue item is how teams end up arguing about severity instead of about evidence.\n\nCut on exploitability per asset, not severity in the abstract. The list gets smaller and, more usefully, the conversation with the owning team changes: you are no longer asking them to trust a score.\n\nProof travels further than priority.", "x": "A CVSS score describes a vulnerability, not your environment.\n\nSame critical finding: unreachable on one asset, exploitable on another, part of a chain on a third.\n\nProof travels further than priority.", "cta": "Pass it on if your severity debates sound like this.", "ctaUrl": "", "source": "Kai CTEM page — 'Cut on exploitability per asset, not severity in the abstract'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "same-score-different-answer"}, {"id": "scanning-is-table-stakes", "week": 3, "slot": 2, "goal": "reshare", "scene": "after-the-find", "theme": "Scanning is table stakes", "eyebrow": "A straight answer", "headline": "Discovery is solved. The work after it is not.", "linkedin": "A point against my own interest, because it is true: scanning is table stakes.\n\nYour existing vulnerability and cloud posture tools find things perfectly well. Nobody needs another discovery engine, and a vendor telling you otherwise is selling you a second inventory to reconcile against the first.\n\nThe hard part was never finding. It is everything between a finding and a change that shipped: whether it is reachable, who owns the asset, what the fix is, and when that team can take it.\n\nBe suspicious of anyone whose answer to the second problem is a better version of the first.", "x": "A point against my own interest: scanning is table stakes.\n\nThe hard part was never finding. It's everything between a finding and a change that shipped.", "cta": "Reshare if you've bought the second inventory and regretted it.", "ctaUrl": "", "source": "Kai messaging — 'Scanning is table stakes', conceded position", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "after-the-find"}, {"id": "intel-to-rule", "week": 3, "slot": 3, "goal": "traffic", "scene": "rules-stack", "theme": "From intelligence to a deployed rule", "eyebrow": "Detection intelligence", "headline": "70+ rules, generated and tuned, in two hours.", "linkedin": "Threat intelligence tells you what is being exploited. Detection engineering turns that into a rule. Between the two sits a queue, and that queue is usually measured in weeks.\n\nDoing both in one pass — scoped to the exposures you actually have rather than every published technique — produced 70+ detection rules, generated and tuned, in two hours.\n\nThe constraint was never the writing. It was the context: knowing which exposures are real in this estate before deciding what to detect.\n\nSame intelligence, same team. Different order of operations.", "x": "Threat intel tells you what's exploited. Detection engineering makes it a rule. Between them sits a queue measured in weeks.\n\n70+ rules, generated and tuned, in two hours.", "cta": "See detection written for your environment →", "ctaUrl": "https://kai.security/platform", "source": "Cross-checked metric — 70+ rules generated and tuned in 2 hours", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "rules-stack"}, {"id": "reachability-maths", "week": 3, "slot": 4, "goal": "traffic", "scene": "erode-to-real", "theme": "Reachability changes the arithmetic", "eyebrow": "Exploitability", "headline": "Over 90% of findings are removed before anyone triages.", "linkedin": "Severity is assigned in the abstract. Reachability is a fact about your environment.\n\nWhen you prove whether a finding is reachable — on the asset, in the code path, and from outside — most of the queue stops being work. In Kai's deployments that removes over 90% of findings before a human triages anything, and up to 99% depending on environment, language ecosystem and scanner mix.\n\nThe remaining list is small enough to argue about from evidence rather than from a CVSS score.\n\nThat is the whole case for proving exploitability before you prioritise.", "x": "Severity is assigned in the abstract. Reachability is a fact about your environment.\n\nProving it removes 90%+ of findings before anyone triages.", "cta": "See what exposure management looks like when it closes →", "ctaUrl": "https://kai.security/platform", "source": "Kai platform page + Ladder 'Live': reachability cuts findings 90%+, up to 99%", "pillar": "CTEM", "tile": {"type": "headline"}, "concept": "erode-to-real"}, {"id": "accepted-has-no-expiry", "week": 4, "slot": 1, "goal": "reshare", "scene": "accepted-ages", "theme": "Accepted risk has no expiry date", "eyebrow": "Risk acceptance", "headline": "Accepted risk is a decision, not a status.", "linkedin": "Every exposure programme has an accepted-risk bucket. Almost none of them have a review date.\n\nA risk accepted in March was accepted against March's estate, March's threat landscape and March's compensating controls. By October none of those three are the same, and nobody re-ran the decision — because the finding left the queue the moment it was marked accepted.\n\nAcceptance is a reasonable answer. Permanent acceptance, with no expiry and no owner, is just a quieter kind of backlog.\n\nDoes your programme put a review date on an accepted risk? Genuinely curious how many do.", "x": "A risk accepted in March was accepted against March's estate and March's threat landscape.\n\nBy October nobody re-ran the decision.\n\nAcceptance without an expiry date is a quieter kind of backlog.", "cta": "If your programme dates its acceptances, say so — I'd like to hear how.", "ctaUrl": "", "source": "Kai CTEM page — 'Ranked is not the same as closed'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "accepted-ages"}, {"id": "record-vs-belief", "week": 4, "slot": 2, "goal": "follow", "scene": "belief-vs-evidence", "theme": "A CMDB records a belief", "eyebrow": "Asset record", "headline": "Your inventory records a belief. Evidence records a fact.", "linkedin": "A CMDB is a record of what somebody entered, and of what the last reconciliation agreed to. Both of those are beliefs about the estate. Neither is an observation of it.\n\nThat distinction stays harmless right up until you calculate something from it — coverage, ownership, exposure per business unit. Then the belief becomes a number in a board pack.\n\nRebuilding the record from evidence rather than reconciling what the CMDB already believed is a different exercise, and it tends to produce an uncomfortable first week. It is also the only version of the record you can defend.\n\nI post about asset truth and exposure management most weeks — follow along if this is your problem too.", "x": "A CMDB records what someone entered and what the last reconciliation agreed to.\n\nBoth are beliefs about the estate. Neither is an observation of it.", "cta": "Follow for more on asset truth and exposure management.", "ctaUrl": "", "source": "Kai platform page — asset record rebuilt from evidence rather than reconciled", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "belief-vs-evidence"}, {"id": "techniques-that-apply", "week": 4, "slot": 3, "goal": "traffic", "scene": "narrow-to-yours", "theme": "Detect what applies to you", "eyebrow": "Scope", "headline": "Most published techniques will never touch your estate.", "linkedin": "Detection coverage is usually measured against the published technique list. It is a tidy denominator, and it is the wrong one.\n\nMost of those techniques depend on software you do not run, in configurations you do not have, reachable from positions nobody can get to in your environment. Writing rules for them adds standing triage cost and buys no risk reduction.\n\nScoping detection to confirmed exposures inverts the exercise: you start from what is real here, then write for that. One SOC's false-positive rate moved from 74% to 12% on exactly that change.\n\nCoverage is easy to add and expensive to own.", "x": "Detection coverage is measured against the published technique list. Tidy denominator, wrong one.\n\nMost of it depends on software you don't run.\n\n74% false positives → 12%.", "cta": "See detection scoped to your environment →", "ctaUrl": "https://kai.security/platform", "source": "Cross-checked metric — 74% → 12% SOC false-positive rate", "pillar": "Threat Intelligence", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "narrow-to-yours"}, {"id": "rollback-is-the-fix", "week": 4, "slot": 4, "goal": "reshare", "scene": "rollback-path", "theme": "A change you cannot undo is not a fix", "eyebrow": "Change safety", "headline": "If you cannot roll it back, it is not a fix. It is a gamble.", "linkedin": "The reason remediation moves slowly in large estates is rarely that nobody knows what to change. It is that nobody will authorise the change without knowing how to undo it.\n\nThat is a completely rational position. A failed patch on a production system costs more than the exposure did, and the person who approved it owns that outcome.\n\nSo the useful question is not how to make changes faster. It is how to make them reversible — the change authored, the blast radius known, the rollback path recorded before anything ships. Speed is a consequence of that, not a substitute for it.\n\nEvery remediation conversation that skips the rollback question ends up back at the change advisory board anyway.", "x": "Remediation isn't slow because nobody knows what to change.\n\nIt's slow because nobody will authorise a change they can't undo.\n\nReversible first. Fast is a consequence.", "cta": "Pass it on if your CAB conversations sound like this.", "ctaUrl": "", "source": "Kai platform page — change authored and delivered inside a set boundary, rollback path recorded", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "rollback-path"}, {"id": "coverage-denominator", "week": 5, "slot": 1, "goal": "reshare", "scene": "denominator-grows", "theme": "Every coverage percentage has a denominator", "eyebrow": "Measurement", "headline": "98% coverage of the assets you already knew about.", "linkedin": "Coverage percentages are the most quoted and least interrogated number in security reporting.\n\nThe figure is only as honest as its denominator, and the denominator is whatever your tooling agreed to count. Discover 30,000 assets that endpoint tooling had marked unmanaged and a 98% becomes something considerably less comfortable — without a single control getting worse.\n\nThat is the right outcome, incidentally. The number was always wrong; it just looked better before.\n\nIf a coverage figure never moves when you improve discovery, it is not measuring coverage. It is measuring the inventory.", "x": "Coverage % is only as honest as its denominator, and the denominator is whatever your tooling agreed to count.\n\nFind 30,000 unmanaged assets and 98% stops looking like 98%.", "cta": "Reshare if your coverage figure has never moved.", "ctaUrl": "", "source": "Cross-checked metric — 30,000 shadow IT and OT assets discovered agentlessly", "pillar": "CTEM", "pillarSecondary": "CAASM", "tile": {"type": "headline"}, "concept": "denominator-grows"}, {"id": "unmanaged-is-a-verdict", "week": 5, "slot": 2, "goal": "reshare", "scene": "verdict-reversed", "theme": "Unmanaged is a verdict, not a property", "eyebrow": "Coverage", "headline": "'Unmanaged' is something your tooling decided, not something the asset is.", "linkedin": "When an endpoint tool marks an asset unmanaged, that is a statement about the tool's reach. It gets read as a statement about the asset.\n\nThe practical consequence is that the asset stops appearing in the places where work gets allocated. It is not in the coverage figure, not in the owner mapping, and not in anyone's queue. It is still on the network.\n\nRoughly 30,000 assets in one estate sat in exactly that category, and they were found agentlessly — nothing new deployed, no new agent to roll out.\n\nWorth checking what your own unmanaged bucket actually contains. In most estates nobody has looked inside it recently.", "x": "'Unmanaged' is a statement about your tool's reach. It gets read as a statement about the asset.\n\nEither way it's still on the network.", "cta": "Worth comparing notes — reshare if your unmanaged bucket is a mystery too.", "ctaUrl": "", "source": "Cross-checked metric — ~30,000 assets marked unmanaged by existing endpoint tooling", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "verdict-reversed"}, {"id": "detections-should-retire", "week": 5, "slot": 3, "goal": "follow", "scene": "rules-retire", "theme": "Detections should retire", "eyebrow": "Rule lifecycle", "headline": "Nobody is measured on the detections they retired.", "linkedin": "Detection libraries only ever grow. Every incident adds a rule, every new technique adds a rule, and nothing ever comes off — because no one has been rewarded for deleting a detection.\n\nThe cost is not storage. It is that every stale rule spends analyst attention on an exposure that was closed months ago.\n\nIf a detection was written to cover a specific exposure while the fix waited, then the fix landing is the signal to retire it. That only works if the rule knew which exposure it was standing in for — which is an argument for writing detections against confirmed exposures rather than against the technique list.\n\nA library that cannot shrink is not a library. It is an accumulation.\n\nI write about this most weeks — follow if detection lifecycle is on your mind.", "x": "Detection libraries only grow. Every incident adds a rule and nothing comes off.\n\nIf a detection covered an exposure while the fix waited, the fix landing is the signal to retire it.", "cta": "Follow for more on detection lifecycle and exposure management.", "ctaUrl": "", "source": "Kai platform page — 'a detection stands in for as long as the fix has to wait'", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "rules-retire"}, {"id": "autonomy-inside-a-boundary", "week": 5, "slot": 4, "goal": "traffic", "scene": "inside-boundary", "theme": "Autonomy inside a boundary you set", "eyebrow": "The boundary", "headline": "Autonomy is not the absence of control. It is control you set once.", "linkedin": "The objection to autonomous remediation is always the same, and it is a fair one: I am not letting software change production on its own.\n\nThat objection is about an unbounded agent. It is not an argument against autonomy — it is an argument for a boundary.\n\nSet the boundary once: which asset classes, which change types, which windows, which approvals still route to a human. Inside it, the change is authored, delivered and recorded with a rollback path. Outside it, nothing moves without you.\n\nThat is a different proposition from a tool that files a ticket and calls it remediation. The exposure goes from found to fixed, and the control you exercised was the boundary rather than the keystroke.", "x": "'I'm not letting software change production on its own' is an argument against an unbounded agent.\n\nIt's an argument for a boundary, not against autonomy.", "cta": "See an exposure go from found to fixed →", "ctaUrl": "https://kai.security/platform", "source": "Kai platform page — change authored and delivered inside the boundary you set, rollback recorded", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "inside-boundary"}], "_tile_modes": "A planner post is its own artwork, not a tile with a scene on it: white ground, Kai colours as accent, and a composition built for that one argument. Each post names a concept in POST_CONCEPTS. Nothing here is shared with the Single tile or Carousel tabs.", "_rolling_window": "The calendar always shows the next 30 days. Twenty posts fill five weeks of the Mon/Tue/Thu/Fri cadence, so there is never an empty slot inside the window. When a week falls behind, plan the next four and append them.", "framework": {"_note": "Read from Kai's own systems on 2 Oct 2026 and summarised here so the planner, and anyone reading the plan, works from the approved messaging rather than from whatever the last post happened to say. Re-read the sources when they change.", "sources": [{"label": "Kai Messaging Framework (19 Jun 2026)", "system": "SharePoint", "url": "https://kaicyberinc.sharepoint.com/sites/kai-marketing/Shared Documents/External Sharing/Kai & Taschler Insights/2026 CISO Survey/Kai Messaging Framework 061926.pdf", "gives": "Manifesto, vision, positioning statement, capabilities, 12 use cases, Autonomous Defense Cycle, taglines, boilerplate."}, {"label": "Q3/Q4 Campaign Brief — Prioritization is Dead. Long live Fixed.", "system": "SharePoint", "url": "https://kaicyberinc.sharepoint.com/sites/kai-marketing/Shared Documents/Campaigns/FY27 Q3-Q4/Campaign Brief.docx", "gives": "Current campaign umbrella, message ladder, tone guardrails, personas, funnel. Modified 2 Oct 2026 — the freshest positioning."}, {"label": "Master Sales Playbook + Scripts", "system": "Confluence (KPM)", "url": "https://kaicyber.atlassian.net/wiki/spaces/KPM/pages/347013121/Master+Sales+Playbook+Scripts", "gives": "What lands and what confuses on real calls, proof points, and the CISO stress test — the claims buyers push back on and the hardened way to say them."}], "umbrella": "Prioritization is Dead. Long live Fixed.", "ladder": {"ongoing": "Risk Fixed, Not Filed.", "subheadline": "Proven exploitable. Fixed by the right owner. Covered until the patch lands.", "closing": "Prioritization kept the backlog alive. Kai eliminates it.", "ciso": "Measure your program in risk closed, not tickets opened.", "vpVuln": "Your backlog finally goes down.", "guardrail": "Humans set the boundary. Kai acts automatically inside it; outside it, Kai stages the plan, names the owner and opens the ticket."}, "manifesto": ["Cybersecurity has reached its human limit.", "We cannot win a machine-speed war with human-speed defenses.", "Adding AI to a broken stack isn't progress. It's inertia with a new label.", "The future of security has no categories — only outcomes.", "Human defenders don't just keep up. They become superhuman."], "challenges": [{"challenge": "Tools aren't keeping up", "answer": "Collapse scanners into one platform"}, {"challenge": "The threat has changed", "answer": "Drive all exposures to remediation"}, {"challenge": "Resources have a ceiling", "answer": "Agents amplify security team capacity"}], "cycle": {"Protect": "Before an attack — discover, enrich, attribute ownership, validate true exploitability, tune detections, drive remediation.", "Detect": "During an attack — distil intel in real time, hunt, generate detections, correlate across assets, identities and vulnerabilities.", "Respond": "When an attack is detected — execute response, guide remediation with context, validate fixes, update the model."}, "phrases_that_land": ["We investigate first, then prioritise — instead of prioritise then investigate.", "We flip the process on its head.", "Your scanners find. We investigate, triage and remediate.", "We're a pilot, not a co-pilot.", "Attackers don't think in categories. Defense shouldn't either.", "Not just 'upgrade Library X' — here are all 15 dependencies."], "phrases_to_avoid": ["'GenAI' — buyers hear ChatGPT wrapper and disengage.", "Deep explanations of how transformers work — prospects get defensive.", "More than one use case in a single post — the thread gets lost.", "Fear-based or AI-attacker framing in a headline (campaign brief tone rule).", "Mocking prioritisation or the people who built programmes on it. Affectionate, never sneering.", "Naming competitors."], "tone": "Confident, plain-spoken, a little playful. Affectionate toward prioritisation, never mocking.", "proof_public": [{"figure": "74% → 12% SOC false-positive rate", "source": "Cross-checked metric"}, {"figure": "~30,000 shadow IT and OT assets discovered agentlessly", "source": "Cross-checked metric"}, {"figure": "70+ detection rules generated and tuned in 2 hours", "source": "Cross-checked metric"}, {"figure": "4% → 92% asset ownership, 250k assets, under 12h", "source": "kai.security platform page"}, {"figure": "Reachability removes 90%+ of findings, up to 99%", "source": "kai.security platform page + Ladder 'Live'"}, {"figure": "20-30+ people, 15-20 tools, 3-5 handoffs in a remediation chain", "source": "kai.security CTEM page"}], "proof_internal_do_not_publish": ["15M vulnerabilities triaged in hours", "2M SCA findings, 97% eliminated in 1 hour", "16M → 3M actionable (hotel chain, 350k assets)", "2.5M → 32K (100k cloud assets)", "4% → 76% ownership in one week (27M tickets)", "50-85% SIEM cost reduction", "MITRE ATT&CK coverage +45%", "3M vulnerabilities in under 30 minutes", "False negative rate 2-3%", "$1M+ bookings; $125M raised", "The competitive matrix, which is built on Gartner sub-categories"], "claims_guard": {"the_90_99_number": "Do not frame it as a false-positive epidemic. The scanner is doing its job: it found a library with a known CVE, which is technically correct. The question is whether an attacker can exploit it in this environment. Frame it as a context gap scanners were never designed to fill — never as scanner failure. This is the CISO's single biggest pushback.", "ownership": "The published figure is 4% → 92% across 250k assets in under 12h. An internal playbook cites 4% → 76% in one week from 27M tickets, and flags the method as an inference rather than a fact. Use the published figure, and do not imply ticket inference is certainty.", "autonomy": "Automated remediation delivery is claimable as available (ruled 2 Oct 2026). Always pair it with the boundary: humans set it, Kai acts inside it, outside it Kai stages the plan.", "analyst_material": "Nothing sourced from licensed analyst research, including the competitive matrix and anything in the Gartner Research folder. Education only — no quotes, no figures, no attribution, no screenshots."}}};
 /* ---- end LinkedIn plan ---- */
-/* The concept animations are diagrams, not stat graphics, so unlike ring or
-   grid they are allowed on a headline tile — which is what a thought-leadership
-   post actually is. */
-const CONCEPT_REVEALS = new Set(['cycle', 'funnel', 'collapse']);
-const CONCEPTS = {
-  cycle: {
-    label: 'CTEM cycle \u2014 the loop closes',
-    note: 'Five phases everyone defines. Two more that close the loop.',
-    traditional: ['Scoping', 'Discovery', 'Prioritization', 'Validation', 'Mobilization'],
-    beyond: ['Auto Remediation', 'Detection'],
-    traditionalLabel: 'Actions in traditional CTEM',
-    beyondLabel: 'Beyond CTEM, only Kai'
-  },
-  funnel: {
-    label: 'Exposure funnel \u2014 noise removed',
-    note: 'Over 90% of findings removed on exploitability before anyone triages.',
-    steps: [
-      { value: '845.4K', label: 'Exposures' },
-      { value: '101K',   label: 'Reachable' },
-      { value: '10.4K',  label: 'Exploitable' },
-      { value: '336',    label: 'Chain-critical' }
-    ]
-  },
-  collapse: {
-    label: 'Days to minutes \u2014 the chain collapses',
-    note: 'Context resolves once, before the fork.',
-    before: { label: 'Without Kai', head: 'Days to weeks',
-              rows: [['20-30+', 'humans involved'], ['15-20', 'tools in the chain'], ['3-5', 'cross-team handoffs']] },
-    after:  { label: 'With Kai', head: 'Minutes',
-              rows: [['One', 'agentic platform'], ['One', 'tool in the chain'], ['None', 'cross-team handoffs']] }
-  }
-};
 const FORMATS = [
   {
     v: '1200x1200',
@@ -1671,8 +1666,8 @@ function state(){
     hires: liveHires(), motif: v('motif'),
     cta: ctaOn() ? {label: v('ctaLabel').trim(), url: v('ctaUrl').trim(), showUrl: v('ctaShowUrl') === '1',
                     pos: v('ctaPos'), fill: v('ctaColor')} : null,
-    reveal: (v('type') === 'headline' && !CONCEPT_REVEALS.has(v('reveal')))
-              ? 'none' : v('reveal'),
+    reveal: v('type') === 'headline' ? 'none' : v('reveal'),
+    postConcept: v('postConcept'),
     beforeLabel: v('beforeLabel'), collapsePct: parseFloat(v('collapsePct')) || 12,
     ambient: parseInt(v('ambient'), 10) || 0,
     dur: Math.max(0.4, parseFloat(v('dur')) || 1.6),
@@ -1927,6 +1922,11 @@ function drawFrame(c0, W, H, s, progress, amb){
   if (s.brandStrip !== false) drawBrandStrip(c, W, H);
 }
 function drawFrameInner(c, W, H, s, progress, amb){
+  // A planner post is its own artwork, not a tile with a scene on it.
+  if (s.postConcept && typeof POST_CONCEPTS !== 'undefined' && POST_CONCEPTS[s.postConcept]){
+    drawPostFrame(c, W, H, s, progress);
+    return;
+  }
   let t = THEMES[s.theme];
   if (t.layout && s.wash && WASHES[s.wash] && WASHES[s.wash].aurora)
     t = Object.assign({}, t, LIGHT_INK, {aurora: WASHES[s.wash].aurora, stops: WASHES[s.wash].stops});
@@ -2030,8 +2030,7 @@ function drawFrameInner(c, W, H, s, progress, amb){
   const blockBottom = (s.authors.length ? authorTop : (ctaStack ? ctaTop : stackBottom))
                       - ((s.authors.length || ctaStack) ? R.gap2 * 1.6 * S : 0);
   const hasScene = s.reveal === 'ring' || s.reveal === 'grid' ||
-                   s.reveal === 'columns' || s.reveal === 'clock' ||
-                   CONCEPT_REVEALS.has(s.reveal);
+                   s.reveal === 'columns' || s.reveal === 'clock';
   const bandTop = logoY + logoH + R.safeGap * S;
   // On a square the graphic sits above the copy, so it gets its own band and the
   // text stack starts below it. On a rectangle it sits beside the copy instead.
@@ -2144,101 +2143,6 @@ function drawFrameInner(c, W, H, s, progress, amb){
     c.globalAlpha = 0.75; c.fillText(fmt(s.from, s), x0 + colW/2, baseY + 12*S);
     c.globalAlpha = 1;   c.fillText(fmt(val, s), x0 + colW*1.5 + gapW, baseY + 12*S);
     c.textAlign = 'left';
-  } else if (s.reveal === 'cycle') {
-    /* The CTEM loop. The five phases everyone defines recede; the two only Kai
-       runs carry the emphasis colour, because they are the ones that close it. */
-    const KC = CONCEPTS.cycle, n = KC.traditional.length + KC.beyond.length;
-    const r  = wide ? 152 * S : Math.min(W * 0.175, SB.h / 2 - 4 * S);
-    const cx = wide ? W - M - r - 14 * S : SB.x + SB.w / 2;
-    const cy = wide ? H * 0.464 : SB.y + SB.h / 2;
-    const gap = 0.05, seg = (Math.PI * 2) / n, grown = easeOutCubic(progress);
-    c.lineWidth = Math.max(10, r * 0.20); c.lineCap = 'butt';
-    for (let i = 0; i < n; i++) {
-      const a0 = -Math.PI / 2 + i * seg + gap / 2, a1 = a0 + seg - gap;
-      const lit = clamp01(grown * n - i);
-      c.strokeStyle = t.dataTrack;
-      c.beginPath(); c.arc(cx, cy, r, a0, a1); c.stroke();
-      if (lit <= 0) continue;
-      const beyond = i >= KC.traditional.length;
-      c.globalAlpha = beyond ? 1 : 0.42;
-      c.strokeStyle = beyond ? numC : inkC;
-      c.beginPath(); c.arc(cx, cy, r, a0, a0 + (a1 - a0) * lit); c.stroke();
-      c.globalAlpha = 1;
-    }
-    const done = Math.round(clamp01(grown) * n);
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillStyle = numC; c.font = `700 ${Math.round(r * 0.72)}px Roboto, sans-serif`;
-    c.fillText(String(done), cx, cy - r * 0.10);
-    c.fillStyle = inkC; c.globalAlpha = 0.78;
-    c.font = `500 ${Math.max(12, r * 0.155)}px "Wix Madefor Text", sans-serif`;
-    c.fillText(done >= n ? 'phases · closed' : 'phases', cx, cy + r * 0.40);
-    c.globalAlpha = 1; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
-
-  } else if (s.reveal === 'funnel') {
-    /* Volume in, almost none of it out. The counts are the ones on the
-       Exposure Management view; only the survivor takes the accent. */
-    const steps = CONCEPTS.funnel.steps, last = steps.length - 1;
-    const bw = wide ? W * 0.377 : W - M * 2;
-    const bx = wide ? W - M - bw : M;
-    const bh = wide ? Math.min(SB.h * 0.56, H * 0.30) : SB.h * 0.50;
-    const by = wide ? H * 0.476 - bh * 0.30 : SB.y + SB.h * 0.30;
-    const colW = bw / steps.length, grown = easeOutCubic(progress);
-    c.textAlign = 'center';
-    for (let i = 0; i < steps.length; i++) {
-      const lit = clamp01(grown * steps.length - i);
-      if (lit <= 0) continue;
-      const h = Math.max(7 * S, bh * Math.pow(0.40, i)) * lit;
-      const x = bx + i * colW, base = by + bh;
-      // all bars take the figure colour, which is contrast-checked against the
-      // ground — inkC is white on the blue themes and vanishes here
-      c.globalAlpha = [0.30, 0.46, 0.66, 1][Math.min(i, 3)] * lit;
-      c.fillStyle = numC;
-      roundRect(c, x + colW * 0.14, base - h, colW * 0.72, h, Math.min(9 * S, h / 2));
-      c.globalAlpha = lit;
-      c.fillStyle = numC;
-      c.font = `700 ${Math.max(15, 24 * S)}px Roboto, sans-serif`;
-      c.fillText(steps[i].value, x + colW / 2, base - h - 12 * S);
-      c.globalAlpha = lit * 0.72; c.fillStyle = inkC;
-      c.font = `500 ${Math.max(12, 14 * S)}px "Wix Madefor Text", sans-serif`;
-      c.fillText(steps[i].label, x + colW / 2, base + 24 * S);
-      c.globalAlpha = 1;
-    }
-    c.textAlign = 'left';
-
-  } else if (s.reveal === 'collapse') {
-    /* Both sides stay on screen — the comparison is the point, so replacing
-       one with the other in place would throw away the message. */
-    const KK = CONCEPTS.collapse;
-    const bw = wide ? W * 0.377 : W - M * 2;
-    const bx = wide ? W - M - bw : M;
-    const top = wide ? H * 0.476 - SB.h * 0.30 : SB.y + SB.h * 0.12;
-    const rowH = (wide ? SB.h * 0.58 : SB.h * 0.62) / 3;
-    const colW = bw * 0.46, gapX = bw - colW * 2;
-    const grown = easeOutCubic(progress);
-    const num = Math.max(15, Math.min(26 * S, rowH * 0.42));
-    const lab = Math.max(11, Math.min(14 * S, rowH * 0.26));
-    [[KK.before, 0, '#E11D48', 0], [KK.after, colW + gapX, numC, 0.3]].forEach(
-      ([side, dx, col, delay]) => {
-        const on = clamp01((grown - delay) / (1 - delay));
-        if (on <= 0) return;
-        c.globalAlpha = on * 0.78; c.fillStyle = inkC;
-        c.font = `600 ${lab}px "Wix Madefor Text", sans-serif`;
-        c.fillText(side.label.toUpperCase(), bx + dx, top);
-        for (let i = 0; i < side.rows.length; i++) {
-          const rowOn = clamp01(on * 3 - i);
-          if (rowOn <= 0) continue;
-          const y = top + 26 * S + i * rowH + num * 0.8;
-          c.globalAlpha = rowOn; c.fillStyle = col;
-          c.font = `700 ${num}px Roboto, sans-serif`;
-          c.fillText(side.rows[i][0], bx + dx, y);
-          c.globalAlpha = rowOn * 0.66; c.fillStyle = inkC;
-          c.font = `500 ${lab}px "Wix Madefor Text", sans-serif`;
-          // clear of the figure's own box, not just of its baseline
-          c.fillText(side.rows[i][1], bx + dx, y + num * 0.95);
-        }
-        c.globalAlpha = 1;
-      });
-
   } else if (s.reveal === 'bar') {
     const by = H - 24*S, bh = 12*S;
     c.fillStyle = t.dataTrack;
@@ -4124,8 +4028,7 @@ function toSVG(s){
   const blockBottom = (s.authors.length ? authorTop : (ctaStack ? ctaTop : stackBottom))
                       - ((s.authors.length || ctaStack) ? R.gap2*1.6*S : 0);
   const hasScene = s.reveal === 'ring' || s.reveal === 'grid' ||
-                   s.reveal === 'columns' || s.reveal === 'clock' ||
-                   CONCEPT_REVEALS.has(s.reveal);
+                   s.reveal === 'columns' || s.reveal === 'clock';
   const bandTop = logoY + logoH + R.safeGap*S;
   const bandH = (hasScene && !wide) ? Math.min(W*0.30, H*0.30) : 0;
   const safeTop = bandTop + (bandH ? bandH + R.gap2*1.2*S : 0);
@@ -4806,7 +4709,6 @@ function refreshUI(){
   document.getElementById('emphMode').parentElement.style.display = (announce || isQuoteUI) ? 'none' : 'block';
   document.getElementById('clockFields').style.display = s.reveal === 'clock' ? 'grid' : 'none';
   document.querySelectorAll('.sw').forEach(el => el.classList.toggle('on', el.dataset.k === theme));
-  if (typeof syncConcepts === 'function') syncConcepts();
   document.querySelectorAll('.lock').forEach(el => el.classList.toggle('on', el.dataset.k === theme));
 
   const host = document.getElementById('advice');
@@ -4887,81 +4789,6 @@ function applyCategoryCopy(t, force){
 }
 
 
-/* The concept animations get a section rather than an entry buried in the
-   reveal dropdown: they are a kind of tile, not a kind of chart. Both write
-   the same `reveal` field, so the two controls can never disagree. */
-const CONCEPT_KEYS = [
-  ['none',     'None'],
-  ['cycle',    'CTEM cycle'],
-  ['funnel',   'Exposure funnel'],
-  ['collapse', 'Days to minutes']
-];
-function conceptGlyph(c, w, h, kind){
-  const navy = '#080943', cyan = '#00BFFF';
-  c.clearRect(0, 0, w, h);
-  c.fillStyle = '#EEF2F6'; c.fillRect(0, 0, w, h);
-  const cx = w / 2, cy = h / 2;
-  if (kind === 'cycle'){
-    const r = h * 0.30;
-    c.lineWidth = h * 0.13; c.lineCap = 'butt';
-    for (let i = 0; i < 7; i++){
-      const a0 = -Math.PI/2 + i * (Math.PI*2/7) + 0.07, a1 = a0 + Math.PI*2/7 - 0.14;
-      c.strokeStyle = i >= 5 ? cyan : navy;
-      c.globalAlpha = i >= 5 ? 1 : 0.35;
-      c.beginPath(); c.arc(cx, cy, r, a0, a1); c.stroke();
-    }
-    c.globalAlpha = 1;
-  } else if (kind === 'funnel'){
-    const bw = w * 0.13, gap = w * 0.055, x0 = cx - (bw*4 + gap*3)/2;
-    [0.72, 0.42, 0.22, 0.10].forEach((f, i) => {
-      c.fillStyle = i === 3 ? cyan : navy; c.globalAlpha = i === 3 ? 1 : 0.35;
-      const bh = h * f; c.fillRect(x0 + i*(bw+gap), cy + h*0.34 - bh, bw, bh);
-    });
-    c.globalAlpha = 1;
-  } else if (kind === 'collapse'){
-    const bw = w * 0.30;
-    [[cx - w*0.20, '#E11D48', [0.26, 0.20, 0.14]], [cx + w*0.20, cyan, [0.10, 0.10, 0.10]]]
-      .forEach(([x, col, rows]) => {
-        c.fillStyle = col;
-        rows.forEach((f, i) => c.fillRect(x - bw/2, cy - h*0.26 + i*h*0.20, bw*f/0.26*0.6, h*0.09));
-      });
-  } else {
-    c.strokeStyle = navy; c.globalAlpha = 0.28; c.lineWidth = 1.5;
-    c.beginPath(); c.moveTo(cx - w*0.12, cy - h*0.12); c.lineTo(cx + w*0.12, cy + h*0.12);
-    c.moveTo(cx + w*0.12, cy - h*0.12); c.lineTo(cx - w*0.12, cy + h*0.12); c.stroke();
-    c.globalAlpha = 1;
-  }
-}
-function syncConcepts(){
-  const v = document.getElementById('reveal').value;
-  document.querySelectorAll('#concepts .cw').forEach(el =>
-    el.classList.toggle('on', el.dataset.k === v));
-}
-function buildConcepts(){
-  const host = document.getElementById('concepts');
-  if (!host) return;
-  CONCEPT_KEYS.forEach(([k, label]) => {
-    const d = document.createElement('div');
-    d.className = 'cw'; d.dataset.k = k;
-    d.title = k === 'none' ? 'No concept animation'
-                           : (CONCEPTS[k] ? CONCEPTS[k].note : label);
-    const cv = document.createElement('canvas');
-    cv.width = 150; cv.height = 92;
-    d.appendChild(cv);
-    const b = document.createElement('b'); b.textContent = label; d.appendChild(b);
-    conceptGlyph(cv.getContext('2d'), 150, 92, k);
-    d.addEventListener('click', () => {
-      const sel = document.getElementById('reveal');
-      sel.value = k; sel.dispatchEvent(new Event('change'));
-      syncConcepts();
-    });
-    host.appendChild(d);
-  });
-  document.getElementById('reveal').addEventListener('change', syncConcepts);
-  host.parentElement.style.paddingBottom = '6px';
-  syncConcepts();
-}
-
 /* ---------------- LinkedIn Planner ----------------
    Four posts a week, each one a concept with its own animation and its own
    copy. The planner drives the existing tile engine rather than drawing
@@ -4993,17 +4820,8 @@ function loadPost(post){
   /* The post declares its own tile mode. A stat graphic visualises a from/to,
      so it only draws on a stat tile; a concept diagram is an argument and
      belongs on a headline. Getting this wrong renders an empty tile. */
-  const T = post.tile || { type: 'headline', reveal: post.scene };
-  if (T.theme && THEMES[T.theme]) syncTheme(T.theme);   // the pillar owns the category
-  if (T.stops){                                         // and may carry its own stops
-    const hex = ['g1','g2','g3'], pos = ['p1','p2','p3'];
-    T.stops.forEach(([at, col], i) => {
-      if (i > 2) return;
-      const h = document.getElementById(hex[i]), q = document.getElementById(pos[i]);
-      if (h) h.value = col.toLowerCase();
-      if (q) q.value = Math.round(at * 100);
-    });
-  }
+  const T = post.tile || { type: 'headline' };
+  set('postConcept', post.concept || '');
   set('type', T.type);
   set('eyebrow', post.eyebrow);
   set('head', T.head !== undefined ? T.head : planValue(post, 'headline'));
@@ -5016,11 +4834,10 @@ function loadPost(post){
     if (T.beforeLabel) set('beforeLabel', T.beforeLabel);
     if (T.collapsePct) set('collapsePct', T.collapsePct);
   }
-  set('reveal', T.reveal);
+  set('reveal', 'none');
   set('ctaLabel', planValue(post, 'cta'));
   set('ctaUrl', planValue(post, 'ctaUrl'));
   set('ctaShowUrl', post.ctaUrl ? '1' : '0');
-  if (typeof syncConcepts === 'function') syncConcepts();
   save(); play();
   say('Loaded “' + post.theme + '”. Export the PNG or the GIF from the controls below.');
 }
@@ -5090,7 +4907,8 @@ async function openInFigma(kind){
 }
 
 const PL_KEYS = { edits:'kai-plan-edits-v1', inputs:'kai-plan-inputs-v1',
-                  dirs:'kai-plan-directions-v1' };
+                  dirs:'kai-plan-directions-v1', ctas:'kai-plan-ctas-v1',
+                  drafts:'kai-plan-drafts-v1' };
 const PL_CADENCE = [1, 2, 4, 5];                       // Mon, Tue, Thu, Fri
 const PL_DAYS = ['mon','tue','thu','fri'];
 const PL_PILLAR_COLOUR = {
@@ -5113,15 +4931,44 @@ Goal mix per week:
 Roughly two reshare, one traffic, one follow. Reshare leads, because the other
 two depend on it.
 
+Messaging (from the framework — see the Messaging panel above):
+- The umbrella is "Prioritization is Dead. Long live Fixed." Prioritisation is
+  not gone; it became a step. What died is ranking a list and calling the work
+  done. Never attack CTEM or the people who built programmes on it.
+- The strongest hook Kai has is the flip: investigate first, then prioritise.
+  Use it when the post is about triage.
+- Tone: confident, plain-spoken, a little playful. Affectionate toward
+  prioritisation, never mocking.
+- No fear-based or AI-attacker framing in a headline.
+- Never say "GenAI", never explain how transformers work, never name a
+  competitor, and never carry more than one use case in a post.
+
+Figures:
+- Only the public proof points in the framework. Everything else in the sales
+  playbook is internal and stays internal.
+- The 90-99% reachability number is a context gap, not a false-positive
+  epidemic. The scanner did its job; it found a real CVE. The question is
+  whether it is exploitable here. Framing it as scanner failure is the fastest
+  way to lose a CISO.
+- Autonomy is always paired with the boundary: humans set it, Kai acts inside
+  it, outside it Kai stages the plan and names the owner.
+- Nothing sourced from licensed analyst research. Education only.
+
 Writing rules:
 - Reshare posts carry no product claim. A post that names Kai does not get
   reshared by people who do not work here.
 - Product claims belong in traffic posts, with a link.
-- Every figure must be one of the three cross-checked metrics or already
-  published on kai.security. Name the source.
-- Never source anything that would need third-party permission to reproduce.
-  Licensed research is for understanding topics and buyer sentiment only.
-- Open on the problem, not the product. End reshare posts on a question.`;
+- Every figure names its source.
+- Open on the problem, not the product. End reshare posts on a question.
+
+The brief:
+- Queued post ideas come first. Work each one into the soonest slot whose
+  pillar fits, and say which post it became.
+- CTAs come from the destination list in the brief. Match the destination to
+  the topic; if nothing fits, the post ships without a link rather than
+  pointing somewhere loosely related.
+- Ideas and destinations also steer the illustration: a post about an idea in
+  the brief gets a concept drawn for that argument, not a reused one.`;
 
 const plGet = k => { try { return JSON.parse(localStorage.getItem(k)) || null; } catch { return null; } };
 const plSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
@@ -5138,12 +4985,26 @@ const plEdited = id => !!planEdits()[id];
 /* Dated slots on the cadence, starting from the Monday of this week. The plan
    has twelve posts; the rest of the thirty days are open slots waiting for a
    planning run. */
+/* Open slots inside the 30-day window — what "always 30 days in advance" costs
+   if a planning run is skipped. */
+function rowsPending(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const horizon = new Date(today); horizon.setDate(today.getDate() + 30);
+  return plSchedule().reduce((n, r) => n + r.cells.filter(
+    cl => !cl.post && cl.date >= today && cl.date <= horizon).length, 0);
+}
+
 function plSchedule(){
   const today = new Date(); today.setHours(0,0,0,0);
   const monday = new Date(today);
   monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
-  const posts = PLAN.posts.slice().sort((a,b) => a.week - b.week || a.slot - b.slot);
-  const rows = [], weeks = 6;
+  const posts = allPosts().slice().sort((a,b) => a.week - b.week || a.slot - b.slot);
+  // The window is a rolling 30 days from today, rounded out to whole weeks, so
+  // the grid never shows a run of empty slots inside the period we promise to fill.
+  const horizon = new Date(today); horizon.setDate(today.getDate() + 30);
+  const rows = [], weeks = Math.max(
+    Math.ceil((horizon - monday) / (7 * 86400000)),
+    Math.ceil(posts.length / PL_CADENCE.length));
   let n = 0;
   for (let w = 0; w < weeks; w++){
     const cells = PL_CADENCE.map(dow => {
@@ -5159,14 +5020,575 @@ const plFmt = d => d.toLocaleDateString('en-GB', { month:'short', day:'numeric' 
 
 let plSelected = null;
 
+/* ==================================================================== *
+ * LinkedIn post concepts — the planner's own design language
+ *
+ * These are not the tile scenes. A planner post is its own artwork: white
+ * ground, Kai colours as accent, and a composition built for that one
+ * argument. Nothing here is shared with the Single tile or Carousel tabs.
+ * ==================================================================== */
+const PK = { ink:'#080943', mute:'#5A6480', faint:'#C9D2E0', hair:'#E4E7EC',
+             deep:'#027FA8', blue:'#00BFFF', cyan:'#11C4FD', mint:'#8AF0E6',
+             foam:'#50C7AC', lime:'#BEFF78', acid:'#D6FF20', paper:'#FFFFFF' };
+const pe = t => 1 - Math.pow(1 - Math.max(0, Math.min(1, t)), 3);   // ease out
+const pstep = (p, i, n, overlap) => Math.max(0, Math.min(1, (p * n - i) / (overlap || 1)));
+function pRound(c, x, y, w, h, r){ roundRect(c, x, y, w, h, Math.min(r, Math.abs(h)/2, Math.abs(w)/2)); }
+function pText(c, t, x, y, size, col, weight, align, font){
+  c.save(); c.fillStyle = col; c.textAlign = align || 'left'; c.textBaseline = 'alphabetic';
+  c.font = `${weight || 600} ${size}px ${font || '"Wix Madefor Text", sans-serif'}`;
+  c.fillText(t, x, y); c.restore();
+}
+
+const POST_CONCEPTS = {
+
+  /* The list reorders itself; the pile never gets smaller. */
+  'reorder-not-shorter': (c, b, p) => {
+    const n = 7, gap = b.h / n, bw = b.w * 0.62, x = b.x;
+    const order = [3,0,5,1,6,2,4];
+    const t = pe(Math.min(1, p * 1.4));
+    for (let i = 0; i < n; i++){
+      const from = i, to = order[i];
+      const y = b.y + (from + (to - from) * t) * gap;
+      const w = bw * (0.42 + 0.58 * ((n - to) / n));
+      c.fillStyle = i === order.indexOf(0) ? PK.blue : PK.faint;
+      pRound(c, x, y, w, gap * 0.62, gap * 0.31); c.fill();
+    }
+    c.save(); c.setLineDash([6, 6]); c.strokeStyle = PK.mute; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(x + bw + 28, b.y); c.lineTo(x + bw + 28, b.y + b.h); c.stroke();
+    c.restore();
+    pText(c, 'same ' + n, x + bw + 44, b.y + b.h / 2 - 4, Math.max(13, b.h * 0.075), PK.mute, 600);
+    pText(c, 'every week', x + bw + 44, b.y + b.h / 2 + Math.max(16, b.h * 0.085), Math.max(13, b.h * 0.075), PK.mute, 500);
+  },
+
+  /* Unowned assets acquire an owner: 4% to 92%. */
+  'owner-fills': (c, b, p) => {
+    const gh = b.h * 0.62;
+    const cols = 14, rows = 7, cw = b.w / cols, ch = Math.min(cw, gh / rows), r = Math.min(cw, ch) * 0.26;
+    const n = cols * rows, owned = Math.round(n * (0.04 + 0.88 * pe(p)));
+    for (let i = 0; i < n; i++){
+      const x = b.x + (i % cols) * cw + cw / 2, y = b.y + Math.floor(i / cols) * ch + ch / 2;
+      c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2);
+      c.fillStyle = i < owned ? PK.blue : PK.faint; c.fill();
+    }
+    const pct = Math.round(4 + 88 * pe(p));
+    pText(c, pct + '%', b.x + b.w, b.y + b.h * 0.86,
+          Math.max(24, b.h * 0.26), PK.ink, 700, 'right', 'Roboto, sans-serif');
+    pText(c, 'have an accountable owner', b.x + b.w, b.y + b.h * 0.99,
+          Math.max(11, b.h * 0.078), PK.mute, 500, 'right');
+  },
+
+
+  /* A stream of alerts; most of it was never real. */
+  'alert-stream': (c, b, p) => {
+    // Grey = never real. The grey drains from 74% to 12%; blue is what was worth waking for.
+    const cols = 12, rows = 4, n = cols * rows, t = pe(p);
+    const frac = 0.74 - 0.62 * t;
+    const cw = b.w / cols, ch = b.h * 0.60 / rows;
+    for (let i = 0; i < n; i++){
+      const col = i % cols, row = Math.floor(i / cols);
+      // scattered, stable flip order
+      const rank = (((i * 2654435761) % 1013) / 1013);
+      const fake = rank < frac;
+      const h = ch * 0.52, w = cw * 0.72;
+      const x = b.x + col * cw, y = b.y + row * ch + (ch * 0.52 - h) / 2;
+      c.globalAlpha = fake ? 0.55 : 1;
+      c.fillStyle = fake ? PK.faint : PK.blue;
+      pRound(c, x, y, w, h, Math.min(5, h / 2));
+      c.fill();
+    }
+    c.globalAlpha = 1;
+    const v = Math.round(frac * 100);
+    const num = Math.max(26, b.h * 0.30);
+    pText(c, v + '%', b.x, b.y + b.h, num, PK.ink, 700, 'left', 'Roboto, sans-serif');
+    c.font = `700 ${num}px Roboto, sans-serif`;
+    const nw = c.measureText(v + '%').width;
+    pText(c, 'never real', b.x + nw + Math.max(10, b.h * 0.05), b.y + b.h - num * 0.10,
+          Math.max(13, b.h * 0.095), PK.mute, 500);
+  },
+
+  /* Two teams, the same context rebuilt twice, then once. */
+  'handoff-gap': (c, b, p) => {
+    // The span between found and fixed, measured against where it starts.
+    const t = pe(p), r = Math.max(11, b.h * 0.095);
+    const cy = b.y + b.h * 0.60, refY = b.y + b.h * 0.14;
+    const x0 = b.x + r, x1 = b.x + b.w - r;
+    const days = 21 - 20.9 * t;
+    const span = (x1 - x0) * (days / 21);
+
+    // reference: where the gap starts
+    c.strokeStyle = PK.hair; c.lineWidth = Math.max(5, b.h * 0.035); c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x0, refY); c.lineTo(x1, refY); c.stroke();
+    pText(c, '21 days, typical', x1, refY - Math.max(12, b.h * 0.07),
+          Math.max(11, b.h * 0.075), PK.mute, 500, 'right');
+
+    // the live gap
+    const xe = x0 + span;
+    c.save(); c.setLineDash([9, 11]); c.lineDashOffset = -t * 40;
+    c.strokeStyle = PK.blue; c.lineWidth = Math.max(4, b.h * 0.032);
+    c.beginPath(); c.moveTo(x0, cy); c.lineTo(Math.max(x0 + 1, xe), cy); c.stroke(); c.restore();
+
+    const labY = cy + r + Math.max(20, b.h * 0.135), labS = Math.max(12, b.h * 0.085);
+    // merge on measured text, not on a guessed distance
+    c.font = `600 ${labS}px "Wix Madefor Text", sans-serif`;
+    const merged = span < c.measureText('found').width + r * 1.6;
+    c.beginPath(); c.arc(x0, cy, r, 0, Math.PI * 2); c.fillStyle = PK.ink; c.fill();
+    c.beginPath(); c.arc(xe, cy, r, 0, Math.PI * 2); c.fillStyle = PK.blue; c.fill();
+    if (merged){
+      pText(c, 'found, fixed', x0, labY, labS, PK.mute, 600, 'left');
+    } else {
+      pText(c, 'found', x0, labY, labS, PK.mute, 600, 'left');
+      pText(c, 'fixed', xe, labY, labS, PK.mute, 600, 'center');
+    }
+
+    const d = Math.round(days);
+    pText(c, d < 1 ? 'minutes' : d + (d === 1 ? ' day' : ' days'),
+          x0, cy - r - Math.max(14, b.h * 0.09), Math.max(17, b.h * 0.155),
+          t > 0.75 ? PK.blue : PK.ink, 700, 'left', 'Roboto, sans-serif');
+  },
+
+  /* Five phases, then the two that close the ring. */
+  'loop-closes': (c, b, p) => {
+    const R = Math.min(b.w, b.h) / 2 * 0.86, cx = b.x + b.w / 2, cy = b.y + b.h / 2;
+    const n = 7, seg = Math.PI * 2 / n, gap = 0.08, t = pe(p);
+    c.lineWidth = Math.max(10, R * 0.20); c.lineCap = 'butt';
+    for (let i = 0; i < n; i++){
+      const a0 = -Math.PI / 2 + i * seg + gap / 2, a1 = a0 + seg - gap;
+      c.strokeStyle = PK.hair; c.beginPath(); c.arc(cx, cy, R, a0, a1); c.stroke();
+      const lit = pstep(t, i, n, 1);
+      if (lit <= 0) continue;
+      c.strokeStyle = i < 5 ? PK.ink : PK.blue;
+      c.globalAlpha = i < 5 ? 0.30 : 1;
+      c.beginPath(); c.arc(cx, cy, R, a0, a0 + (a1 - a0) * lit); c.stroke();
+      c.globalAlpha = 1;
+    }
+    const done = Math.round(t * n);
+    pText(c, String(done), cx, cy + R * 0.14, R * 0.62, PK.ink, 700, 'center', 'Roboto, sans-serif');
+    pText(c, done >= n ? 'closed' : 'phases', cx, cy + R * 0.46, Math.max(11, R * 0.15), PK.mute, 500, 'center');
+  },
+
+  /* Counted assets, and the ones beyond the line. */
+  'beyond-the-line': (c, b, p) => {
+    const t = pe(p), cols = 18, rows = 8, cw = b.w / cols, ch = b.h / rows;
+    const edge = b.x + b.w * 0.46;
+    for (let i = 0; i < cols * rows; i++){
+      const x = b.x + (i % cols) * cw + cw / 2, y = b.y + Math.floor(i / cols) * ch + ch / 2;
+      const beyond = x > edge;
+      if (beyond && t < ((x - edge) / (b.w * 0.54))) continue;
+      c.beginPath(); c.arc(x, y, Math.min(cw, ch) * 0.20, 0, Math.PI * 2);
+      c.fillStyle = beyond ? PK.blue : PK.faint; c.fill();
+    }
+    c.save(); c.setLineDash([5, 6]); c.strokeStyle = PK.mute; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(edge, b.y - 6); c.lineTo(edge, b.y + b.h + 6); c.stroke(); c.restore();
+    pText(c, 'counted', edge - 12, b.y - 14, Math.max(11, b.h * 0.085), PK.mute, 600, 'right');
+    pText(c, 'found', edge + 12, b.y - 14, Math.max(11, b.h * 0.085), PK.blue, 600);
+  },
+
+  /* A patch that has to wait, and the cover that stands in. */
+  'cover-until': (c, b, p) => {
+    const t = pe(p), cy = b.y + b.h * 0.50, h = Math.max(12, b.h * 0.10);
+    c.fillStyle = PK.hair; pRound(c, b.x, cy - h / 2, b.w, h, h / 2); c.fill();
+    const patchX = b.x + b.w * 0.78;
+    c.fillStyle = PK.blue; c.globalAlpha = Math.min(1, t * 2.4);
+    pRound(c, b.x, cy - h / 2, (patchX - b.x) * Math.min(1, t * 1.5), h, h / 2); c.fill();
+    c.globalAlpha = 1;
+    c.beginPath(); c.arc(patchX, cy, h * 0.95, 0, Math.PI * 2);
+    c.fillStyle = PK.ink; c.fill();
+    pText(c, 'patch lands', patchX, cy + h * 2.6, Math.max(11, b.h * 0.082), PK.mute, 600, 'center');
+    pText(c, 'detection covers the gap', b.x, cy - h * 2.0, Math.max(11, b.h * 0.082), PK.deep, 600);
+  },
+
+  /* Intake outruns output, so the backlog grows. */
+  'throughput-gap': (c, b, p) => {
+    // Two columns off one baseline; the difference is the backlog.
+    const t = pe(p), bw = b.w * 0.17, baseY = b.y + b.h * 0.86;
+    const x1 = b.x + b.w * 0.06, x2 = x1 + bw + b.w * 0.10;
+    const inH = b.h * 0.80 * t, outH = b.h * 0.19 * t;
+    [[x1, inH, PK.faint, 'found'], [x2, outH, PK.blue, 'fixed']].forEach(([x, hh, col, lab]) => {
+      c.fillStyle = col; pRound(c, x, baseY - hh, bw, hh, 8); c.fill();
+      pText(c, lab, x + bw / 2, baseY + Math.max(21, b.h * 0.12),
+            Math.max(12, b.h * 0.085), PK.mute, 600, 'center');
+    });
+    // brace spanning the shortfall, labelled clear of the line
+    const bx = x2 + bw + Math.max(16, b.w * 0.035);
+    const top = baseY - inH, bot = baseY - outH, arm = Math.max(8, b.w * 0.018);
+    c.strokeStyle = PK.deep; c.lineWidth = 2; c.setLineDash([]);
+    c.beginPath();
+    c.moveTo(bx - arm, top); c.lineTo(bx, top);
+    c.lineTo(bx, bot); c.lineTo(bx - arm, bot);
+    c.stroke();
+    pText(c, 'the backlog', bx + Math.max(10, b.w * 0.022), (top + bot) / 2 + b.h * 0.03,
+          Math.max(13, b.h * 0.105), PK.deep, 700);
+    pText(c, 'every week', bx + Math.max(10, b.w * 0.022), (top + bot) / 2 + b.h * 0.155,
+          Math.max(11, b.h * 0.08), PK.mute, 500);
+  },
+
+  /* One severity, three different answers. */
+  'same-score-different-answer': (c, b, p) => {
+    const t = pe(p), n = 3, cw = b.w / n, outs = ['unreachable', 'exploitable', 'in a chain'];
+    const cols = [PK.faint, PK.blue, PK.ink];
+    for (let i = 0; i < n; i++){
+      const x = b.x + i * cw + cw * 0.08, w = cw * 0.84;
+      c.fillStyle = PK.hair; pRound(c, x, b.y, w, b.h * 0.34, 10); c.fill();
+      pText(c, 'CRITICAL', x + w / 2, b.y + b.h * 0.215, Math.max(11, b.h * 0.085), PK.mute, 700, 'center');
+      const lit = pstep(t, i, n, 1.2);
+      if (lit <= 0) continue;
+      c.globalAlpha = lit;
+      c.strokeStyle = PK.hair; c.lineWidth = 2;
+      c.beginPath(); c.moveTo(x + w / 2, b.y + b.h * 0.36); c.lineTo(x + w / 2, b.y + b.h * 0.52); c.stroke();
+      c.fillStyle = cols[i]; pRound(c, x, b.y + b.h * 0.55, w, b.h * 0.30, 10); c.fill();
+      pText(c, outs[i], x + w / 2, b.y + b.h * 0.745, Math.max(11, b.h * 0.078),
+            i === 0 ? PK.mute : '#FFFFFF', 700, 'center');
+      c.globalAlpha = 1;
+    }
+  },
+
+  /* Finding is instant; everything after it is not. */
+  'after-the-find': (c, b, p) => {
+    const steps = ['find', 'reach', 'own', 'fix', 'prove'], n = steps.length;
+    const t = pe(p), cw = b.w / n, cy = b.y + b.h * 0.42, r = Math.max(9, b.h * 0.07);
+    c.strokeStyle = PK.hair; c.lineWidth = Math.max(4, b.h * 0.028);
+    c.beginPath(); c.moveTo(b.x + cw / 2, cy); c.lineTo(b.x + b.w - cw / 2, cy); c.stroke();
+    const prog = Math.min(1, t);
+    c.strokeStyle = PK.blue;
+    c.beginPath(); c.moveTo(b.x + cw / 2, cy);
+    c.lineTo(b.x + cw / 2 + (b.w - cw) * (prog < 0.25 ? prog * 4 * 0.25 : 0.25 + (prog - 0.25) * 0.33), cy);
+    c.stroke();
+    steps.forEach((st, i) => {
+      const x = b.x + cw / 2 + i * ((b.w - cw) / (n - 1));
+      const done = i === 0 ? t > 0.08 : t > 0.25 + i * 0.18;
+      c.beginPath(); c.arc(x, cy, r, 0, Math.PI * 2);
+      c.fillStyle = done ? PK.blue : '#FFFFFF'; c.fill();
+      c.strokeStyle = done ? PK.blue : PK.faint; c.lineWidth = 3; c.stroke();
+      pText(c, st, x, cy + r + Math.max(20, b.h * 0.12), Math.max(11, b.h * 0.078),
+            done ? PK.ink : PK.mute, 600, 'center');
+    });
+    pText(c, 'solved', b.x + cw / 2, cy - r - Math.max(14, b.h * 0.08), Math.max(11, b.h * 0.075), PK.mute, 600, 'center');
+  },
+
+  /* Intelligence in, rules out. */
+  'rules-stack': (c, b, p) => {
+    const t = pe(p), total = 70, shown = Math.round(total * t);
+    const gh = b.h * 0.60;                       // grid band; the count lives below it, inside the box
+    const cols = 10, rows = 7, cw = b.w * 0.52 / cols, ch = gh / rows;
+    for (let i = 0; i < Math.min(shown, cols * rows); i++){
+      const x = b.x + b.w * 0.44 + (i % cols) * cw, y = b.y + gh - (Math.floor(i / cols) + 1) * ch;
+      c.fillStyle = PK.blue; c.globalAlpha = 0.35 + 0.65 * (i / (cols * rows));
+      pRound(c, x, y + ch * 0.18, cw * 0.74, ch * 0.62, 3); c.fill(); c.globalAlpha = 1;
+    }
+    const cy = b.y + gh * 0.5;
+    c.strokeStyle = PK.deep; c.lineWidth = Math.max(3, gh * 0.022); c.lineCap = 'round';
+    c.beginPath(); c.moveTo(b.x, cy);
+    c.bezierCurveTo(b.x + b.w * 0.2, cy, b.x + b.w * 0.24, b.y + gh * 0.9, b.x + b.w * 0.42, b.y + gh * 0.9);
+    c.stroke();
+    pText(c, 'intel', b.x, cy - Math.max(13, gh * 0.09), Math.max(11, gh * 0.09), PK.mute, 600);
+    pText(c, shown + '+', b.x + b.w, b.y + b.h * 0.86,
+          Math.max(24, b.h * 0.26), PK.ink, 700, 'right', 'Roboto, sans-serif');
+    pText(c, 'rules, tuned', b.x + b.w, b.y + b.h * 0.99,
+          Math.max(11, b.h * 0.078), PK.mute, 500, 'right');
+  },
+
+  'erode-to-real': (c, b, p) => {
+    // Everything scanned, eroded down to what is actually reachable.
+    const t = pe(p), bh = b.h * 0.52, by = b.y + b.h * 0.26;
+    const left = Math.max(b.w * 0.07, b.w * (1 - 0.93 * t));
+    c.fillStyle = PK.hair; pRound(c, b.x, by, b.w, bh, 14); c.fill();
+    c.fillStyle = PK.blue; pRound(c, b.x, by, left, bh, 14); c.fill();
+    const x = b.x + left;
+    c.save(); c.setLineDash([5, 6]); c.strokeStyle = PK.mute; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(x, by - 8); c.lineTo(x, by + bh + 8); c.stroke(); c.restore();
+    pText(c, Math.round(93 * t) + '% removed', b.x + b.w, by - Math.max(12, b.h * 0.07),
+          Math.max(13, b.h * 0.125), PK.mute, 600, 'right');
+    // the sliver ends ~7% wide, so the label hangs under it with a leader
+    c.strokeStyle = PK.deep; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(b.x + left / 2, by + bh + 4);
+    c.lineTo(b.x + left / 2, by + bh + Math.max(12, b.h * 0.08)); c.stroke();
+    pText(c, 'proven reachable', b.x, by + bh + Math.max(30, b.h * 0.20),
+          Math.max(13, b.h * 0.105), PK.deep, 700);
+  }
+,
+  /* A finding leaves the queue the moment it is accepted, and then ages. */
+  'accepted-ages': (c, b, p) => {
+    const t = pe(p), chipH = Math.max(22, b.h * 0.17), railY = b.y + b.h * 0.56;
+    pRound(c, b.x, b.y, Math.max(96, b.w * 0.24), chipH, chipH / 2);
+    c.fillStyle = PK.hair; c.fill();
+    pText(c, 'ACCEPTED', b.x + Math.max(12, b.w * 0.026), b.y + chipH * 0.70,
+          Math.max(11, chipH * 0.46), PK.mute, 700);
+    c.strokeStyle = PK.hair; c.lineWidth = Math.max(5, b.h * 0.035); c.lineCap = 'round';
+    c.beginPath(); c.moveTo(b.x + 4, railY); c.lineTo(b.x + b.w - 4, railY); c.stroke();
+    c.strokeStyle = PK.blue; c.beginPath(); c.moveTo(b.x + 4, railY);
+    c.lineTo(b.x + 4 + (b.w - 8) * t, railY); c.stroke();
+    const days = Math.round(412 * t);
+    const num = Math.max(24, b.h * 0.26), cap = Math.max(11, b.h * 0.085);
+    const numY = b.y + b.h * 0.88;
+    pText(c, days + ' days', b.x, numY, num, PK.ink, 700, 'left', 'Roboto, sans-serif');
+    // on a narrow box the caption will not sit beside the number, so it goes under it
+    c.font = `700 ${num}px Roboto, sans-serif`;
+    const numW = c.measureText(days + ' days').width;
+    const capText = 'since anyone re-ran the decision';
+    c.font = `500 ${cap}px "Wix Madefor Text", sans-serif`;
+    if (numW + c.measureText(capText).width + cap * 1.2 < b.w){
+      pText(c, capText, b.x + b.w, numY, cap, PK.mute, 500, 'right');
+    } else {
+      pText(c, capText, b.x, numY + cap * 1.5, cap, PK.mute, 500);
+    }
+  },
+
+  /* What the record says, against what the estate actually shows. */
+  'belief-vs-evidence': (c, b, p) => {
+    const t = pe(p), cols = 12, cw = b.w / cols, rh = b.h * 0.22, gap = b.h * 0.22;
+    const yA = b.y + b.h * 0.12, yB = yA + rh + gap;
+    const DIFF = [1, 3, 4, 7, 9, 10];                 // where the record and the estate disagree
+    for (let i = 0; i < cols; i++){
+      const x = b.x + i * cw, w = cw * 0.80;
+      pRound(c, x, yA, w, rh, 5); c.fillStyle = PK.faint; c.fill();
+    }
+    for (let i = 0; i < cols; i++){
+      const x = b.x + i * cw, w = cw * 0.80, shown = pstep(t, i, cols, 3);
+      if (shown <= 0) continue;
+      const differs = DIFF.includes(i);
+      if (differs){
+        // the record claims it; the estate does not show it. Leave the hole.
+        c.save(); c.setLineDash([4, 4]); c.strokeStyle = PK.faint;
+        c.lineWidth = Math.max(2, rh * 0.10);
+        c.beginPath(); c.moveTo(x, yB + rh / 2); c.lineTo(x + w, yB + rh / 2);
+        c.stroke(); c.restore();
+      } else {
+        pRound(c, x, yB, w, rh, 5); c.fillStyle = PK.blue;
+        c.globalAlpha = shown; c.fill(); c.globalAlpha = 1;
+      }
+    }
+    pText(c, 'recorded', b.x, yA - Math.max(8, b.h * 0.05), Math.max(11, b.h * 0.085), PK.mute, 600);
+    pText(c, 'observed', b.x, yB + rh + Math.max(20, b.h * 0.155),
+          Math.max(11, b.h * 0.085), PK.deep, 700);
+    const nd = Math.round(DIFF.length * t);
+    pText(c, nd + ' of ' + cols + ' disagree', b.x + b.w, yB + rh + Math.max(20, b.h * 0.155),
+          Math.max(11, b.h * 0.085), PK.mute, 500, 'right');
+  },
+
+  /* Everything published, narrowed to what is real in this estate. */
+  'narrow-to-yours': (c, b, p) => {
+    const t = pe(p), topY = b.y + b.h * 0.18, botY = b.y + b.h * 0.70;
+    const n = 34, kept = Math.max(4, Math.round(n * (1 - 0.82 * t)));
+    const span = b.w * 0.92, cx = b.x + b.w / 2, pitch = span / n;
+    const tickW = Math.max(4, pitch * 0.42), tickH = b.h * 0.13;
+    const keptSpan = kept * pitch;
+    // the funnel walls, drawn from the outer ticks to the kept group
+    c.strokeStyle = PK.hair; c.lineWidth = Math.max(2, b.h * 0.016);
+    c.beginPath();
+    c.moveTo(cx - span / 2, topY + tickH); c.lineTo(cx - keptSpan / 2, botY);
+    c.moveTo(cx + span / 2, topY + tickH); c.lineTo(cx + keptSpan / 2, botY);
+    c.stroke();
+    for (let i = 0; i < n; i++){
+      const x = cx - span / 2 + (i + 0.5) * pitch;
+      const survives = Math.abs(i - (n - 1) / 2) < kept / 2;
+      c.fillStyle = survives ? PK.blue : PK.faint;
+      c.globalAlpha = survives ? 1 : 0.6;
+      pRound(c, x - tickW / 2, topY, tickW, tickH, tickW / 2); c.fill();
+    }
+    c.globalAlpha = 1;
+    for (let i = 0; i < kept; i++){
+      const x = cx - keptSpan / 2 + (i + 0.5) * pitch;
+      c.fillStyle = PK.blue;
+      pRound(c, x - tickW / 2, botY, tickW, tickH, tickW / 2); c.fill();
+    }
+    pText(c, 'published', b.x, topY - Math.max(8, b.h * 0.05), Math.max(11, b.h * 0.085), PK.mute, 600);
+    pText(c, 'real in this estate', b.x, botY + tickH + Math.max(20, b.h * 0.155),
+          Math.max(11, b.h * 0.09), PK.deep, 700);
+  },
+
+  /* Forward, and the way back recorded before anything ships. */
+  'rollback-path': (c, b, p) => {
+    const t = pe(p), cy = b.y + b.h * 0.42, r = Math.max(10, b.h * 0.085);
+    const x0 = b.x + r, x1 = b.x + b.w - r;
+    c.strokeStyle = PK.hair; c.lineWidth = Math.max(5, b.h * 0.038); c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x0, cy); c.lineTo(x1, cy); c.stroke();
+    c.strokeStyle = PK.blue;
+    c.beginPath(); c.moveTo(x0, cy); c.lineTo(x0 + (x1 - x0) * Math.min(1, t * 1.4), cy); c.stroke();
+    [[x0, 'change', PK.ink], [x1, 'live', PK.blue]].forEach(([x, lab, col], i) => {
+      c.beginPath(); c.arc(x, cy, r, 0, Math.PI * 2); c.fillStyle = col; c.fill();
+      pText(c, lab, x, cy - r - Math.max(10, b.h * 0.06),
+            Math.max(11, b.h * 0.085), PK.mute, 600, i ? 'right' : 'left');
+    });
+    // the way back, drawn before it is ever needed
+    const arcT = Math.max(0, (t - 0.35) / 0.65), dip = b.h * 0.34;
+    if (arcT > 0){
+      c.save(); c.setLineDash([7, 8]); c.strokeStyle = PK.deep;
+      c.lineWidth = Math.max(3, b.h * 0.026);
+      c.beginPath(); c.moveTo(x1, cy + r);
+      c.bezierCurveTo(x1, cy + dip, x0, cy + dip, x0, cy + r);
+      c.stroke(); c.restore();
+      pText(c, 'rollback path recorded', b.x + b.w / 2, cy + dip * 0.92 + Math.max(16, b.h * 0.12),
+            Math.max(11, b.h * 0.088), PK.deep, 700, 'center');
+    }
+  },
+
+  /* The percentage was always wrong; it just looked better before. */
+  'denominator-grows': (c, b, p) => {
+    // 250k known, ~30k found. 98% of the known estate is 87.5% of the real one.
+    const t = pe(p), barY = b.y + b.h * 0.52, bh = Math.max(14, b.h * 0.16);
+    const KNOWN = 250, FOUND = 30 * t, units = KNOWN + FOUND;
+    const barW = b.w * units / (KNOWN + 30), knownW = barW * KNOWN / units;
+    c.fillStyle = PK.hair; pRound(c, b.x, barY, barW, bh, 7); c.fill();
+    c.fillStyle = PK.blue; pRound(c, b.x, barY, knownW * 0.98, bh, 7); c.fill();
+    c.save(); c.setLineDash([4, 5]); c.strokeStyle = PK.mute; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(b.x + knownW, barY - 7); c.lineTo(b.x + knownW, barY + bh + 7);
+    c.stroke(); c.restore();
+    const total = barW;
+    const pct = (98 * KNOWN / units).toFixed(0);
+    pText(c, pct + '%', b.x, b.y + b.h * 0.36, Math.max(26, b.h * 0.30),
+          PK.ink, 700, 'left', 'Roboto, sans-serif');
+    c.font = `700 ${Math.max(26, b.h * 0.30)}px Roboto, sans-serif`;
+    pText(c, 'covered', b.x + c.measureText(pct + '%').width + Math.max(12, b.h * 0.06),
+          b.y + b.h * 0.34, Math.max(12, b.h * 0.095), PK.mute, 500);
+    if (t > 0.1){
+      pText(c, '+30,000 found', b.x + total, barY - Math.max(10, b.h * 0.06),
+            Math.max(11, b.h * 0.085), PK.deep, 700, 'right');
+    }
+    pText(c, 'same controls, honest denominator', b.x, barY + bh + Math.max(26, b.h * 0.21),
+          Math.max(11, b.h * 0.088), PK.deep, 700);
+  },
+
+  /* A verdict your tooling reached, reversed on evidence. */
+  'verdict-reversed': (c, b, p) => {
+    const t = pe(p), cols = 5, rows = 3, n = cols * rows;
+    const cw = b.w / cols, ch = b.h * 0.74 / rows;
+    for (let i = 0; i < n; i++){
+      const col = i % cols, row = Math.floor(i / cols);
+      const x = b.x + col * cw, y = b.y + row * ch;
+      const w = cw * 0.90, h = ch * 0.74;
+      const flipped = pstep(t, i, n, 4) > 0.5;
+      pRound(c, x, y, w, h, 6);
+      c.fillStyle = flipped ? PK.blue : PK.hair; c.fill();
+      pText(c, flipped ? 'OBSERVED' : 'UNMANAGED', x + w / 2, y + h / 2 + h * 0.14,
+            Math.max(10.5, h * 0.30), flipped ? '#FFFFFF' : PK.mute, 700, 'center');
+    }
+    pText(c, 'same assets, nothing deployed', b.x, b.y + b.h * 0.97,
+          Math.max(11, b.h * 0.085), PK.deep, 700);
+  },
+
+  /* A library that cannot shrink is an accumulation. */
+  'rules-retire': (c, b, p) => {
+    const t = pe(p), n = 9, RET = [1, 3, 6, 8];
+    const rh = b.h * 0.082, gap = b.h * 0.030, top = b.y + b.h * 0.10;
+    let y = top, live = 0;
+    for (let i = 0; i < n; i++){
+      const ri = RET.indexOf(i);
+      const go = ri < 0 ? 0 : pstep(t, ri, RET.length, 1);   // the last one must finish at t=1
+      const h = rh * (1 - go);
+      const w = b.w * (0.52 + 0.40 * ((i * 5) % 7) / 7) * (1 - 0.45 * go);
+      if (h > 0.6){
+        c.globalAlpha = ri < 0 ? 1 : 1 - 0.65 * go;
+        c.fillStyle = ri < 0 ? PK.blue : PK.faint;
+        pRound(c, b.x, y, w, h, Math.min(h / 2, rh / 2)); c.fill();
+        c.globalAlpha = 1;
+        y += h + gap * (1 - go);
+      }
+      if (ri < 0 || go < 1) live += (ri < 0 ? 1 : 1 - go);
+    }
+    const retired = Math.round(RET.length * t);
+    pText(c, retired ? retired + ' retired' : 'nothing retired',
+          b.x + b.w, top, Math.max(12, b.h * 0.095), retired ? PK.deep : PK.mute, 700, 'right');
+    pText(c, 'the fix landed, so the cover comes off', b.x, b.y + b.h * 0.97,
+          Math.max(11, b.h * 0.082), PK.deep, 700);
+  },
+
+  /* Control exercised once, at the edge, rather than at every keystroke. */
+  'inside-boundary': (c, b, p) => {
+    const t = pe(p), m = b.h * 0.14;
+    const fx = b.x, fy = b.y + b.h * 0.10, fw = b.w, fh = b.h * 0.70;
+    c.save(); c.setLineDash([9, 7]); c.strokeStyle = PK.deep;
+    c.lineWidth = Math.max(2.5, b.h * 0.018);
+    pRound(c, fx, fy, fw, fh, 14); c.stroke(); c.restore();
+    pText(c, 'the boundary you set', fx, fy - Math.max(8, b.h * 0.045),
+          Math.max(11, b.h * 0.082), PK.deep, 700);
+    // inside it, found runs through to fixed
+    const cy = fy + fh / 2, x0 = fx + m, x1 = fx + fw - m, r = Math.max(8, b.h * 0.062);
+    c.strokeStyle = PK.hair; c.lineWidth = Math.max(4, b.h * 0.030); c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x0, cy); c.lineTo(x1, cy); c.stroke();
+    c.strokeStyle = PK.blue;
+    c.beginPath(); c.moveTo(x0, cy); c.lineTo(x0 + (x1 - x0) * t, cy); c.stroke();
+    ['found', 'authored', 'delivered'].forEach((lab, i) => {
+      const x = x0 + (x1 - x0) * (i / 2), on = t >= i / 2 - 0.02;
+      c.beginPath(); c.arc(x, cy, r, 0, Math.PI * 2);
+      c.fillStyle = on ? PK.blue : PK.faint; c.fill();
+      pText(c, lab, x, cy + r + Math.max(18, b.h * 0.12), Math.max(10.5, b.h * 0.075),
+            on ? PK.ink : PK.mute, 600, i === 0 ? 'left' : (i === 2 ? 'right' : 'center'));
+    });
+    pText(c, 'nothing moves outside it', fx + fw, b.y + b.h * 0.99,
+          Math.max(11, b.h * 0.078), PK.mute, 500, 'right');
+  }
+};
+
+/* The post frame: white, the mark in navy, the concept, then the words. */
+function drawPostFrame(c, W, H, s, progress){
+  const wide = W / H > 1.25, M = Math.round(W * (wide ? 0.052 : 0.075));
+  const S = W / REF_W;
+  c.save();
+  c.fillStyle = PK.paper; c.fillRect(0, 0, W, H);
+
+  const logo = img('logo:' + PK.ink);
+  let logoH = 0;
+  if (logo){
+    logoH = Math.round(H * (wide ? 0.085 : 0.062));
+    c.drawImage(logo, M, M, logoH * logo.width / logo.height, logoH);
+  }
+
+  const fn = POST_CONCEPTS[s.postConcept];
+  const textTop = wide ? M + logoH + H * 0.10 : H * 0.60;
+  const box = wide
+    ? { x: W * 0.52, y: M + logoH + H * 0.10, w: W * 0.42, h: H * 0.46 }
+    : { x: M, y: M + logoH + H * 0.055, w: W - M * 2, h: H * 0.30 };
+  if (fn) { c.save(); fn(c, box, Math.max(0, Math.min(1, progress)), PK); c.restore(); }
+
+  const colW = wide ? W * 0.42 : W - M * 2;
+  let y = wide ? textTop + H * 0.02 : H * 0.655;
+  if (s.eyebrow){
+    pText(c, s.eyebrow.toUpperCase(), M, y, Math.max(12, 20 * S), PK.deep, 700);
+    y += Math.max(22, 34 * S);
+  }
+  const size = Math.max(20, (wide ? 44 : 54) * S);
+  c.font = `700 ${size}px "Wix Madefor Text", sans-serif`;
+  const words = String(s.head || '').split(/\s+/);
+  const lines = []; let cur = '';
+  for (const w of words){
+    const tryLine = cur ? cur + ' ' + w : w;
+    if (c.measureText(tryLine).width > colW && cur){ lines.push(cur); cur = w; } else cur = tryLine;
+  }
+  if (cur) lines.push(cur);
+  lines.slice(0, 4).forEach(ln => { pText(c, ln, M, y + size * 0.82, size, PK.ink, 700); y += size * 1.14; });
+
+  if (s.source){
+    const fs = Math.max(15, 25 * S), avail = W - M * 2;
+    c.font = `500 ${fs}px "Wix Madefor Text", sans-serif`;
+    const sw = String(s.source).split(/\s+/);
+    const sl = []; let acc = '';
+    for (const w of sw){
+      const tryLine = acc ? acc + ' ' + w : w;
+      if (c.measureText(tryLine).width > avail && acc){ sl.push(acc); acc = w; } else acc = tryLine;
+    }
+    if (acc) sl.push(acc);
+    const keep = sl.slice(0, 2);
+    if (sl.length > 2) keep[1] = keep[1].replace(/[\s,;]+$/, '') + '…';
+    const base = H - Math.max(30, 50 * S);
+    keep.forEach((ln, i) => pText(c, ln, M, base - (keep.length - 1 - i) * fs * 1.3, fs, PK.mute, 500));
+  }
+  c.restore();
+}
+
 function buildPlanner(){
   const cal = document.getElementById('plCal');
   if (!cal || typeof PLAN === 'undefined') return;
-  document.getElementById('plIntro').textContent =
-    PLAN.posts.length + ' posts planned across ' + PLAN.cadence.weeks +
-    ' weeks, four a week. ' + PLAN.cadence.mix;
-
   const rows = plSchedule();
+  const openSlots = rowsPending();
+  document.getElementById('plIntro').textContent =
+    allPosts().length + ' posts planned across ' + rows.length +
+    ' weeks, four a week, covering the next 30 days. ' +
+    (plDrafts().length ? plDrafts().length + ' from the brief, still to be written. ' : '') +
+    (openSlots ? openSlots + ' slot' + (openSlots === 1 ? '' : 's') +
+                 ' inside the window are still open — add to the brief and plan them. '
+               : 'Every slot inside the window is filled. ') +
+    PLAN.cadence.mix;
+
   cal.innerHTML = '';
   cal.appendChild(Object.assign(document.createElement('div'), { className:'hd', textContent:'' }));
   PL_DAYS.forEach(d => cal.appendChild(
@@ -5186,7 +5608,8 @@ function buildPlanner(){
       b.className = 'pl-cell' + (cell.past ? ' past' : '');
       b.style.borderLeftColor = PL_PILLAR_COLOUR[cell.post.pillar] || 'var(--navy)';
       b.dataset.id = cell.post.id;
-      const status = plEdited(cell.post.id) ? 'edited' : 'planned';
+      const status = cell.post.draft ? 'draft' : (plEdited(cell.post.id) ? 'edited' : 'planned');
+      if (cell.post.draft) b.classList.add('draft');
       b.innerHTML = `<div class="d">${plFmt(cell.date)} &middot; ${status}</div>` +
                     `<div class="t">${planValue(cell.post, 'headline')}</div>`;
       b.addEventListener('click', () => selectPost(cell.post, cell.date));
@@ -5195,8 +5618,10 @@ function buildPlanner(){
   });
 
   buildInputs();
+  buildCtas();
+  buildFramework();
   buildHow();
-  const first = PLAN.posts.slice().sort((a,b)=>a.week-b.week||a.slot-b.slot)[0];
+  const first = allPosts().slice().sort((a,b)=>a.week-b.week||a.slot-b.slot)[0];
   if (first) selectPost(first, rows[0].cells[0].date);
 }
 
@@ -5249,7 +5674,10 @@ function selectPost(post, date){
   field('LinkedIn copy', 'linkedin', 8, li);
   field('X copy', 'x', 4, xc);
   field('Call to action', 'cta', 0, planValue(post, 'cta'));
-  if (post.ctaUrl !== undefined) field('CTA link', 'ctaUrl', 0, planValue(post, 'ctaUrl'));
+  if (post.ctaUrl !== undefined){
+    const cf = field('CTA link', 'ctaUrl', 0, planValue(post, 'ctaUrl'));
+    syncCtaList(); cf.setAttribute('list', 'plCtaOptions');
+  }
 
   const row = document.createElement('div'); row.className = 'pl-acts';
   mk('Copy post', 'go', async () => {
@@ -5277,12 +5705,11 @@ function selectPost(post, date){
   // the thumbnail is the real tile, drawn at preview size
   (async () => {
     const T2 = post.tile || { type:'headline', reveal:post.scene };
-    const th = (T2.theme && THEMES[T2.theme]) ? T2.theme : state().theme;
     const st = Object.assign({}, state(), {
-      theme: th, stops: T2.stops || THEMES[th].stops, tf: THEMES[th].tf,
-      W: 1200, H: 1200, type: T2.type, eyebrow: post.eyebrow,
+      postConcept: post.concept, source: post.source,
+      W: 1200, H: 1200, type: 'headline', eyebrow: post.eyebrow,
       head: T2.head !== undefined ? T2.head : planValue(post, 'headline'),
-      emph: '', reveal: T2.reveal, from: T2.from || 0, to: T2.to || 0,
+      emph: '', reveal: 'none', from: 0, to: 0,
       prefix: T2.prefix || '', suffix: T2.suffix || '',
       scaleMax: T2.scaleMax || 100, grouping: !!T2.grouping,
       beforeLabel: T2.beforeLabel || '', cta: null
@@ -5300,6 +5727,161 @@ function selectPost(post, date){
   }
 }
 
+/* An idea in the brief can go straight onto the calendar as a draft post. It
+   lands in the next open slot, carries the idea's own link as its CTA, and is
+   marked back on the idea as the post it became. Drafts are browser-local —
+   they are a staging area for the next planning run, not a plan edit. */
+function plDrafts(){ return plGet(PL_KEYS.drafts) || []; }
+
+function allPosts(){
+  return PLAN.posts.concat(plDrafts());
+}
+
+function scheduleIdea(idx){
+  const list = plGet(PL_KEYS.inputs) || [];
+  const idea = list[idx];
+  if (!idea) return;
+  const drafts = plDrafts();
+  const taken = PLAN.posts.length + drafts.length;
+  const week = Math.floor(taken / PL_CADENCE.length) + 1;
+  const slot = (taken % PL_CADENCE.length) + 1;
+  const PILLARS = ['CTEM', 'CAASM', 'Threat Intelligence', 'Autonomous Remediation'];
+  const first = idea.text.split(/(?<=[.!?])\s+/)[0] || idea.text;
+  const draft = {
+    id: 'draft-' + Date.now().toString(36),
+    week, slot, goal: idea.link ? 'traffic' : 'reshare',
+    scene: 'reorder-not-shorter', concept: 'reorder-not-shorter',
+    theme: 'From the brief', eyebrow: 'From the brief',
+    headline: first.length > 90 ? first.slice(0, 87).trim() + '…' : first,
+    linkedin: idea.text, x: idea.text.slice(0, 260),
+    cta: idea.link ? 'Read more →' : 'Worth comparing notes — reshare if this matches yours.',
+    ctaUrl: idea.link || '',
+    source: 'From the brief — not yet written against the messaging framework',
+    pillar: PILLARS[(taken) % PILLARS.length],
+    tile: { type: 'headline' }, draft: true, fromIdea: idea.added
+  };
+  drafts.push(draft); plSet(PL_KEYS.drafts, drafts);
+  list[idx].becamePostId = draft.id;
+  list[idx].becameHeadline = draft.headline;
+  plSet(PL_KEYS.inputs, list);
+  buildPlanner();
+  say('Scheduled as a draft. Ask Claude to write it against the framework.');
+}
+
+/* The messaging framework, read from SharePoint and Confluence and carried in
+   the plan. Shown here so nobody writes a post against stale positioning, and
+   folded into the brief so the next planning run reads it too. */
+function buildFramework(){
+  const host = document.getElementById('plFramework');
+  if (!host || typeof PLAN === 'undefined' || !PLAN.framework) return;
+  const F = PLAN.framework, esc = x => String(x).replace(/</g, '&lt;');
+  host.className = 'pl-fw';
+  host.innerHTML =
+    `<p style="margin-top:0"><b>${esc(F.umbrella)}</b><br>${esc(F.ladder.subheadline)}</p>` +
+    `<p><b>Tone.</b> ${esc(F.tone)}</p>` +
+    `<p><b>What lands</b></p><ul>` +
+      F.phrases_that_land.slice(0, 3).map(x => `<li>${esc(x)}</li>`).join('') +
+    `</ul><p><b>What to avoid</b></p><ul>` +
+      F.phrases_to_avoid.slice(0, 4).map(x => `<li>${esc(x)}</li>`).join('') +
+    `</ul><p><b>Figures you may publish</b></p><ul>` +
+      F.proof_public.map(x => `<li>${esc(x.figure)} <i>— ${esc(x.source)}</i></li>`).join('') +
+    `</ul>` +
+    `<p><b>${F.proof_internal_do_not_publish.length} more are internal only.</b> ` +
+      `The reachability number is a context gap, not a false-positive epidemic &mdash; ` +
+      `the scanner did its job.</p>` +
+    `<p><b>Sources</b>` +
+      F.sources.map(x => `<a class="link src" href="${x.url}" target="_blank" rel="noopener">` +
+        `${esc(x.label)} &middot; ${esc(x.system)}</a>`).join('') +
+    `</p>`;
+}
+
+/* The destinations posts can send people to. Seeded from the plan the first
+   time, then owned by whoever is editing — this is the list the next planning
+   run picks a CTA from, so it is deliberately short and labelled. */
+function plCtas(){
+  const saved = plGet(PL_KEYS.ctas);
+  if (saved) return saved;
+  const seen = new Map();
+  (typeof PLAN !== 'undefined' ? PLAN.posts : []).forEach(po => {
+    if (!po.ctaUrl || seen.has(po.ctaUrl)) return;
+    // label from the page, not from whichever post happened to use it first
+    const seg = po.ctaUrl.replace(/[?#].*$/, '').replace(/\/+$/, '')
+                         .split('/').filter(Boolean).pop() || 'Home';
+    const label = seg.replace(/[-_]+/g, ' ').replace(/^./, ch => ch.toUpperCase()) + ' page';
+    seen.set(po.ctaUrl, { label, url: po.ctaUrl });
+  });
+  return [...seen.values()];
+}
+function plSetCtas(list){ plSet(PL_KEYS.ctas, list); }
+
+function buildCtas(){
+  const host = document.getElementById('plCtas');
+  if (!host) return;
+  const list = plCtas();
+  host.innerHTML = '';
+  if (!list.length){
+    host.innerHTML = '<p class="pl-note">No destinations yet. Posts will carry copy but no link.</p>';
+  } else {
+    const linked = allPosts().filter(po => planValue(po, 'ctaUrl')).length;
+    const total  = allPosts().length;
+    host.innerHTML = `<p class="pl-note">${linked} of ${total} posts carry a link. The rest are ` +
+      `deliberately link-free &mdash; they are the vendor-agnostic ones written to be reshared.</p>`;
+  }
+  list.forEach((cta, i) => {
+    const d = document.createElement('div'); d.className = 'pl-input';
+    const r = document.createElement('div'); r.className = 'row2';
+    const p2 = document.createElement('p');
+    p2.innerHTML = '<b>' + String(cta.label).replace(/</g,'&lt;') + '</b><br>' +
+      `<a class="link" href="${cta.url}" target="_blank" rel="noopener">${String(cta.url).replace(/</g,'&lt;')}</a>`;
+    const rm = document.createElement('button'); rm.type='button'; rm.textContent='Remove';
+    rm.style.cssText = 'background:#EEF2F6;color:var(--ink);font-size:12px;padding:7px 11px;border-radius:7px';
+    rm.addEventListener('click', () => {
+      const l = plCtas().slice(); l.splice(i,1); plSetCtas(l); buildCtas(); syncCtaList();
+    });
+    r.append(p2, rm); d.appendChild(r); host.appendChild(d);
+  });
+  syncCtaList();
+}
+
+/* One datalist, shared by every post's CTA link field. */
+function syncCtaList(){
+  let dl = document.getElementById('plCtaOptions');
+  if (!dl){ dl = document.createElement('datalist'); dl.id = 'plCtaOptions'; document.body.appendChild(dl); }
+  dl.innerHTML = plCtas().map(c =>
+    `<option value="${String(c.url).replace(/"/g,'&quot;')}">${String(c.label).replace(/</g,'&lt;')}</option>`).join('');
+}
+
+/* Everything the next run should read, in one paste. */
+function plBriefText(){
+  const ideas = plGet(PL_KEYS.inputs) || [];
+  const dirs = (plGet(PL_KEYS.dirs) || {}).text || PL_DIRECTIONS_DEFAULT;
+  const out = ['Brief for the next Kai LinkedIn planning run.', ''];
+  out.push('POST IDEAS (' + ideas.length + ')');
+  if (!ideas.length) out.push('  (none queued — plan from the directions alone)');
+  ideas.forEach(i => out.push('  - ' + i.text + (i.link ? '\n    ' + i.link : '')));
+  out.push('', 'CTA DESTINATIONS (' + plCtas().length + ')');
+  plCtas().forEach(c => out.push('  - ' + c.label + ' — ' + c.url));
+  const F = (typeof PLAN !== 'undefined' && PLAN.framework) || null;
+  if (F){
+    out.push('', 'MESSAGING FRAMEWORK');
+    out.push('  Umbrella: ' + F.umbrella);
+    out.push('  Subheadline: ' + F.ladder.subheadline);
+    out.push('  Guardrail: ' + F.ladder.guardrail);
+    out.push('  Tone: ' + F.tone);
+    out.push('  Lands: ' + F.phrases_that_land.join(' / '));
+    out.push('  Avoid: ' + F.phrases_to_avoid.join(' / '));
+    out.push('  Publishable figures:');
+    F.proof_public.forEach(x => out.push('    - ' + x.figure + ' (' + x.source + ')'));
+    out.push('  Internal only, do not publish:');
+    F.proof_internal_do_not_publish.forEach(x => out.push('    - ' + x));
+    out.push('  Claims guard:');
+    Object.entries(F.claims_guard).forEach(([k, v]) => out.push('    - ' + k + ': ' + v));
+    out.push('  Sources: ' + F.sources.map(x => x.label + ' — ' + x.url).join(' | '));
+  }
+  out.push('', 'DIRECTIONS', dirs);
+  return out.join('\n');
+}
+
 function buildInputs(){
   const host = document.getElementById('plInputs');
   const list = plGet(PL_KEYS.inputs) || [];
@@ -5313,13 +5895,26 @@ function buildInputs(){
     const p2 = document.createElement('p');
     p2.innerHTML = inp.text.replace(/</g,'&lt;') +
       (inp.link ? `<br><a class="link" href="${inp.link}" target="_blank" rel="noopener">${inp.link}</a>` : '');
-    const tag = document.createElement('span'); tag.className = 'pl-pill'; tag.textContent = '● waiting';
+    const tag = document.createElement('span'); tag.className = 'pl-pill';
+    tag.textContent = inp.becamePostId ? '● scheduled' : '● waiting';
+    if (inp.becameHeadline){
+      const became = document.createElement('p'); became.className = 'pl-note';
+      became.textContent = 'Became: ' + inp.becameHeadline;
+      p2.appendChild(became);
+    }
+    const sched = document.createElement('button'); sched.type = 'button';
+    sched.textContent = inp.becamePostId ? 'Scheduled' : 'Schedule it';
+    sched.disabled = !!inp.becamePostId;
+    sched.style.cssText = 'background:' + (inp.becamePostId ? '#EEF2F6' : 'var(--navy)') +
+      ';color:' + (inp.becamePostId ? 'var(--muted)' : '#fff') +
+      ';font-size:12px;padding:7px 11px;border-radius:7px';
+    if (!inp.becamePostId) sched.addEventListener('click', () => scheduleIdea(i));
     const rm = document.createElement('button'); rm.type='button'; rm.textContent = 'Remove';
     rm.style.cssText = 'background:#EEF2F6;color:var(--ink);font-size:12px;padding:7px 11px;border-radius:7px';
     rm.addEventListener('click', () => {
       const l = plGet(PL_KEYS.inputs) || []; l.splice(i,1); plSet(PL_KEYS.inputs, l); buildInputs();
     });
-    r.append(p2, tag, rm); d.appendChild(r); host.appendChild(d);
+    r.append(p2, tag, sched, rm); d.appendChild(r); host.appendChild(d);
   });
 }
 
@@ -5337,23 +5932,60 @@ function buildHow(){
 
   const ta = document.getElementById('plDirections');
   ta.value = (plGet(PL_KEYS.dirs) || {}).text || PL_DIRECTIONS_DEFAULT;
-  document.getElementById('plSaveDirections').addEventListener('click', () => {
+  const saveDirs = document.getElementById('plSaveDirections');
+  if (!saveDirs.dataset.wired){ saveDirs.dataset.wired = '1';
+  saveDirs.addEventListener('click', () => {
     plSet(PL_KEYS.dirs, { text: ta.value, saved: new Date().toISOString() });
     document.getElementById('plDirSaved').textContent =
       'Saved ' + new Date().toLocaleString('en-GB') + '. The next run uses this version.';
-  });
+  }); }
   const saved = plGet(PL_KEYS.dirs);
   if (saved) document.getElementById('plDirSaved').textContent =
     'Last saved ' + new Date(saved.saved).toLocaleString('en-GB') + '.';
 
-  document.getElementById('plAddInput').addEventListener('click', () => {
+  const addCta = document.getElementById('plAddCta');
+  if (addCta && !addCta.dataset.wired){
+    addCta.dataset.wired = '1';
+    addCta.addEventListener('click', () => {
+      const l = document.getElementById('plCtaLabel'), u = document.getElementById('plCtaUrl');
+      const url = u.value.trim();
+      if (!l.value.trim() || !url){ say('A destination needs both a label and a URL.'); return; }
+      if (!/^https?:\/\//i.test(url)){ say('The URL needs to start with http:// or https://'); return; }
+      plSetCtas(plCtas().concat([{ label: l.value.trim(), url }]));
+      l.value = ''; u.value = ''; buildCtas();
+      say('Destination added. It is now offered on every post.');
+    });
+  }
+  const copyBrief = document.getElementById('plCopyBrief');
+  if (copyBrief && !copyBrief.dataset.wired){
+    copyBrief.dataset.wired = '1';
+    copyBrief.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(plBriefText());
+            say('Brief copied — paste it to Claude to plan the next 30 days.'); }
+      catch { say('Clipboard blocked — select the brief and copy by hand.'); }
+    });
+  }
+  const resetBrief = document.getElementById('plResetBrief');
+  if (resetBrief && !resetBrief.dataset.wired){
+    resetBrief.dataset.wired = '1';
+    resetBrief.addEventListener('click', () => {
+      if (!confirm('Clear queued ideas, drafts and CTA destinations? Edits to planned posts are kept.')) return;
+      plSet(PL_KEYS.inputs, []); localStorage.removeItem(PL_KEYS.ctas);
+      localStorage.removeItem(PL_KEYS.drafts);
+      buildPlanner(); say('Brief cleared. Destinations fall back to the plan.');
+    });
+  }
+
+  const addInput = document.getElementById('plAddInput');
+  if (!addInput.dataset.wired){ addInput.dataset.wired = '1';
+  addInput.addEventListener('click', () => {
     const t = document.getElementById('plInputText'), l = document.getElementById('plInputLink');
     if (!t.value.trim()) { say('Say what the post should be about first.'); return; }
     const list = plGet(PL_KEYS.inputs) || [];
     list.unshift({ text: t.value.trim(), link: l.value.trim(), added: new Date().toISOString() });
     plSet(PL_KEYS.inputs, list); t.value = ''; l.value = ''; buildInputs();
-    say('Input queued for the next planning run.');
-  });
+    say('Idea queued for the next planning run.');
+  }); }
 }
 
 
@@ -5970,7 +6602,6 @@ async function init(){
   }
   buildFormats();
   buildSwatches();
-  buildConcepts();
   buildPlanner();
   initFigmaField();
   buildIcons();
