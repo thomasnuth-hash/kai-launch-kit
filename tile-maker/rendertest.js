@@ -61,7 +61,7 @@ const header = 'const imgCache=new Map();const img=k=>imgCache.get(k)||null;\n'
 const modSrc = header
   + grab('const REF_W', 'const PRESETS')
   + grab('const easeOutCubic', '/* ==================================================================== *\n * Timeline')
-  + '\nmodule.exports={drawFrame,THEMES,WASHES,FORMATS,ICONS,imgCache};\n';
+  + '\nmodule.exports={drawFrame,THEMES,WASHES,FORMATS,ICONS,imgCache,CONCEPTS};\n';
 let _mod;
 if (IS_NODE){
   const modPath = path.join(require('os').tmpdir(), 'rt_mod_' + process.pid + '.js');
@@ -109,6 +109,10 @@ const LONG = {
 };
 const TREAT = {launch:['frame', 'bleed', 'scrim'], event:['wash', 'split', 'lockup']};
 
+/* Every reveal, not just the one the base case happened to set. The three
+   concept scenes are new and would otherwise ship unasserted. */
+const REVEALS = ['none','bar','ring','grid','columns','clock','cycle','funnel','collapse'];
+
 let pass = 0, fail = 0;
 const fails = [];
 for (const [tk, tv] of Object.entries(THEMES)) {
@@ -144,10 +148,14 @@ for (const [tk, tv] of Object.entries(THEMES)) {
 
   const shapes = tv.shapes || ['wide', 'square', 'portrait'];
   const formats = FORMATS.filter(f => shapes.includes(f.shape));
+  if (!tv.layout) variants = variants.flatMap(v =>
+    REVEALS.map(rv => ({...v, _reveal: rv,
+                        _tag: [(v._tag || ''), rv].filter(Boolean).join(' ')})));
   for (const v of variants) for (const f of formats) {
     const [W, H] = f.v.split('x').map(Number);
     const s = Object.assign({}, base, v, {W, H, theme: tk, icon: tv.icon || 'none'});
-    if (tv.layout) { s.reveal = 'ring'; s.iconPlace = 'accent'; }      // poison: announcements must ignore these
+    if (tv.layout) { s.reveal = 'ring'; s.iconPlace = 'accent'; }
+    else if (v._reveal) s.reveal = v._reveal;      // poison: announcements must ignore these
     global.__setImg('shot', v._pic ? {width:1600, height:1000} : null);
     global.__setImg('city', v._pic ? {width:1600, height:1000} : null);
     global.__setImg('evlogo', v._pic ? (v._sq ? {width:300, height:330} : {width:600, height:220}) : null);
