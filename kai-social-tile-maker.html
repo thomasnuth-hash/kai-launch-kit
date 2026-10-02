@@ -5181,6 +5181,20 @@ function lxMicro(c, t, x, y, size, col, align){
   c.restore();
 }
 
+/* A trailing caption inside a row. Narrow formats do not have room for one,
+   and a caption that collides with its own label is worse than no caption. */
+function lxTrail(c, t, leftEnd, rightX, y, size, col){
+  c.save();
+  if ('letterSpacing' in c) c.letterSpacing = (size * 0.07).toFixed(2) + 'px';
+  c.font = `700 ${size}px "Wix Madefor Text", sans-serif`;
+  const w = c.measureText(String(t).toUpperCase()).width;
+  if ('letterSpacing' in c) c.letterSpacing = '0px';
+  c.restore();
+  if (rightX - w < leftEnd + size * 1.2) return false;
+  lxMicro(c, t, rightX, y, size, col, 'right');
+  return true;
+}
+
 /* A pill. */
 function lxChip(c, t, x, y, size, opt){
   const o = opt || {}, padX = size * 0.80, h = size * 2.05;
@@ -5237,9 +5251,10 @@ const POST_CONCEPTS = {
             i < 2 ? LX.blue : LX.solid, false);
       lxSkeleton(c, b.x + rh * 1.15, y + rh * 0.40, b.w * (0.22 + 0.26 * ((i*3)%5)/5), rh * 0.20);
     }
-    const bx = b.x + b.w * 0.80;
-    pText(c, '7', bx, b.y + b.h * 0.46, Math.max(30, b.h * 0.34), LX.t1, 700, 'left', 'Roboto, sans-serif');
-    lxMicro(c, 'open, every week', bx, b.y + b.h * 0.56, Math.max(9.5, b.h * 0.055), LX.t4);
+    pText(c, '7', b.x + b.w, b.y + b.h * 0.46, Math.max(30, b.h * 0.34),
+          LX.t1, 700, 'right', 'Roboto, sans-serif');
+    lxMicro(c, 'open, every week', b.x + b.w, b.y + b.h * 0.56,
+            Math.max(9.5, b.h * 0.055), LX.t4, 'right');
   },
   'owner-fills': (c, b, p) => {
     // Assets acquiring an accountable owner.
@@ -5281,26 +5296,41 @@ const POST_CONCEPTS = {
   },
   'handoff-gap': (c, b, p) => {
     // Found and fixed as two rows; the gap between them is the subject.
-    const t = pe(p), rh = b.h * 0.21, days = 21 - 20.9 * t;
+    const t = pe(p), rh = b.h * 0.215, days = 21 - 20.9 * t;
     lxRow(c, b.x, b.y, b.w, rh, { r: 10, fill: LX.bg0, border: LX.thin });
     lxDot(c, b.x + rh * 0.52, b.y + rh / 2, Math.max(4, rh * 0.15), LX.t1, false);
-    pText(c, 'Finding raised', b.x + rh * 1.0, b.y + rh * 0.62, Math.max(11, rh * 0.26), LX.t1, 600);
-    const gy = b.y + rh + b.h * 0.055, gh = b.h * 0.30;
-    c.save(); c.setLineDash([3, 6]); c.strokeStyle = LX.solid; c.lineWidth = 2;
-    c.beginPath(); c.moveTo(b.x + rh * 0.52, gy); c.lineTo(b.x + rh * 0.52, gy + gh); c.stroke();
-    c.restore();
+    pText(c, 'Finding raised', b.x + rh * 1.02, b.y + rh * 0.63, Math.max(11, rh * 0.26), LX.t1, 600);
+    lxMicro(c, 'day 0', b.x + b.w - rh * 0.4, b.y + rh * 0.60,
+            Math.max(9, rh * 0.17), LX.t4, 'right');
+
+    const gy = b.y + rh, gh = b.h - rh * 2;
+    // the gap drawn as held-open space, with ticks for the days inside it
+    c.save();
+    const g = c.createLinearGradient(0, gy, 0, gy + gh);
+    g.addColorStop(0, 'rgba(2,127,168,0.07)'); g.addColorStop(1, 'rgba(2,127,168,0.01)');
+    c.fillStyle = g; c.fillRect(b.x + rh * 0.30, gy, b.w - rh * 0.60, gh);
+    c.strokeStyle = 'rgba(2,127,168,0.28)'; c.lineWidth = 1.5; c.setLineDash([3, 5]);
+    c.beginPath(); c.moveTo(b.x + rh * 0.52, gy); c.lineTo(b.x + rh * 0.52, gy + gh);
+    c.moveTo(b.x + b.w - rh * 0.52, gy); c.lineTo(b.x + b.w - rh * 0.52, gy + gh);
+    c.stroke(); c.restore();
+
     const d = Math.round(days);
     const label = d < 1 ? 'minutes' : d + (d === 1 ? ' day' : ' days');
-    const num = Math.max(22, b.h * 0.21);
-    pText(c, label, b.x + rh * 1.0, gy + gh * 0.60, num,
+    pText(c, label, b.x + rh * 1.02, gy + gh * 0.56, Math.max(24, b.h * 0.23),
           t > 0.75 ? LX.deep : LX.t1, 700, 'left', 'Roboto, sans-serif');
-    lxMicro(c, 'exposed, nothing changed', b.x + rh * 1.0, gy + gh * 0.88,
-            Math.max(9.5, b.h * 0.052), LX.t4);
+    lxMicro(c, 'exposed, nothing changed', b.x + rh * 1.02, gy + gh * 0.80,
+            Math.max(9.5, b.h * 0.050), LX.t4);
+    // a meter that drains as the gap closes
+    const mw = b.w * 0.30, mx = b.x + b.w - rh * 0.52 - mw, my = gy + gh * 0.30;
+    lxSkeleton(c, mx, my, mw, Math.max(6, b.h * 0.030), 1);
+    c.fillStyle = LX.blue;
+    pRound(c, mx, my, mw * (1 - t), Math.max(6, b.h * 0.030), b.h * 0.015); c.fill();
+
     const fy = b.y + b.h - rh;
     lxRow(c, b.x, fy, b.w, rh, { r: 10, fill: t > 0.75 ? '#F2FBFF' : LX.bg2,
                                  border: t > 0.75 ? '#CDEEFB' : LX.hair });
     lxDot(c, b.x + rh * 0.52, fy + rh / 2, Math.max(4, rh * 0.15), LX.blue);
-    pText(c, 'Fix delivered', b.x + rh * 1.0, fy + rh * 0.62, Math.max(11, rh * 0.26), LX.t1, 600);
+    pText(c, 'Fix delivered', b.x + rh * 1.02, fy + rh * 0.63, Math.max(11, rh * 0.26), LX.t1, 600);
   },
   'loop-closes': (c, b, p) => {
     // Five phases everyone runs, two that close it.
@@ -5398,10 +5428,11 @@ const POST_CONCEPTS = {
     const by = b.y + 2 * rh + gap + b.h * 0.10;
     lxRow(c, b.x, by, b.w, b.h - (by - b.y), { r: 10, fill: LX.bg0, border: LX.thin });
     const ih = b.h - (by - b.y);
-    pText(c, 'The backlog', b.x + ih * 0.42, by + ih * 0.58,
-          Math.max(11, ih * 0.27), LX.t1, 600);
-    lxMicro(c, 'every week', b.x + b.w - ih * 0.42, by + ih * 0.55,
-            Math.max(9.5, ih * 0.19), LX.t4, 'right');
+    const bls = Math.max(11, ih * 0.27);
+    pText(c, 'The backlog', b.x + ih * 0.42, by + ih * 0.58, bls, LX.t1, 600);
+    c.font = `600 ${bls}px "Wix Madefor Text", sans-serif`;
+    lxTrail(c, 'every week', b.x + ih * 0.42 + c.measureText('The backlog').width,
+            b.x + b.w - ih * 0.42, by + ih * 0.55, Math.max(9.5, ih * 0.19), LX.t4);
   },
   'same-score-different-answer': (c, b, p) => {
     // One severity, three different answers once the asset is known.
@@ -5430,24 +5461,31 @@ const POST_CONCEPTS = {
   'after-the-find': (c, b, p) => {
     // Finding is instant. Everything after it is the work.
     const t = pe(p), steps = ['find','reach','own','fix','prove'];
-    const th = Math.max(8, b.h * 0.055), tY = b.y + b.h * 0.38;
-    lxTrack(c, b.x, tY, b.w, th, steps.length, t);
+    const n = steps.length, th = Math.max(10, b.h * 0.075);
+    const tY = b.y + b.h * 0.42, segW = b.w / n;
+
+    // the solved first step, set apart from the four that are not
+    c.save();
+    c.fillStyle = LX.bg2;
+    pRound(c, b.x - b.h * 0.04, b.y, segW - b.w * 0.012 + b.h * 0.04,
+           b.h, LX.r.lg); c.fill();
+    c.restore();
+
+    lxTrack(c, b.x, tY, b.w, th, n, t);
     steps.forEach((lab, i) => {
-      const segW = b.w / steps.length, x = b.x + segW * i;
-      const on = t * steps.length > i + 0.55;
-      lxMicro(c, lab, x, tY + th + Math.max(22, b.h * 0.115),
-              Math.max(10, b.h * 0.058), on ? LX.t1 : LX.t4);
-      if (i === 0){
-        lxMicro(c, 'solved', x, tY - Math.max(14, b.h * 0.075),
-                Math.max(9, b.h * 0.05), LX.t4);
+      const x = b.x + segW * i, on = t * n > i + 0.55;
+      lxMicro(c, lab, x, tY + th + Math.max(24, b.h * 0.125),
+              Math.max(10.5, b.h * 0.062), on ? LX.t1 : LX.t4);
+      if (on){
+        lxDot(c, x + Math.max(4, b.h * 0.022), tY - Math.max(14, b.h * 0.075),
+              Math.max(3, b.h * 0.017), i === 0 ? LX.t4 : LX.blue, false);
       }
     });
-    c.save(); c.setLineDash([4, 5]); c.strokeStyle = LX.solid; c.lineWidth = 1.5;
-    const dx = b.x + b.w / steps.length - b.w * 0.012;
-    c.beginPath(); c.moveTo(dx, tY - b.h * 0.13); c.lineTo(dx, tY + th + b.h * 0.19);
-    c.stroke(); c.restore();
-    lxMicro(c, 'not solved', dx + b.w * 0.02, tY - Math.max(14, b.h * 0.075),
-            Math.max(9, b.h * 0.05), LX.deep);
+    lxMicro(c, 'solved', b.x, b.y + b.h * 0.10, Math.max(9.5, b.h * 0.052), LX.t4);
+    lxMicro(c, 'not solved', b.x + segW, b.y + b.h * 0.10,
+            Math.max(9.5, b.h * 0.052), LX.deep);
+    pText(c, '4 of 5', b.x + b.w, b.y + b.h * 0.13, Math.max(16, b.h * 0.125),
+          LX.t1, 700, 'right', 'Roboto, sans-serif');
   },
   'rules-stack': (c, b, p) => {
     // Intelligence in, validated rules out.
@@ -5505,9 +5543,9 @@ const POST_CONCEPTS = {
     lxSkeleton(c, b.x, tY, b.w, th, 1);
     c.fillStyle = LX.blue; pRound(c, b.x, tY, b.w * t, th, th / 2); c.fill();
     const days = Math.round(412 * t), num = Math.max(24, b.h * 0.23);
-    pText(c, days + ' days', b.x, b.y + b.h * 0.96, num, LX.t1, 700, 'left', 'Roboto, sans-serif');
-    lxMicro(c, 'since anyone re-ran it', b.x + b.w, b.y + b.h * 0.93,
-            Math.max(9.5, b.h * 0.052), LX.t4, 'right');
+    pText(c, days + ' days', b.x, b.y + b.h * 0.97, num, LX.t1, 700, 'left', 'Roboto, sans-serif');
+    lxMicro(c, 'since anyone re-ran it', b.x, b.y + b.h * 0.76,
+            Math.max(9.5, b.h * 0.052), LX.t4);
   },
   'belief-vs-evidence': (c, b, p) => {
     // What the record claims, against what the estate shows.
@@ -5537,31 +5575,48 @@ const POST_CONCEPTS = {
   },
   'narrow-to-yours': (c, b, p) => {
     // Everything published, narrowed to what is real here.
-    const t = pe(p), n = 30, kept = Math.max(3, Math.round(n * (1 - 0.84 * t)));
-    const topY = b.y + b.h * 0.16, botY = b.y + b.h * 0.64;
-    const span = b.w * 0.94, cx = b.x + b.w / 2, pitch = span / n;
-    const tw = Math.max(3.5, pitch * 0.40), th = b.h * 0.14;
+    const t = pe(p), n = 28, kept = Math.max(3, Math.round(n * (1 - 0.86 * t)));
+    const topY = b.y + b.h * 0.14, botY = b.y + b.h * 0.70;
+    const span = b.w, cx = b.x + b.w / 2, pitch = span / n;
+    const tw = Math.max(5, pitch * 0.46), th = b.h * 0.17;
     const keptSpan = kept * pitch;
-    c.fillStyle = LX.bg2;
+
+    // the walls, as a filled funnel with a hairline edge
+    c.save();
+    const g = c.createLinearGradient(0, topY, 0, botY + th);
+    g.addColorStop(0, 'rgba(0,191,255,0.10)'); g.addColorStop(1, 'rgba(0,191,255,0.02)');
+    c.fillStyle = g;
     c.beginPath();
     c.moveTo(cx - span/2, topY + th); c.lineTo(cx + span/2, topY + th);
     c.lineTo(cx + keptSpan/2, botY); c.lineTo(cx - keptSpan/2, botY);
     c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(2,127,168,0.30)'; c.lineWidth = Math.max(1.2, b.h * 0.007);
+    c.beginPath();
+    c.moveTo(cx - span/2, topY + th); c.lineTo(cx - keptSpan/2, botY);
+    c.moveTo(cx + span/2, topY + th); c.lineTo(cx + keptSpan/2, botY);
+    c.stroke(); c.restore();
+
     for (let i = 0; i < n; i++){
       const x = cx - span/2 + (i + 0.5) * pitch;
       const alive = Math.abs(i - (n-1)/2) < kept/2;
       c.fillStyle = alive ? LX.blue : LX.bg3;
       pRound(c, x - tw/2, topY, tw, th, tw/2); c.fill();
     }
+    // one glow behind the whole surviving group, not one per tick
+    lxGlow(c, cx, botY + th / 2, Math.max(keptSpan, th * 2) * 0.9, LX.blue, 0.14,
+           { x: b.x, y: botY - th, w: b.w, h: th * 3 });
     for (let i = 0; i < kept; i++){
       const x = cx - keptSpan/2 + (i + 0.5) * pitch;
       c.fillStyle = LX.blue; pRound(c, x - tw/2, botY, tw, th, tw/2); c.fill();
     }
-    lxMicro(c, 'published techniques', b.x, topY - b.h * 0.05, Math.max(9.5, b.h * 0.052), LX.t4);
+    lxMicro(c, 'published techniques', b.x, topY - b.h * 0.045,
+            Math.max(9.5, b.h * 0.050), LX.t4);
+    pText(c, String(n), b.x + b.w, topY - b.h * 0.035, Math.max(13, b.h * 0.095),
+          LX.t4, 700, 'right', 'Roboto, sans-serif');
     lxMicro(c, 'real in this estate', b.x, botY + th + b.h * 0.115,
-            Math.max(9.5, b.h * 0.052), LX.deep);
-    pText(c, kept + ' of ' + n, b.x + b.w, botY + th + b.h * 0.135,
-          Math.max(16, b.h * 0.135), LX.t1, 700, 'right', 'Roboto, sans-serif');
+            Math.max(9.5, b.h * 0.050), LX.deep);
+    pText(c, String(kept), b.x + b.w, botY + th + b.h * 0.135, Math.max(20, b.h * 0.17),
+          LX.t1, 700, 'right', 'Roboto, sans-serif');
   },
   'rollback-path': (c, b, p) => {
     // A change moving through stages, with the way back recorded as its own row.
@@ -5603,10 +5658,12 @@ const POST_CONCEPTS = {
     c.moveTo(ax - ar * 0.95, cy2 - ar * 0.75); c.lineTo(ax - ar * 0.30, cy2 - ar * 0.52);
     c.moveTo(ax - ar * 0.95, cy2 - ar * 0.75); c.lineTo(ax - ar * 1.15, cy2 - ar * 0.05);
     c.stroke();
-    pText(c, 'Rollback path recorded', b.x + rowH * 1.05, cy2 + rowH * 0.075,
-          Math.max(11, rowH * 0.21), LX.t1, 600);
-    lxMicro(c, 'before anything shipped', b.x + b.w - rowH * 0.3, cy2 + rowH * 0.06,
-            Math.max(9.5, rowH * 0.165), LX.t4, 'right');
+    const rls = Math.max(11, rowH * 0.21);
+    pText(c, 'Rollback path recorded', b.x + rowH * 1.05, cy2 + rowH * 0.075, rls, LX.t1, 600);
+    c.font = `600 ${rls}px "Wix Madefor Text", sans-serif`;
+    lxTrail(c, 'before anything shipped',
+            b.x + rowH * 1.05 + c.measureText('Rollback path recorded').width,
+            b.x + b.w - rowH * 0.3, cy2 + rowH * 0.06, Math.max(9.5, rowH * 0.165), LX.t4);
   },
 
   /* The percentage was always wrong; it just looked better before. */
@@ -5687,24 +5744,41 @@ const POST_CONCEPTS = {
   'inside-boundary': (c, b, p) => {
     // Control exercised once, at the edge, rather than at every keystroke.
     const t = pe(p);
-    const fy = b.y + b.h * 0.10, fh = b.h * 0.66;
+    const fy = b.y + b.h * 0.13, fh = b.h * 0.72;
+    c.save(); c.globalAlpha = 0.045; c.fillStyle = LX.blue;
+    pRound(c, b.x, fy, b.w, fh, 12); c.fill(); c.restore();
     c.save(); c.setLineDash([7, 6]); c.strokeStyle = LX.deep;
     c.lineWidth = Math.max(2, b.h * 0.012);
     pRound(c, b.x, fy, b.w, fh, 12); c.stroke(); c.restore();
-    c.save(); c.globalAlpha = 0.035; c.fillStyle = LX.blue;
-    pRound(c, b.x, fy, b.w, fh, 12); c.fill(); c.restore();
     lxMicro(c, 'the boundary you set', b.x, fy - b.h * 0.045,
-            Math.max(9.5, b.h * 0.052), LX.deep);
-    const pad = b.w * 0.055, th = Math.max(7, b.h * 0.042);
-    const tY = fy + fh * 0.46;
+            Math.max(9.5, b.h * 0.050), LX.deep);
+    lxMicro(c, 'set once', b.x + b.w, fy - b.h * 0.045,
+            Math.max(9.5, b.h * 0.050), LX.t4, 'right');
+
+    const pad = b.w * 0.055, rh = fh * 0.30;
+    lxRow(c, b.x + pad, fy + fh * 0.11, b.w - pad * 2, rh,
+          { r: 9, fill: LX.bg0, border: LX.thin });
+    lxDot(c, b.x + pad + rh * 0.50, fy + fh * 0.11 + rh / 2,
+          Math.max(3.5, rh * 0.15), LX.blue);
+    pText(c, 'Exposure proven', b.x + pad + rh * 1.0, fy + fh * 0.11 + rh * 0.63,
+          Math.max(10.5, rh * 0.27), LX.t1, 600);
+    const cs = Math.max(9.5, rh * 0.20);
+    c.font = `700 ${cs}px "Wix Madefor Text", sans-serif`;
+    const lab = t > 0.9 ? 'delivered' : t > 0.45 ? 'authored' : 'queued';
+    const cw2 = c.measureText(lab.toUpperCase()).width + cs * 1.6;
+    lxChip(c, lab, b.x + b.w - pad - cw2 - rh * 0.28, fy + fh * 0.11 + rh * 0.26, cs,
+           { upper: true, weight: 700, fill: t > 0.9 ? '#E6F8FF' : LX.bg2,
+             color: t > 0.9 ? LX.deep : LX.t3 });
+
+    const th = Math.max(8, fh * 0.075), tY = fy + fh * 0.64;
     lxTrack(c, b.x + pad, tY, b.w - pad * 2, th, 3, t);
-    ['found', 'authored', 'delivered'].forEach((lab, i) => {
-      const segW = (b.w - pad * 2) / 3, x = b.x + pad + segW * i;
-      lxMicro(c, lab, x, tY + th + Math.max(18, b.h * 0.088),
-              Math.max(9, b.h * 0.05), t * 3 > i + 0.55 ? LX.t1 : LX.t4);
+    ['found', 'authored', 'delivered'].forEach((l2, i) => {
+      const segW = (b.w - pad * 2) / 3;
+      lxMicro(c, l2, b.x + pad + segW * i, tY + th + Math.max(18, fh * 0.14),
+              Math.max(9.5, fh * 0.082), t * 3 > i + 0.55 ? LX.t1 : LX.t4);
     });
     lxMicro(c, 'nothing moves outside it', b.x + b.w, b.y + b.h * 0.99,
-            Math.max(9.5, b.h * 0.05), LX.t4, 'right');
+            Math.max(9.5, b.h * 0.050), LX.t4, 'right');
   },
 };
 
@@ -5714,11 +5788,9 @@ function drawPostFrame(c, W, H, s, progress){
   const M = Math.round(W * (wide ? 0.052 : 0.068));
   c.save();
 
-  /* ground: a shade off white, with a dot grid that fades before it competes */
   c.fillStyle = LX.bg1; c.fillRect(0, 0, W, H);
   lxGrid(c, 0, 0, W, H, S);
 
-  /* lockup */
   const logo = img('logo:' + LX.t1);
   let logoH = 0;
   if (logo){
@@ -5726,67 +5798,80 @@ function drawPostFrame(c, W, H, s, progress){
     c.drawImage(logo, M, M, logoH * logo.width / logo.height, logoH);
   }
 
-  /* the concept sits on an elevated card, not on the page */
-  const cardY = M + logoH + H * (wide ? 0.055 : 0.045);
-  const card = wide
-    ? { x: W * 0.50, y: cardY, w: W * 0.44, h: H * 0.56 }
-    : { x: M, y: cardY, w: W - M * 2, h: H * 0.40 };
-  lxCard(c, card.x, card.y, card.w, card.h, LX.r.xl * S * 1.4, { S });
-
-  /* a glow behind the card's focal third, so the eye lands before it reads */
-  lxGlow(c, card.x + card.w * 0.62, card.y + card.h * 0.42,
-         Math.max(card.w, card.h) * 0.55, LX.blue, 0.055,
-         { x: card.x, y: card.y, w: card.w, h: card.h, r: LX.r.xl * S * 1.4 });
-
-  const pad = Math.min(card.w, card.h) * (wide ? 0.11 : 0.115);
-  const box = { x: card.x + pad, y: card.y + pad,
-                w: card.w - pad * 2, h: card.h - pad * 2 };
-  const fn = POST_CONCEPTS[s.postConcept];
-  if (fn){ c.save(); pRound(c, card.x, card.y, card.w, card.h, LX.r.xl * S * 1.4); c.clip();
-           fn(c, box, Math.max(0, Math.min(1, progress)), PK); c.restore(); }
-
-  /* words */
+  /* Measure the words first, then give the card every pixel they do not need.
+     Laying the card out first is what left a band of dead air under the
+     headline on every square post. */
   const colW = wide ? W * 0.42 : W - M * 2;
-  let y = wide ? cardY + H * 0.02 : card.y + card.h + H * 0.062;
+  const eyeS = Math.max(11, 19 * S), eyeGap = Math.max(20, 32 * S);
+  const size = Math.max(20, (wide ? 44 : 56) * S), lineH = size * 1.10;
 
-  if (s.eyebrow){
-    lxMicro(c, s.eyebrow, M, y, Math.max(11, 19 * S), LX.deep);
-    y += Math.max(20, 32 * S);
-  }
-
-  const size = Math.max(20, (wide ? 44 : 56) * S);
   c.font = `700 ${size}px "Wix Madefor Text", sans-serif`;
   if ('letterSpacing' in c) c.letterSpacing = (size * -0.022).toFixed(2) + 'px';
   const words = String(s.head || '').split(/\s+/);
   const lines = []; let cur = '';
   for (const w of words){
-    const tryLine = cur ? cur + ' ' + w : w;
-    if (c.measureText(tryLine).width > colW && cur){ lines.push(cur); cur = w; } else cur = tryLine;
+    const t2 = cur ? cur + ' ' + w : w;
+    if (c.measureText(t2).width > colW && cur){ lines.push(cur); cur = w; } else cur = t2;
   }
   if (cur) lines.push(cur);
   if ('letterSpacing' in c) c.letterSpacing = '0px';
-  lines.slice(0, 4).forEach(ln => {
-    pText(c, ln, M, y + size * 0.80, size, LX.t1, 700, 'left', null, -0.022);
-    y += size * 1.10;                                   // Linear's title line-height
-  });
+  const headLines = lines.slice(0, 4);
 
-  /* source, under a hairline rule */
+  /* the source block, pinned to the bottom */
+  const srcS = Math.max(13, 21 * S);
+  let srcLines = [];
   if (s.source){
-    const fs = Math.max(13, 21 * S), base = H - Math.max(28, 46 * S);
-    c.font = `500 ${fs}px "Wix Madefor Text", sans-serif`;
+    c.font = `500 ${srcS}px "Wix Madefor Text", sans-serif`;
     const avail = W - M * 2, sw = String(s.source).split(/\s+/);
-    const sl = []; let acc = '';
+    let acc = '';
     for (const w of sw){
       const t2 = acc ? acc + ' ' + w : w;
-      if (c.measureText(t2).width > avail && acc){ sl.push(acc); acc = w; } else acc = t2;
+      if (c.measureText(t2).width > avail && acc){ srcLines.push(acc); acc = w; } else acc = t2;
     }
-    if (acc) sl.push(acc);
-    const keep = sl.slice(0, 2);
-    if (sl.length > 2) keep[1] = keep[1].replace(/[\s,;]+$/, '') + '…';
-    const top = base - (keep.length - 1) * fs * 1.35;
+    if (acc) srcLines.push(acc);
+    if (srcLines.length > 2){ srcLines = srcLines.slice(0, 2);
+      srcLines[1] = srcLines[1].replace(/[\s,;]+$/, '') + '…'; }
+  }
+  const srcBlockH = srcLines.length ? (srcLines.length - 1) * srcS * 1.35 + srcS * 2.6 : 0;
+  const srcTop = H - Math.max(26, 42 * S) - (srcLines.length - 1) * srcS * 1.35;
+
+  const textH = (s.eyebrow ? eyeGap : 0) + headLines.length * lineH;
+  const textTop = wide
+    ? M + logoH + H * 0.10
+    : (srcLines.length ? srcTop - srcS * 2.4 : H - M) - textH - H * 0.012;
+
+  /* the card now fills whatever the words left */
+  const cardTop = M + logoH + H * (wide ? 0.055 : 0.042);
+  const card = wide
+    ? { x: W * 0.50, y: cardTop, w: W * 0.44, h: H - cardTop - M }
+    : { x: M, y: cardTop, w: W - M * 2, h: Math.max(H * 0.22, textTop - cardTop - H * 0.052) };
+  const cardR = LX.r.xl * S * 1.4;
+  lxCard(c, card.x, card.y, card.w, card.h, cardR, { S });
+  lxGlow(c, card.x + card.w * 0.66, card.y + card.h * 0.38,
+         Math.max(card.w, card.h) * 0.62, LX.blue, 0.06,
+         { x: card.x, y: card.y, w: card.w, h: card.h, r: cardR });
+
+  const pad = Math.min(card.w, card.h) * (wide ? 0.11 : 0.13);
+  const box = { x: card.x + pad, y: card.y + pad,
+                w: card.w - pad * 2, h: card.h - pad * 2 };
+  const fn = POST_CONCEPTS[s.postConcept];
+  if (fn){ c.save(); pRound(c, card.x, card.y, card.w, card.h, cardR); c.clip();
+           fn(c, box, Math.max(0, Math.min(1, progress)), PK); c.restore(); }
+
+  /* words */
+  let y = textTop;
+  if (s.eyebrow){ lxMicro(c, s.eyebrow, M, y, eyeS, LX.deep); y += eyeGap; }
+  headLines.forEach(ln => {
+    pText(c, ln, M, y + size * 0.80, size, LX.t1, 700, 'left', null, -0.022);
+    y += lineH;
+  });
+
+  if (srcLines.length){
     c.strokeStyle = LX.hair; c.lineWidth = Math.max(1, S);
-    c.beginPath(); c.moveTo(M, top - fs * 1.5); c.lineTo(W - M, top - fs * 1.5); c.stroke();
-    keep.forEach((ln, i) => pText(c, ln, M, top + i * fs * 1.35, fs, LX.t3, 500, 'left', null, -0.011));
+    c.beginPath(); c.moveTo(M, srcTop - srcS * 1.45); c.lineTo(W - M, srcTop - srcS * 1.45);
+    c.stroke();
+    srcLines.forEach((ln, i) =>
+      pText(c, ln, M, srcTop + i * srcS * 1.35, srcS, LX.t3, 500, 'left', null, -0.011));
   }
   c.restore();
 }
