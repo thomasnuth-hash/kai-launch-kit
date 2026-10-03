@@ -1436,7 +1436,7 @@ const shapeOf = (W, H) => { const r = W / H; return r >= 1.4 ? 'wide' : (r >= 0.
 const rampOf  = (W, H) => RAMPS[shapeOf(W, H)];
 
 /* ---- LinkedIn plan: generated from brand/linkedin-plan.json ---- */
-const PLAN = {"_comment": "Topic bank for the LinkedIn Planner. Four posts a week, three weeks, rotating across the three programme goals.", "_sourcing": "Nothing here is sourced from material that would need third-party permission to reproduce. Licensed analyst research was used only as an education tool — to understand topics, categories, buyer sentiment and the shape of available solutions. No analyst text is quoted, paraphrased or attributed, and no analyst figure, quadrant or radar appears. Every number below is either one of Kai's three cross-checked metrics or already published on kai.security, and each post names its source. Messaging is taken from the Kai Messaging Framework and the Q3/Q4 Campaign Brief in SharePoint and the Master Sales Playbook in Confluence; see `framework.sources`. Analyst material in those systems is excluded. Source lines previously credited a 'Kai platform page'; that page does not exist on kai.security, so they now credit Kai product messaging, which is where the claims were verified.", "_positioning": "Kai associates the Autonomous Defense Platform with four categories: CTEM, CAASM, Threat Intelligence and Autonomous Remediation. Every post carries a primary pillar, and most carry a secondary, so a week never sits on one.", "_pillars": {"CTEM": "Continuous Threat Exposure Management — the shared language with buyers, never the category.", "CAASM": "Cyber Asset Attack Surface Management — the asset record, ownership, coverage.", "Threat Intelligence": "Intel to exposures to detection, in one pass.", "Autonomous Remediation": "The category Kai owns. Carried at the level of the gap it fills and what closing the loop means — never as a claim that automated remediation delivery is shipped. See _claims_guard."}, "_claims_guard": "Automated remediation delivery is claimable as available — ruled by Thomas Nuth, 2 Oct 2026, superseding Decision #1 and the Zafran battlecard line that said never to present it as shipped. The public site already said available; internal CompIntel said roadmap. That conflict is resolved in favour of available.\n\nSeparately, and by design rather than by caution: the reshare posts still carry no product claim. Goal 1 is reshares through vendor-agnostic thought leadership, and a post that names the product does not get reshared by people who do not work here. Product claims belong in the traffic posts.", "_goals": {"reshare": "Vendor-agnostic thought leadership. No product claim in the body. A neutral glossary link may sit in the first comment, which earns traffic without costing the reshare.", "follow": "Establishes a recurring point of view worth subscribing to.", "traffic": "Earns the click. Names Kai and links to the page that proves the point."}, "cadence": {"postsPerWeek": 4, "weeks": 5, "mix": "Each week carries one post per pillar — CTEM, CAASM, Threat Intelligence, Autonomous Remediation — and a goal mix of roughly two reshare, one traffic, one follow. Reshare leads because the other two depend on it."}, "posts": [{"id": "prioritisation-not-sufficient", "week": 1, "slot": 1, "goal": "reshare", "scene": "reorder-not-shorter", "theme": "Prioritisation is necessary, not sufficient", "eyebrow": "Exposure management", "headline": "A better-ordered backlog is still a backlog.", "linkedin": "Every exposure programme has more findings than it can act on, so every programme added a prioritisation layer. The list got better ordered. It did not get shorter.\n\nA rank tells you what to do first. It does not tell you whose asset it is, whether the finding is reachable in your environment, what the fix actually is, or when that team can take a change.\n\nThose four answers are the difference between a report and a closed finding. None of them come from a scanner, and none of them come from sorting.\n\nWhat is your team's actual bottleneck — the ranking, or the four answers after it?", "x": "A rank tells you what to do first. It doesn't tell you whose asset it is, whether it's reachable, what the fix is, or when that team can take a change.\n\nBetter-ordered isn't shorter.", "cta": "If this matches what you're seeing, pass it on.", "ctaUrl": "https://www.kai.security/glossary/mobilization", "source": "Kai CTEM page — 'Ranked is not the same as closed'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "reorder-not-shorter", "ctaWhy": "The post ends where mobilisation begins.", "ctaPlacement": "first comment"}, {"id": "ownership-blocker", "week": 1, "slot": 2, "goal": "traffic", "scene": "owner-fills", "theme": "Ownership is the hidden blocker", "eyebrow": "Asset ownership", "headline": "You cannot fix what has no owner.", "linkedin": "Most remediation programmes stall on a question nobody tracks: who owns this asset?\n\nAt one Fortune 50 energy company, 4% of assets had an accountable owner. After rebuilding the asset record from evidence rather than reconciling what the CMDB already believed, that went to 92% across 250,000 assets in under twelve hours — including roughly 30,000 assets the endpoint tooling had marked unmanaged.\n\nOwnership is not an inventory problem. It is the thing standing between a validated finding and a change that ships. Once the owner is known, the change can be authored and delivered autonomously inside the boundary you set, with a rollback path recorded.", "x": "4% of assets had an accountable owner. Then 92% across 250,000 assets in under 12 hours.\n\nOwnership isn't an inventory problem. It's the thing between a finding and a fix.", "cta": "See an exposure go from found to fixed →", "ctaUrl": "https://www.kai.security/glossary/ownership-attribution", "source": "Kai product messaging — Fortune 50 energy company, 4%→92%, 250k assets, <12h, ~30k unmanaged", "pillar": "CAASM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "owner-fills", "ctaWhy": "The post is about who owns the asset.", "ctaPlacement": "body"}, {"id": "detection-tax", "week": 1, "slot": 3, "goal": "follow", "scene": "alert-stream", "theme": "The detection tax nobody budgets for", "eyebrow": "Detection engineering", "headline": "74% of alerts were false positives. Then 12%.", "linkedin": "Every detection rule you write is a standing cost. It fires, someone triages it, and the ones that were never real spend your analysts' attention anyway.\n\nAutonomous detection engineering moved one SOC's false-positive rate from 74% to 12%. The interesting part is not the number, it is where the saving comes from: rules written against confirmed exposures rather than against every published technique.\n\nCoverage is easy to add and expensive to own. Precision is the thing worth engineering for.\n\nI write about exposure management and detection weekly — follow along if that is your problem too.", "x": "74% of alerts were false positives. Then 12%.\n\nThe saving isn't from more rules. It's from writing them against confirmed exposures instead of every published technique.", "cta": "Follow for more on exposure management and detection.", "ctaUrl": "https://www.kai.security/glossary/detection-as-code", "source": "Cross-checked metric — 74% → 12% SOC false-positive rate", "pillar": "Threat Intelligence", "tile": {"type": "headline"}, "concept": "alert-stream", "ctaWhy": "Precision comes from treating rules as code.", "ctaPlacement": "body"}, {"id": "handoff-is-the-cost", "week": 1, "slot": 4, "goal": "reshare", "scene": "handoff-gap", "theme": "The handoff is where the time goes", "eyebrow": "Mean time to remediate", "headline": "The gap between finding and fixing is where risk lives.", "linkedin": "Count the people in your remediation chain, end to end. Then the tools. Then the cross-team handoffs.\n\nIn most enterprises the honest answer is twenty to thirty people, fifteen to twenty tools, and three to five handoffs. None of that is incompetence. It is what happens when two teams rebuild the same context from the same intelligence and then reconcile with each other.\n\nThe time does not go into deciding what to fix. It goes into the spaces between the teams that fix it.\n\nIf you have measured your own chain, I would genuinely like to know what you found.", "x": "Twenty to thirty people. Fifteen to twenty tools. Three to five handoffs.\n\nThe time doesn't go into deciding what to fix. It goes into the gaps between the teams that fix it.", "cta": "Worth comparing notes — reshare if your chain looks like this.", "ctaUrl": "https://www.kai.security/glossary/exposure-window", "source": "Kai CTEM page — Autonomous Defense Cycle, 20-30+ / 15-20 / 3-5", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "handoff-gap", "ctaWhy": "The gap the post measures has a name.", "ctaPlacement": "first comment"}, {"id": "ctem-is-a-programme", "week": 2, "slot": 1, "goal": "reshare", "scene": "loop-closes", "theme": "CTEM is a programme, not a product", "eyebrow": "The cycle", "headline": "Five phases everyone defines. What closes the loop?", "linkedin": "Scope, discover, prioritise, validate, mobilise. Five phases, defined the same way across the industry, and most programmes can name all five.\n\nAsk a harder question: what closes the loop? Mobilisation hands work to another team and the cycle stops there. The next pass starts from a standing start, because nothing carried the exposure from found to fixed to covered.\n\nA cycle that does not close is a queue with better vocabulary.\n\nWhere does your loop actually break — at validation, at mobilisation, or at the handoff after it?", "x": "Scope, discover, prioritise, validate, mobilise.\n\nFive phases everyone can name. But what closes the loop?\n\nA cycle that doesn't close is a queue with better vocabulary.", "cta": "Curious where others see the break. Reply or reshare.", "ctaUrl": "https://www.kai.security/glossary/continuous-threat-exposure-management", "source": "Kai CTEM page — 'Five phases everyone defines. Two more that close the loop.'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "loop-closes", "ctaWhy": "The five phases, defined neutrally.", "ctaPlacement": "first comment"}, {"id": "shadow-assets", "week": 2, "slot": 2, "goal": "traffic", "scene": "beyond-the-line", "theme": "The assets your tooling marked unmanaged", "eyebrow": "Asset coverage", "headline": "30,000 assets nobody was counting.", "linkedin": "A coverage gap is not an absence of data. It is data your tooling decided not to count.\n\nScanning agentlessly across one estate surfaced roughly 30,000 shadow IT and OT assets that existing endpoint tooling had marked unmanaged. Nothing new was deployed to find them.\n\nThe uncomfortable part is what that does to every percentage you report. A coverage figure calculated against a denominator that silently excludes 30,000 assets is not a coverage figure.\n\nRaise the gap as a finding. Do not drop it from the denominator.", "x": "~30,000 shadow IT and OT assets that endpoint tooling had marked unmanaged. Found agentlessly, nothing deployed.\n\nA coverage % against a denominator that excludes them isn't a coverage %.", "cta": "See an asset record rebuilt from evidence →", "ctaUrl": "https://www.kai.security/solutions/ctem", "source": "Cross-checked metric — 30,000 shadow IT and OT assets discovered agentlessly", "pillar": "CAASM", "tile": {"type": "headline"}, "concept": "beyond-the-line", "ctaWhy": "Traffic post — the product page earns the click.", "ctaPlacement": "body"}, {"id": "detection-as-stopgap", "week": 2, "slot": 3, "goal": "reshare", "scene": "cover-until", "theme": "Detection as a stopgap while the fix waits", "eyebrow": "Compensating coverage", "headline": "Some fixes have to wait. The exposure should not be uncovered while they do.", "linkedin": "Not everything can be patched this week. Maintenance windows exist, dependencies exist, and some systems genuinely cannot take a change on your timetable.\n\nThe question is what happens in the meantime. In most programmes the honest answer is nothing: the finding sits in a queue marked accepted-risk and the gap is simply open.\n\nThere is a better default. If the fix has to wait, a detection written specifically for that exposure can stand in for the patch until the change lands — and then be retired.\n\nTreating detection as temporary cover rather than permanent coverage is, I think, an underrated move.", "x": "Not everything can be patched this week.\n\nThe question is what covers the gap until it is. A detection written for that exposure can stand in for the patch — then retire.", "cta": "If your programme does this already, say so — I'd like to hear how.", "ctaUrl": "https://www.kai.security/glossary/compensating-controls", "source": "Kai product messaging — 'a detection stands in for as long as the fix has to wait'", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "cover-until", "ctaWhy": "Exactly what the post argues for.", "ctaPlacement": "first comment"}, {"id": "queue-never-shrinks", "week": 2, "slot": 4, "goal": "follow", "scene": "throughput-gap", "theme": "Why the queue never shrinks", "eyebrow": "The throughput gap", "headline": "Exposure programmes are not failing at detection.", "linkedin": "Exposure programmes are not failing at detection. Every enterprise of any size finds more than it can act on, and most have added a layer on top to sort it.\n\nThe list gets better ordered every year. The backlog does not shrink. That is a throughput problem wearing a prioritisation costume.\n\nThroughput is set by the slowest step, and the slowest step is almost never the ranking. It is ownership, or the change window, or the reconciliation between the team that found it and the team that has to fix it.\n\nAutonomous remediation is how that step stops being the constraint — the change authored and delivered inside the boundary you set, rather than queued for someone else's sprint.\n\nI post about this most weeks. Follow if measuring throughput rather than volume is where your head is.", "x": "Exposure programmes aren't failing at detection.\n\nThe list gets better ordered every year. The backlog doesn't shrink.\n\nThat's a throughput problem in a prioritisation costume.", "cta": "Follow for more on throughput over volume.", "ctaUrl": "https://www.kai.security/resources/the-throughput-gap", "source": "Kai CTEM page — 'Ranked is not the same as closed'; Auto Remediation available per 2026-07-29 release", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "throughput-gap", "ctaWhy": "Kai's own piece on this argument.", "ctaPlacement": "body"}, {"id": "exploitability-before-severity", "week": 3, "slot": 1, "goal": "reshare", "scene": "same-score-different-answer", "theme": "Exploitability before severity", "eyebrow": "Validation", "headline": "Critical in the abstract is not critical on your asset.", "linkedin": "A CVSS score describes a vulnerability. It does not describe your environment.\n\nThe same critical finding can be unreachable on one asset, exploitable on another, and part of a chain on a third. Treating those three as one queue item is how teams end up arguing about severity instead of about evidence.\n\nCut on exploitability per asset, not severity in the abstract. The list gets smaller and, more usefully, the conversation with the owning team changes: you are no longer asking them to trust a score.\n\nProof travels further than priority.", "x": "A CVSS score describes a vulnerability, not your environment.\n\nSame critical finding: unreachable on one asset, exploitable on another, part of a chain on a third.\n\nProof travels further than priority.", "cta": "Pass it on if your severity debates sound like this.", "ctaUrl": "https://www.kai.security/glossary/cvss", "source": "Kai CTEM page — 'Cut on exploitability per asset, not severity in the abstract'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "same-score-different-answer", "ctaWhy": "The score the post is arguing against.", "ctaPlacement": "first comment"}, {"id": "scanning-is-table-stakes", "week": 3, "slot": 2, "goal": "reshare", "scene": "after-the-find", "theme": "Scanning is table stakes", "eyebrow": "A straight answer", "headline": "Discovery is solved. The work after it is not.", "linkedin": "A point against my own interest, because it is true: scanning is table stakes.\n\nYour existing vulnerability and cloud posture tools find things perfectly well. Nobody needs another discovery engine, and a vendor telling you otherwise is selling you a second inventory to reconcile against the first.\n\nThe hard part was never finding. It is everything between a finding and a change that shipped: whether it is reachable, who owns the asset, what the fix is, and when that team can take it.\n\nBe suspicious of anyone whose answer to the second problem is a better version of the first.", "x": "A point against my own interest: scanning is table stakes.\n\nThe hard part was never finding. It's everything between a finding and a change that shipped.", "cta": "Reshare if you've bought the second inventory and regretted it.", "ctaUrl": "https://www.kai.security/glossary/exposure-assessment-platform", "source": "Kai messaging — 'Scanning is table stakes', conceded position", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "after-the-find", "ctaWhy": "What the category does and does not cover.", "ctaPlacement": "first comment"}, {"id": "intel-to-rule", "week": 3, "slot": 3, "goal": "traffic", "scene": "rules-stack", "theme": "From intelligence to a deployed rule", "eyebrow": "Detection intelligence", "headline": "70+ rules, generated and tuned, in two hours.", "linkedin": "Threat intelligence tells you what is being exploited. Detection engineering turns that into a rule. Between the two sits a queue, and that queue is usually measured in weeks.\n\nDoing both in one pass — scoped to the exposures you actually have rather than every published technique — produced 70+ detection rules, generated and tuned, in two hours.\n\nThe constraint was never the writing. It was the context: knowing which exposures are real in this estate before deciding what to detect.\n\nSame intelligence, same team. Different order of operations.", "x": "Threat intel tells you what's exploited. Detection engineering makes it a rule. Between them sits a queue measured in weeks.\n\n70+ rules, generated and tuned, in two hours.", "cta": "See detection written for your environment →", "ctaUrl": "https://www.kai.security/glossary/sigma", "source": "Cross-checked metric — 70+ rules generated and tuned in 2 hours", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "rules-stack", "ctaWhy": "The format the rules are written in.", "ctaPlacement": "body"}, {"id": "reachability-maths", "week": 3, "slot": 4, "goal": "traffic", "scene": "erode-to-real", "theme": "Reachability changes the arithmetic", "eyebrow": "Exploitability", "headline": "Over 90% of findings are removed before anyone triages.", "linkedin": "Severity is assigned in the abstract. Reachability is a fact about your environment.\n\nWhen you prove whether a finding is reachable — on the asset, in the code path, and from outside — most of the queue stops being work. In Kai's deployments that removes over 90% of findings before a human triages anything, and up to 99% depending on environment, language ecosystem and scanner mix.\n\nThe remaining list is small enough to argue about from evidence rather than from a CVSS score.\n\nThat is the whole case for proving exploitability before you prioritise.", "x": "Severity is assigned in the abstract. Reachability is a fact about your environment.\n\nProving it removes 90%+ of findings before anyone triages.", "cta": "See what exposure management looks like when it closes →", "ctaUrl": "https://www.kai.security/glossary/reachability-analysis", "source": "Kai product messaging + Ladder 'Live': reachability cuts findings 90%+, up to 99%", "pillar": "CTEM", "tile": {"type": "headline"}, "concept": "erode-to-real", "ctaWhy": "The method behind the number.", "ctaPlacement": "body"}, {"id": "accepted-has-no-expiry", "week": 4, "slot": 1, "goal": "reshare", "scene": "accepted-ages", "theme": "Accepted risk has no expiry date", "eyebrow": "Risk acceptance", "headline": "Accepted risk is a decision, not a status.", "linkedin": "Every exposure programme has an accepted-risk bucket. Almost none of them have a review date.\n\nA risk accepted in March was accepted against March's estate, March's threat landscape and March's compensating controls. By October none of those three are the same, and nobody re-ran the decision — because the finding left the queue the moment it was marked accepted.\n\nAcceptance is a reasonable answer. Permanent acceptance, with no expiry and no owner, is just a quieter kind of backlog.\n\nDoes your programme put a review date on an accepted risk? Genuinely curious how many do.", "x": "A risk accepted in March was accepted against March's estate and March's threat landscape.\n\nBy October nobody re-ran the decision.\n\nAcceptance without an expiry date is a quieter kind of backlog.", "cta": "If your programme dates its acceptances, say so — I'd like to hear how.", "ctaUrl": "https://www.kai.security/glossary/asset-criticality", "source": "Kai CTEM page — 'Ranked is not the same as closed'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "accepted-ages", "ctaWhy": "Acceptance depends on criticality, which moves.", "ctaPlacement": "first comment"}, {"id": "record-vs-belief", "week": 4, "slot": 2, "goal": "follow", "scene": "belief-vs-evidence", "theme": "A CMDB records a belief", "eyebrow": "Asset record", "headline": "Your inventory records a belief. Evidence records a fact.", "linkedin": "A CMDB is a record of what somebody entered, and of what the last reconciliation agreed to. Both of those are beliefs about the estate. Neither is an observation of it.\n\nThat distinction stays harmless right up until you calculate something from it — coverage, ownership, exposure per business unit. Then the belief becomes a number in a board pack.\n\nRebuilding the record from evidence rather than reconciling what the CMDB already believed is a different exercise, and it tends to produce an uncomfortable first week. It is also the only version of the record you can defend.\n\nI post about asset truth and exposure management most weeks — follow along if this is your problem too.", "x": "A CMDB records what someone entered and what the last reconciliation agreed to.\n\nBoth are beliefs about the estate. Neither is an observation of it.", "cta": "Follow for more on asset truth and exposure management.", "ctaUrl": "https://www.kai.security/glossary/caasm", "source": "Kai product messaging — asset record rebuilt from evidence rather than reconciled", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "belief-vs-evidence", "ctaWhy": "The asset record is the subject.", "ctaPlacement": "body"}, {"id": "techniques-that-apply", "week": 4, "slot": 3, "goal": "traffic", "scene": "narrow-to-yours", "theme": "Detect what applies to you", "eyebrow": "Scope", "headline": "Most published techniques will never touch your estate.", "linkedin": "Detection coverage is usually measured against the published technique list. It is a tidy denominator, and it is the wrong one.\n\nMost of those techniques depend on software you do not run, in configurations you do not have, reachable from positions nobody can get to in your environment. Writing rules for them adds standing triage cost and buys no risk reduction.\n\nScoping detection to confirmed exposures inverts the exercise: you start from what is real here, then write for that. One SOC's false-positive rate moved from 74% to 12% on exactly that change.\n\nCoverage is easy to add and expensive to own.", "x": "Detection coverage is measured against the published technique list. Tidy denominator, wrong one.\n\nMost of it depends on software you don't run.\n\n74% false positives → 12%.", "cta": "See detection scoped to your environment →", "ctaUrl": "https://www.kai.security/glossary/mitre-attack", "source": "Cross-checked metric — 74% → 12% SOC false-positive rate", "pillar": "Threat Intelligence", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "narrow-to-yours", "ctaWhy": "The technique list the post narrows.", "ctaPlacement": "body"}, {"id": "rollback-is-the-fix", "week": 4, "slot": 4, "goal": "reshare", "scene": "rollback-path", "theme": "A change you cannot undo is not a fix", "eyebrow": "Change safety", "headline": "If you cannot roll it back, it is not a fix. It is a gamble.", "linkedin": "The reason remediation moves slowly in large estates is rarely that nobody knows what to change. It is that nobody will authorise the change without knowing how to undo it.\n\nThat is a completely rational position. A failed patch on a production system costs more than the exposure did, and the person who approved it owns that outcome.\n\nSo the useful question is not how to make changes faster. It is how to make them reversible — the change authored, the blast radius known, the rollback path recorded before anything ships. Speed is a consequence of that, not a substitute for it.\n\nEvery remediation conversation that skips the rollback question ends up back at the change advisory board anyway.", "x": "Remediation isn't slow because nobody knows what to change.\n\nIt's slow because nobody will authorise a change they can't undo.\n\nReversible first. Fast is a consequence.", "cta": "Pass it on if your CAB conversations sound like this.", "ctaUrl": "https://www.kai.security/resources/autonomous-remediation-trust-barrier", "source": "Kai product messaging — change authored and delivered inside a set boundary, rollback path recorded", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "rollback-path", "ctaWhy": "Kai's own piece on the hesitation.", "ctaPlacement": "first comment"}, {"id": "coverage-denominator", "week": 5, "slot": 1, "goal": "reshare", "scene": "denominator-grows", "theme": "Every coverage percentage has a denominator", "eyebrow": "Measurement", "headline": "98% coverage of the assets you already knew about.", "linkedin": "Coverage percentages are the most quoted and least interrogated number in security reporting.\n\nThe figure is only as honest as its denominator, and the denominator is whatever your tooling agreed to count. Discover 30,000 assets that endpoint tooling had marked unmanaged and a 98% becomes something considerably less comfortable — without a single control getting worse.\n\nThat is the right outcome, incidentally. The number was always wrong; it just looked better before.\n\nIf a coverage figure never moves when you improve discovery, it is not measuring coverage. It is measuring the inventory.", "x": "Coverage % is only as honest as its denominator, and the denominator is whatever your tooling agreed to count.\n\nFind 30,000 unmanaged assets and 98% stops looking like 98%.", "cta": "Reshare if your coverage figure has never moved.", "ctaUrl": "https://www.kai.security/lp/2026-state-of-autonomous-defense-report", "source": "Cross-checked metric — 30,000 shadow IT and OT assets discovered agentlessly", "pillar": "CTEM", "pillarSecondary": "CAASM", "tile": {"type": "headline"}, "concept": "denominator-grows", "ctaWhy": "Measurement post — the report is the payoff.", "ctaPlacement": "first comment"}, {"id": "unmanaged-is-a-verdict", "week": 5, "slot": 2, "goal": "reshare", "scene": "verdict-reversed", "theme": "Unmanaged is a verdict, not a property", "eyebrow": "Coverage", "headline": "'Unmanaged' is something your tooling decided, not something the asset is.", "linkedin": "When an endpoint tool marks an asset unmanaged, that is a statement about the tool's reach. It gets read as a statement about the asset.\n\nThe practical consequence is that the asset stops appearing in the places where work gets allocated. It is not in the coverage figure, not in the owner mapping, and not in anyone's queue. It is still on the network.\n\nRoughly 30,000 assets in one estate sat in exactly that category, and they were found agentlessly — nothing new deployed, no new agent to roll out.\n\nWorth checking what your own unmanaged bucket actually contains. In most estates nobody has looked inside it recently.", "x": "'Unmanaged' is a statement about your tool's reach. It gets read as a statement about the asset.\n\nEither way it's still on the network.", "cta": "Worth comparing notes — reshare if your unmanaged bucket is a mystery too.", "ctaUrl": "https://www.kai.security/glossary/shadow-it", "source": "Cross-checked metric — ~30,000 assets marked unmanaged by existing endpoint tooling", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "verdict-reversed", "ctaWhy": "The bucket the post opens.", "ctaPlacement": "first comment"}, {"id": "detections-should-retire", "week": 5, "slot": 3, "goal": "follow", "scene": "rules-retire", "theme": "Detections should retire", "eyebrow": "Rule lifecycle", "headline": "Nobody is measured on the detections they retired.", "linkedin": "Detection libraries only ever grow. Every incident adds a rule, every new technique adds a rule, and nothing ever comes off — because no one has been rewarded for deleting a detection.\n\nThe cost is not storage. It is that every stale rule spends analyst attention on an exposure that was closed months ago.\n\nIf a detection was written to cover a specific exposure while the fix waited, then the fix landing is the signal to retire it. That only works if the rule knew which exposure it was standing in for — which is an argument for writing detections against confirmed exposures rather than against the technique list.\n\nA library that cannot shrink is not a library. It is an accumulation.\n\nI write about this most weeks — follow if detection lifecycle is on your mind.", "x": "Detection libraries only grow. Every incident adds a rule and nothing comes off.\n\nIf a detection covered an exposure while the fix waited, the fix landing is the signal to retire it.", "cta": "Follow for more on detection lifecycle and exposure management.", "ctaUrl": "https://www.kai.security/resources/security-team-after-automation", "source": "Kai product messaging — 'a detection stands in for as long as the fix has to wait'", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "rules-retire", "ctaWhy": "What the team stops doing.", "ctaPlacement": "body"}, {"id": "autonomy-inside-a-boundary", "week": 5, "slot": 4, "goal": "traffic", "scene": "inside-boundary", "theme": "Autonomy inside a boundary you set", "eyebrow": "The boundary", "headline": "Autonomy is not the absence of control. It is control you set once.", "linkedin": "The objection to autonomous remediation is always the same, and it is a fair one: I am not letting software change production on its own.\n\nThat objection is about an unbounded agent. It is not an argument against autonomy — it is an argument for a boundary.\n\nSet the boundary once: which asset classes, which change types, which windows, which approvals still route to a human. Inside it, the change is authored, delivered and recorded with a rollback path. Outside it, nothing moves without you.\n\nThat is a different proposition from a tool that files a ticket and calls it remediation. The exposure goes from found to fixed, and the control you exercised was the boundary rather than the keystroke.", "x": "'I'm not letting software change production on its own' is an argument against an unbounded agent.\n\nIt's an argument for a boundary, not against autonomy.", "cta": "See an exposure go from found to fixed →", "ctaUrl": "https://www.kai.security/demo", "source": "Kai product messaging — change authored and delivered inside the boundary you set, rollback recorded", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "inside-boundary", "ctaWhy": "The one bottom-of-funnel post. 'See it fixed'.", "ctaPlacement": "body"}], "_tile_modes": "A planner post is its own artwork, not a tile with a scene on it: white ground, Kai colours as accent, and a composition built for that one argument. Each post names a concept in POST_CONCEPTS. Nothing here is shared with the Single tile or Carousel tabs.", "_rolling_window": "The calendar always shows the next 30 days. Twenty posts fill five weeks of the Mon/Tue/Thu/Fri cadence, so there is never an empty slot inside the window. When a week falls behind, plan the next four and append them.", "framework": {"_note": "Read from Kai's own systems on 2 Oct 2026 and summarised here so the planner, and anyone reading the plan, works from the approved messaging rather than from whatever the last post happened to say. Re-read the sources when they change.", "sources": [{"label": "Kai Messaging Framework (19 Jun 2026)", "system": "SharePoint", "url": "https://kaicyberinc.sharepoint.com/sites/kai-marketing/Shared Documents/External Sharing/Kai & Taschler Insights/2026 CISO Survey/Kai Messaging Framework 061926.pdf", "gives": "Manifesto, vision, positioning statement, capabilities, 12 use cases, Autonomous Defense Cycle, taglines, boilerplate."}, {"label": "Q3/Q4 Campaign Brief — Prioritization is Dead. Long live Fixed.", "system": "SharePoint", "url": "https://kaicyberinc.sharepoint.com/sites/kai-marketing/Shared Documents/Campaigns/FY27 Q3-Q4/Campaign Brief.docx", "gives": "Current campaign umbrella, message ladder, tone guardrails, personas, funnel. Modified 2 Oct 2026 — the freshest positioning."}, {"label": "Master Sales Playbook + Scripts", "system": "Confluence (KPM)", "url": "https://kaicyber.atlassian.net/wiki/spaces/KPM/pages/347013121/Master+Sales+Playbook+Scripts", "gives": "What lands and what confuses on real calls, proof points, and the CISO stress test — the claims buyers push back on and the hardened way to say them."}], "umbrella": "Prioritization is Dead. Long live Fixed.", "ladder": {"ongoing": "Risk Fixed, Not Filed.", "subheadline": "Proven exploitable. Fixed by the right owner. Covered until the patch lands.", "closing": "Prioritization kept the backlog alive. Kai eliminates it.", "ciso": "Measure your program in risk closed, not tickets opened.", "vpVuln": "Your backlog finally goes down.", "guardrail": "Humans set the boundary. Kai acts automatically inside it; outside it, Kai stages the plan, names the owner and opens the ticket."}, "manifesto": ["Cybersecurity has reached its human limit.", "We cannot win a machine-speed war with human-speed defenses.", "Adding AI to a broken stack isn't progress. It's inertia with a new label.", "The future of security has no categories — only outcomes.", "Human defenders don't just keep up. They become superhuman."], "challenges": [{"challenge": "Tools aren't keeping up", "answer": "Collapse scanners into one platform"}, {"challenge": "The threat has changed", "answer": "Drive all exposures to remediation"}, {"challenge": "Resources have a ceiling", "answer": "Agents amplify security team capacity"}], "cycle": {"Protect": "Before an attack — discover, enrich, attribute ownership, validate true exploitability, tune detections, drive remediation.", "Detect": "During an attack — distil intel in real time, hunt, generate detections, correlate across assets, identities and vulnerabilities.", "Respond": "When an attack is detected — execute response, guide remediation with context, validate fixes, update the model."}, "phrases_that_land": ["We investigate first, then prioritise — instead of prioritise then investigate.", "We flip the process on its head.", "Your scanners find. We investigate, triage and remediate.", "We're a pilot, not a co-pilot.", "Attackers don't think in categories. Defense shouldn't either.", "Not just 'upgrade Library X' — here are all 15 dependencies."], "phrases_to_avoid": ["'GenAI' — buyers hear ChatGPT wrapper and disengage.", "Deep explanations of how transformers work — prospects get defensive.", "More than one use case in a single post — the thread gets lost.", "Fear-based or AI-attacker framing in a headline (campaign brief tone rule).", "Mocking prioritisation or the people who built programmes on it. Affectionate, never sneering.", "Naming competitors."], "tone": "Confident, plain-spoken, a little playful. Affectionate toward prioritisation, never mocking.", "proof_public": [{"figure": "74% → 12% SOC false-positive rate", "source": "Cross-checked metric"}, {"figure": "~30,000 shadow IT and OT assets discovered agentlessly", "source": "Cross-checked metric"}, {"figure": "70+ detection rules generated and tuned in 2 hours", "source": "Cross-checked metric"}, {"figure": "4% → 92% asset ownership, 250k assets, under 12h", "source": "kai.security platform page"}, {"figure": "Reachability removes 90%+ of findings, up to 99%", "source": "kai.security platform page + Ladder 'Live'"}, {"figure": "20-30+ people, 15-20 tools, 3-5 handoffs in a remediation chain", "source": "kai.security CTEM page"}], "proof_internal_do_not_publish": ["15M vulnerabilities triaged in hours", "2M SCA findings, 97% eliminated in 1 hour", "16M → 3M actionable (hotel chain, 350k assets)", "2.5M → 32K (100k cloud assets)", "4% → 76% ownership in one week (27M tickets)", "50-85% SIEM cost reduction", "MITRE ATT&CK coverage +45%", "3M vulnerabilities in under 30 minutes", "False negative rate 2-3%", "$1M+ bookings; $125M raised", "The competitive matrix, which is built on Gartner sub-categories"], "claims_guard": {"the_90_99_number": "Do not frame it as a false-positive epidemic. The scanner is doing its job: it found a library with a known CVE, which is technically correct. The question is whether an attacker can exploit it in this environment. Frame it as a context gap scanners were never designed to fill — never as scanner failure. This is the CISO's single biggest pushback.", "ownership": "The published figure is 4% → 92% across 250k assets in under 12h. An internal playbook cites 4% → 76% in one week from 27M tickets, and flags the method as an inference rather than a fact. Use the published figure, and do not imply ticket inference is certainty.", "autonomy": "Automated remediation delivery is claimable as available (ruled 2 Oct 2026). Always pair it with the boundary: humans set it, Kai acts inside it, outside it Kai stages the plan.", "analyst_material": "Nothing sourced from licensed analyst research, including the competitive matrix and anything in the Gartner Research folder. Education only — no quotes, no figures, no attribution, no screenshots."}}, "destinations": [{"label": "Mobilization (glossary)", "url": "https://www.kai.security/glossary/mobilization", "kind": "neutral", "note": "Where ranking stops and work starts."}, {"label": "Ownership attribution (glossary)", "url": "https://www.kai.security/glossary/ownership-attribution", "kind": "neutral", "note": "Who owns the asset, and how that is inferred."}, {"label": "Detection as code (glossary)", "url": "https://www.kai.security/glossary/detection-as-code", "kind": "neutral", "note": "Rules as versioned, testable artefacts."}, {"label": "Exposure window (glossary)", "url": "https://www.kai.security/glossary/exposure-window", "kind": "neutral", "note": "The time between found and fixed."}, {"label": "CTEM (glossary)", "url": "https://www.kai.security/glossary/continuous-threat-exposure-management", "kind": "neutral", "note": "The five phases, defined neutrally."}, {"label": "CTEM solution", "url": "https://www.kai.security/solutions/ctem", "kind": "product", "note": "The product page. Traffic posts only."}, {"label": "Compensating controls (glossary)", "url": "https://www.kai.security/glossary/compensating-controls", "kind": "neutral", "note": "Cover while the fix waits."}, {"label": "The throughput gap", "url": "https://www.kai.security/resources/the-throughput-gap", "kind": "thought-leadership", "note": "Kai's own piece on why the queue never shrinks."}, {"label": "CVSS (glossary)", "url": "https://www.kai.security/glossary/cvss", "kind": "neutral", "note": "Severity in the abstract, and its limits."}, {"label": "Exposure assessment platform (glossary)", "url": "https://www.kai.security/glossary/exposure-assessment-platform", "kind": "neutral", "note": "What the category covers."}, {"label": "Sigma (glossary)", "url": "https://www.kai.security/glossary/sigma", "kind": "neutral", "note": "The portable detection rule format."}, {"label": "Reachability analysis (glossary)", "url": "https://www.kai.security/glossary/reachability-analysis", "kind": "neutral", "note": "Whether a finding can actually be reached."}, {"label": "Asset criticality (glossary)", "url": "https://www.kai.security/glossary/asset-criticality", "kind": "neutral", "note": "What makes an asset worth more than its CVSS."}, {"label": "CAASM (glossary)", "url": "https://www.kai.security/glossary/caasm", "kind": "neutral", "note": "The asset record and its coverage."}, {"label": "MITRE ATT&CK (glossary)", "url": "https://www.kai.security/glossary/mitre-attack", "kind": "neutral", "note": "The technique list, and what it is for."}, {"label": "The autonomous remediation trust barrier", "url": "https://www.kai.security/resources/autonomous-remediation-trust-barrier", "kind": "thought-leadership", "note": "Kai's own piece on why teams hesitate."}, {"label": "2026 State of Autonomous Defense report", "url": "https://www.kai.security/lp/2026-state-of-autonomous-defense-report", "kind": "gated", "note": "The report. Gated — use for follow and measurement posts."}, {"label": "Shadow IT (glossary)", "url": "https://www.kai.security/glossary/shadow-it", "kind": "neutral", "note": "Assets the tooling never counted."}, {"label": "The security team after automation", "url": "https://www.kai.security/resources/security-team-after-automation", "kind": "thought-leadership", "note": "Kai's own piece on what the role becomes."}, {"label": "Book a demo", "url": "https://www.kai.security/demo", "kind": "conversion", "note": "Bottom of funnel. One post at a time, at most."}, {"label": "Validation before automation", "url": "https://www.kai.security/resources/validation-before-automation", "kind": "thought-leadership", "note": "Kai's own piece on proving before acting."}, {"label": "Function reachability (glossary)", "url": "https://www.kai.security/glossary/function-reachability", "kind": "neutral", "note": "Whether the vulnerable function is called."}, {"label": "Exposure validation (glossary)", "url": "https://www.kai.security/glossary/exposure-validation", "kind": "neutral", "note": "Proving exploitability rather than assuming it."}, {"label": "Attack path (glossary)", "url": "https://www.kai.security/glossary/attack-path", "kind": "neutral", "note": "How findings chain into a route."}, {"label": "EPSS (glossary)", "url": "https://www.kai.security/glossary/epss", "kind": "neutral", "note": "Probability of exploitation, and its limits."}, {"label": "KEV (glossary)", "url": "https://www.kai.security/glossary/known-exploited-vulnerabilities-kev", "kind": "neutral", "note": "Known exploited, as a signal."}, {"label": "Resources hub", "url": "https://www.kai.security/resources", "kind": "hub", "note": "When nothing more specific fits."}, {"label": "Glossary hub", "url": "https://www.kai.security/glossary", "kind": "hub", "note": "When nothing more specific fits."}], "_destinations_note": "Every URL verified 200 against www.kai.security on 2 Oct 2026. The old plan pointed six posts at https://kai.security/platform, which is a 404 — that page does not exist. Glossary pages are the workhorse here: they are neutral and educational, so a reshare post can carry one without reading as an ad. Product and conversion pages are reserved for traffic posts.", "employees": [{"id": "galina", "name": "Galina Antova", "role": "Co-founder", "initials": "GA", "profile": "https://www.linkedin.com/company/kai-security/", "colour": "#027FA8", "voice": "First principles and category level. She has built this before — Claroty in cyber-physical, SecurityMatters before it — and she has had the conversation with 500+ CISOs. She is allowed to say why Kai exists, because she decided it.", "does": ["Speaks to peers: other founders, CISOs, boards.", "Argues from conviction and from having built the previous thing.", "Names the structural problem, not the product that answers it.", "Ends on a position, not a call to action."], "doesnt": ["No product specs, no feature names, no metrics dump.", "No reposting the company post with 'great read'.", "No competitor names.", "Never the first comment on her own company's post — she adds, she does not applaud."], "ownCadence": "One post a fortnight, Wednesdays."}, {"id": "thomas", "name": "Thomas Nuth", "role": "Marketing", "initials": "TN", "profile": "https://www.linkedin.com/in/tnuth/", "colour": "#00BFFF", "voice": "The programme view. What the team is reading, testing and getting wrong. Useful rather than promotional, and honest about trade-offs — which is what earns the reshare from people who do not work here.", "does": ["Curates: other people's research, definitions, frameworks.", "Shares what the team learned, including the unflattering half.", "Adds the practical detail the company post left out.", "Links to the neutral page, not the product page."], "doesnt": ["No claims engineering has not made.", "No speaking for customers.", "No 'thrilled to announce'.", "No competitor names."], "ownCadence": "One post a fortnight, Wednesdays."}], "advocacy": {"_note": "Employee amplification. Two mechanics: a comment on the company post, and their own post on their own account. Comments go up 45-90 minutes after the company post — long enough not to look staged, early enough to matter. Nobody comments first on their own company's post, and nobody writes 'great read'. A comment that adds nothing is worse than no comment.", "commentDelayMins": [45, 90], "comments": [{"postId": "prioritisation-not-sufficient", "who": "galina", "text": "The ranking layer was a rational response to a real problem — there were more findings than anyone could action, so we sorted them. What nobody priced in was that sorting is not throughput. You can be excellent at deciding what matters and still close nothing."}, {"postId": "ownership-blocker", "who": "thomas", "text": "The part that surprised me is that ownership is almost never tracked as a metric. Teams report coverage, mean time to remediate, open criticals — and not the one number that determines whether any of it moves."}, {"postId": "detection-tax", "who": "thomas", "text": "Worth separating two things that get conflated: coverage and precision. Adding a rule is free. Owning it is not — every one you keep spends analyst attention every week, forever."}, {"postId": "handoff-is-the-cost", "who": "thomas", "text": "If you want to measure this on your own programme: count the handoffs, not the hours. The hours are invisible because nobody is sitting idle — they are each doing their own job, twice."}, {"postId": "ctem-is-a-programme", "who": "galina", "text": "The five phases were a genuine contribution. The problem is that a framework describes the work, and most organisations then bought tools for the first three phases and staffed the last two with people. That is where it stops."}, {"postId": "shadow-assets", "who": "thomas", "text": "The bit I would underline: nothing new was deployed to find them. If the answer to a coverage gap is another agent rollout, that is a second project before you get the first answer."}, {"postId": "detection-as-stopgap", "who": "thomas", "text": "The retire step is the one everyone skips. A detection written to cover a specific exposure should die when the fix lands, and almost none of them do."}, {"postId": "queue-never-shrinks", "who": "thomas", "text": "A useful test: if your programme improved every year and the backlog still grew, the thing you improved was not the constraint."}, {"postId": "exploitability-before-severity", "who": "galina", "text": "CVSS was never meant to describe your environment — it describes a vulnerability in the abstract, and it does that job well. Treating it as a priority queue is a category error we all made collectively."}, {"postId": "scanning-is-table-stakes", "who": "galina", "text": "Saying this costs us nothing, which is why it is worth saying. Discovery is solved. Any vendor whose answer to the post-discovery problem is better discovery is selling you a second inventory to reconcile against the first."}, {"postId": "intel-to-rule", "who": "thomas", "text": "The ordering matters more than the speed. Writing rules against confirmed exposures rather than the whole technique list is what makes two hours possible — not typing faster."}, {"postId": "reachability-maths", "who": "thomas", "text": "To be precise about this, because the number sounds like an accusation: the scanner did its job. It found a real CVE in a real library. Whether it is reachable in your code path is a question scanners were never built to answer."}, {"postId": "accepted-has-no-expiry", "who": "galina", "text": "Risk acceptance is one of the few decisions in security with no expiry date attached. We would not accept that in any other part of the business, and I do not think we should accept it here."}, {"postId": "record-vs-belief", "who": "thomas", "text": "Every coverage percentage you have ever reported was calculated against this. Worth knowing which one you are holding before the next board meeting."}, {"postId": "techniques-that-apply", "who": "thomas", "text": "Counting coverage against the published list is comfortable because the denominator is public. It is also the wrong denominator — the only one that matters is what is actually running in your estate."}, {"postId": "rollback-is-the-fix", "who": "galina", "text": "Having built in environments where a failed change takes a plant offline, I would put it more strongly: reversibility is not a safety feature on top of automation. It is the precondition for anyone letting you automate at all."}, {"postId": "coverage-denominator", "who": "galina", "text": "The uncomfortable version of this: the number was always wrong. Improving discovery did not make your posture worse, it made your reporting honest. Those are very different conversations to have with a board."}, {"postId": "unmanaged-is-a-verdict", "who": "thomas", "text": "Worth actually opening that bucket this quarter. In most estates nobody has looked inside it since the tooling was deployed."}, {"postId": "detections-should-retire", "who": "thomas", "text": "Nobody has ever been promoted for deleting a detection. That is the whole problem in one sentence."}, {"postId": "autonomy-inside-a-boundary", "who": "galina", "text": "The objection is right and I would not want to work with a CISO who did not raise it. But it is an objection to an unbounded agent. Set the boundary and the question changes from whether to trust the software to where you draw the line."}]}, "employeePosts": [{"id": "ga-w1", "who": "galina", "week": 1, "day": "wed", "theme": "Why we rebuilt rather than improved", "text": "The best founders do not improve existing categories. They make them obsolete.\n\nI have been on the other side of this. Claroty did not make existing security tools better for industrial environments — it accepted that those environments needed something that did not exist yet.\n\nThe same judgement applies now, and it is harder to make, because the industry has a comfortable answer available: add AI to what you already run. Smarter SIEM. Analyst copilot. AI-assisted triage.\n\nThat is not progress. It is the same fragmented stack with a new label on it, and the ambition stops at marginally better.\n\nYou cannot win a machine-speed war with human-speed defenses. Not with more tools, not with more headcount, and not with AI bolted onto the thing that was already failing.", "why": "Founder conviction, no product. Sets up the month's reshare posts."}, {"id": "tn-w2", "who": "thomas", "week": 2, "day": "wed", "theme": "What a month of writing about exposure management taught us", "text": "We have been publishing on exposure management four times a week for a month. The posts that travelled were not the ones with our best numbers.\n\nThey were the ones that conceded something.\n\n'Scanning is table stakes' got reshared by people who sell scanners. 'A better-ordered backlog is still a backlog' got reshared by people who built the prioritisation layer.\n\nThe pattern seems to be that a post which admits the hard part is still hard reads as a colleague talking. A post that resolves neatly into a product reads as an advert, and people can tell in about two seconds.\n\nStill working this out. If you run content for a security company and have found otherwise, I would genuinely like to know.", "why": "Useful and self-aware. Earns follows from the marketing peer group, not just buyers."}, {"id": "ga-w3", "who": "galina", "week": 3, "day": "wed", "theme": "The thing 500 CISO conversations had in common", "text": "Before starting Kai we spoke with more than 500 CISOs. I expected the conversations to diverge by sector, by size, by maturity.\n\nThey converged on one thing, and it was not a threat.\n\nIt was that their teams were drowning in complexity of our collective making. Every new problem over two decades was answered with a new tool, and the gaps between those tools are not edge cases. They are the attack surface.\n\nNobody asked for another product. Several of them asked, more or less directly, for someone to take work away.\n\nThat is a harder thing to build and a much harder thing to sell. It is also the only answer that scales.", "why": "Earned authority, zero product. The strongest reshare asset the company has."}, {"id": "tn-w4", "who": "thomas", "week": 4, "day": "wed", "theme": "Measure throughput, not volume", "text": "A question worth putting to your own programme this quarter:\n\nIf every metric you report improved last year, did the backlog get smaller?\n\nFor most exposure programmes the honest answer is no. Findings went up, prioritisation got better, mean time to remediate improved on the items that were worked — and the queue still grew.\n\nThat is because volume metrics measure the parts of the process that were never the constraint. Throughput is set by the slowest step, and the slowest step is almost never the ranking. It is ownership, or the change window, or the reconciliation between the team that found it and the team that fixes it.\n\nOne number worth adding to the board pack: findings closed per week, against findings opened per week. It is unflattering. It is also the only one that tells you whether you are winning.", "why": "Practical, no product, gives the reader something to do on Monday."}, {"id": "ga-w5", "who": "galina", "week": 5, "day": "wed", "theme": "Security has no categories, only outcomes", "text": "A prediction I am comfortable being held to: the category labels we use today will not survive the decade.\n\nAsset management, exposure management, detection engineering, identity — these are not natural divisions of the problem. They are divisions of the org chart, and then of the procurement cycle, and we have been buying tools shaped like our own internal boundaries for twenty years.\n\nAttackers do not think in categories. They move across every boundary we drew, because the boundaries are where the gaps are.\n\nThe next era of security will not be organised around what a tool is called. It will be organised around whether risk went down. I think that is a better world to sell into, and a considerably harder one to hide in.", "why": "Category-level thesis. Quotable, and it lands the manifesto line without the manifesto."}]};
+const PLAN = {"_comment": "Topic bank for the LinkedIn Planner. Four posts a week, three weeks, rotating across the three program goals.", "_sourcing": "Nothing here is sourced from material that would need third-party permission to reproduce. Licensed analyst research was used only as an education tool — to understand topics, categories, buyer sentiment and the shape of available solutions. No analyst text is quoted, paraphrased or attributed, and no analyst figure, quadrant or radar appears. Every number below is either one of Kai's three cross-checked metrics or already published on kai.security, and each post names its source. Messaging is taken from the Kai Messaging Framework and the Q3/Q4 Campaign Brief in SharePoint and the Master Sales Playbook in Confluence; see `framework.sources`. Analyst material in those systems is excluded. Source lines previously credited a 'Kai platform page'; that page does not exist on kai.security, so they now credit Kai product messaging, which is where the claims were verified.", "_positioning": "Kai associates the Autonomous Defense Platform with four categories: CTEM, CAASM, Threat Intelligence and Autonomous Remediation. Every post carries a primary pillar, and most carry a secondary, so a week never sits on one.", "_pillars": {"CTEM": "Continuous Threat Exposure Management — the shared language with buyers, never the category.", "CAASM": "Cyber Asset Attack Surface Management — the asset record, ownership, coverage.", "Threat Intelligence": "Intel to exposures to detection, in one pass.", "Autonomous Remediation": "The category Kai owns. Carried at the level of the gap it fills and what closing the loop means — never as a claim that automated remediation delivery is shipped. See _claims_guard."}, "_claims_guard": "Automated remediation delivery is claimable as available — ruled by Thomas Nuth, 2 Oct 2026, superseding Decision #1 and the Zafran battlecard line that said never to present it as shipped. The public site already said available; internal CompIntel said roadmap. That conflict is resolved in favour of available.\n\nSeparately, and by design rather than by caution: the reshare posts still carry no product claim. Goal 1 is reshares through vendor-agnostic thought leadership, and a post that names the product does not get reshared by people who do not work here. Product claims belong in the traffic posts.", "_goals": {"reshare": "Vendor-agnostic thought leadership. No product claim in the body. A neutral glossary link may sit in the first comment, which earns traffic without costing the reshare.", "follow": "Establishes a recurring point of view worth subscribing to.", "traffic": "Earns the click. Names Kai and links to the page that proves the point."}, "cadence": {"postsPerWeek": 4, "weeks": 5, "mix": "Each week carries one post per pillar — CTEM, CAASM, Threat Intelligence, Autonomous Remediation — and a goal mix of roughly two reshare, one traffic, one follow. Reshare leads because the other two depend on it."}, "posts": [{"id": "prioritization-not-sufficient", "week": 1, "slot": 1, "goal": "reshare", "scene": "reorder-not-shorter", "theme": "Prioritization is necessary, not sufficient", "eyebrow": "Exposure management", "headline": "A better-ordered backlog is still a backlog.", "linkedin": "Every exposure program has more findings than it can act on, so every program added a prioritization layer. The list got better ordered. It did not get shorter.\n\nA rank tells you what to do first. It does not tell you whose asset it is, whether the finding is reachable in your environment, what the fix actually is, or when that team can take a change.\n\nThose four answers are the difference between a report and a closed finding. None of them come from a scanner, and none of them come from sorting.\n\nWhat is your team's actual bottleneck — the ranking, or the four answers after it?", "x": "A rank tells you what to do first. It doesn't tell you whose asset it is, whether it's reachable, what the fix is, or when that team can take a change.\n\nBetter-ordered isn't shorter.", "cta": "If this matches what you're seeing, pass it on.", "ctaUrl": "https://www.kai.security/glossary/mobilization", "source": "Kai CTEM page — 'Ranked is not the same as closed'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "reorder-not-shorter", "ctaWhy": "The post ends where mobilization begins.", "ctaPlacement": "first comment"}, {"id": "ownership-blocker", "week": 1, "slot": 2, "goal": "traffic", "scene": "owner-fills", "theme": "Ownership is the hidden blocker", "eyebrow": "Asset ownership", "headline": "You cannot fix what has no owner.", "linkedin": "Most remediation programs stall on a question nobody tracks: who owns this asset?\n\nAt one Fortune 50 energy company, 4% of assets had an accountable owner. After rebuilding the asset record from evidence rather than reconciling what the CMDB already believed, that went to 92% across 250,000 assets in under twelve hours — including roughly 30,000 assets the endpoint tooling had marked unmanaged.\n\nOwnership is not an inventory problem. It is the thing standing between a validated finding and a change that ships. Once the owner is known, the change can be authored and delivered autonomously inside the boundary you set, with a rollback path recorded.", "x": "4% of assets had an accountable owner. Then 92% across 250,000 assets in under 12 hours.\n\nOwnership isn't an inventory problem. It's the thing between a finding and a fix.", "cta": "See an exposure go from found to fixed →", "ctaUrl": "https://www.kai.security/glossary/ownership-attribution", "source": "Kai product messaging — Fortune 50 energy company, 4%→92%, 250k assets, <12h, ~30k unmanaged", "pillar": "CAASM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "owner-fills", "ctaWhy": "The post is about who owns the asset.", "ctaPlacement": "body"}, {"id": "detection-tax", "week": 1, "slot": 3, "goal": "follow", "scene": "alert-stream", "theme": "The detection tax nobody budgets for", "eyebrow": "Detection engineering", "headline": "74% of alerts were false positives. Then 12%.", "linkedin": "Every detection rule you write is a standing cost. It fires, someone triages it, and the ones that were never real spend your analysts' attention anyway.\n\nAutonomous detection engineering moved one SOC's false-positive rate from 74% to 12%. The interesting part is not the number, it is where the saving comes from: rules written against confirmed exposures rather than against every published technique.\n\nCoverage is easy to add and expensive to own. Precision is the thing worth engineering for.\n\nI write about exposure management and detection weekly — follow along if that is your problem too.", "x": "74% of alerts were false positives. Then 12%.\n\nThe saving isn't from more rules. It's from writing them against confirmed exposures instead of every published technique.", "cta": "Follow for more on exposure management and detection.", "ctaUrl": "https://www.kai.security/glossary/detection-as-code", "source": "Cross-checked metric — 74% → 12% SOC false-positive rate", "pillar": "Threat Intelligence", "tile": {"type": "headline"}, "concept": "alert-stream", "ctaWhy": "Precision comes from treating rules as code.", "ctaPlacement": "body"}, {"id": "handoff-is-the-cost", "week": 1, "slot": 4, "goal": "reshare", "scene": "handoff-gap", "theme": "The handoff is where the time goes", "eyebrow": "Mean time to remediate", "headline": "The gap between finding and fixing is where risk lives.", "linkedin": "Count the people in your remediation chain, end to end. Then the tools. Then the cross-team handoffs.\n\nIn most enterprises the honest answer is twenty to thirty people, fifteen to twenty tools, and three to five handoffs. None of that is incompetence. It is what happens when two teams rebuild the same context from the same intelligence and then reconcile with each other.\n\nThe time does not go into deciding what to fix. It goes into the spaces between the teams that fix it.\n\nIf you have measured your own chain, I would genuinely like to know what you found.", "x": "Twenty to thirty people. Fifteen to twenty tools. Three to five handoffs.\n\nThe time doesn't go into deciding what to fix. It goes into the gaps between the teams that fix it.", "cta": "Worth comparing notes — reshare if your chain looks like this.", "ctaUrl": "https://www.kai.security/glossary/exposure-window", "source": "Kai CTEM page — Autonomous Defense Cycle, 20-30+ / 15-20 / 3-5", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "handoff-gap", "ctaWhy": "The gap the post measures has a name.", "ctaPlacement": "first comment"}, {"id": "ctem-is-a-program", "week": 2, "slot": 1, "goal": "reshare", "scene": "loop-closes", "theme": "CTEM is a program, not a product", "eyebrow": "The cycle", "headline": "Five phases everyone defines. What closes the loop?", "linkedin": "Scope, discover, prioritize, validate, mobilize. Five phases, defined the same way across the industry, and most programs can name all five.\n\nAsk a harder question: what closes the loop? Mobilization hands work to another team and the cycle stops there. The next pass starts from a standing start, because nothing carried the exposure from found to fixed to covered.\n\nA cycle that does not close is a queue with better vocabulary.\n\nWhere does your loop actually break — at validation, at mobilization, or at the handoff after it?", "x": "Scope, discover, prioritize, validate, mobilize.\n\nFive phases everyone can name. But what closes the loop?\n\nA cycle that doesn't close is a queue with better vocabulary.", "cta": "Curious where others see the break. Reply or reshare.", "ctaUrl": "https://www.kai.security/glossary/continuous-threat-exposure-management", "source": "Kai CTEM page — 'Five phases everyone defines. Two more that close the loop.'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "loop-closes", "ctaWhy": "The five phases, defined neutrally.", "ctaPlacement": "first comment"}, {"id": "shadow-assets", "week": 2, "slot": 2, "goal": "traffic", "scene": "beyond-the-line", "theme": "The assets your tooling marked unmanaged", "eyebrow": "Asset coverage", "headline": "30,000 assets nobody was counting.", "linkedin": "A coverage gap is not an absence of data. It is data your tooling decided not to count.\n\nScanning agentlessly across one estate surfaced roughly 30,000 shadow IT and OT assets that existing endpoint tooling had marked unmanaged. Nothing new was deployed to find them.\n\nThe uncomfortable part is what that does to every percentage you report. A coverage figure calculated against a denominator that silently excludes 30,000 assets is not a coverage figure.\n\nRaise the gap as a finding. Do not drop it from the denominator.", "x": "~30,000 shadow IT and OT assets that endpoint tooling had marked unmanaged. Found agentlessly, nothing deployed.\n\nA coverage % against a denominator that excludes them isn't a coverage %.", "cta": "See an asset record rebuilt from evidence →", "ctaUrl": "https://www.kai.security/solutions/ctem", "source": "Cross-checked metric — 30,000 shadow IT and OT assets discovered agentlessly", "pillar": "CAASM", "tile": {"type": "headline"}, "concept": "beyond-the-line", "ctaWhy": "Traffic post — the product page earns the click.", "ctaPlacement": "body"}, {"id": "detection-as-stopgap", "week": 2, "slot": 3, "goal": "reshare", "scene": "cover-until", "theme": "Detection as a stopgap while the fix waits", "eyebrow": "Compensating coverage", "headline": "Some fixes have to wait. The exposure should not be uncovered while they do.", "linkedin": "Not everything can be patched this week. Maintenance windows exist, dependencies exist, and some systems genuinely cannot take a change on your timetable.\n\nThe question is what happens in the meantime. In most programs the honest answer is nothing: the finding sits in a queue marked accepted-risk and the gap is simply open.\n\nThere is a better default. If the fix has to wait, a detection written specifically for that exposure can stand in for the patch until the change lands — and then be retired.\n\nTreating detection as temporary cover rather than permanent coverage is, I think, an underrated move.", "x": "Not everything can be patched this week.\n\nThe question is what covers the gap until it is. A detection written for that exposure can stand in for the patch — then retire.", "cta": "If your program does this already, say so — I'd like to hear how.", "ctaUrl": "https://www.kai.security/glossary/compensating-controls", "source": "Kai product messaging — 'a detection stands in for as long as the fix has to wait'", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "cover-until", "ctaWhy": "Exactly what the post argues for.", "ctaPlacement": "first comment"}, {"id": "queue-never-shrinks", "week": 2, "slot": 4, "goal": "follow", "scene": "throughput-gap", "theme": "Why the queue never shrinks", "eyebrow": "The throughput gap", "headline": "Exposure programs are not failing at detection.", "linkedin": "Exposure programs are not failing at detection. Every enterprise of any size finds more than it can act on, and most have added a layer on top to sort it.\n\nThe list gets better ordered every year. The backlog does not shrink. That is a throughput problem wearing a prioritization costume.\n\nThroughput is set by the slowest step, and the slowest step is almost never the ranking. It is ownership, or the change window, or the reconciliation between the team that found it and the team that has to fix it.\n\nAutonomous remediation is how that step stops being the constraint — the change authored and delivered inside the boundary you set, rather than queued for someone else's sprint.\n\nI post about this most weeks. Follow if measuring throughput rather than volume is where your head is.", "x": "Exposure programs aren't failing at detection.\n\nThe list gets better ordered every year. The backlog doesn't shrink.\n\nThat's a throughput problem in a prioritization costume.", "cta": "Follow for more on throughput over volume.", "ctaUrl": "https://www.kai.security/resources/the-throughput-gap", "source": "Kai CTEM page — 'Ranked is not the same as closed'; Auto Remediation available per 2026-07-29 release", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "throughput-gap", "ctaWhy": "Kai's own piece on this argument.", "ctaPlacement": "body"}, {"id": "exploitability-before-severity", "week": 3, "slot": 1, "goal": "reshare", "scene": "same-score-different-answer", "theme": "Exploitability before severity", "eyebrow": "Validation", "headline": "Critical in the abstract is not critical on your asset.", "linkedin": "A CVSS score describes a vulnerability. It does not describe your environment.\n\nThe same critical finding can be unreachable on one asset, exploitable on another, and part of a chain on a third. Treating those three as one queue item is how teams end up arguing about severity instead of about evidence.\n\nCut on exploitability per asset, not severity in the abstract. The list gets smaller and, more usefully, the conversation with the owning team changes: you are no longer asking them to trust a score.\n\nProof travels further than priority.", "x": "A CVSS score describes a vulnerability, not your environment.\n\nSame critical finding: unreachable on one asset, exploitable on another, part of a chain on a third.\n\nProof travels further than priority.", "cta": "Pass it on if your severity debates sound like this.", "ctaUrl": "https://www.kai.security/glossary/cvss", "source": "Kai CTEM page — 'Cut on exploitability per asset, not severity in the abstract'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "same-score-different-answer", "ctaWhy": "The score the post is arguing against.", "ctaPlacement": "first comment"}, {"id": "scanning-is-table-stakes", "week": 3, "slot": 2, "goal": "reshare", "scene": "after-the-find", "theme": "Scanning is table stakes", "eyebrow": "A straight answer", "headline": "Discovery is solved. The work after it is not.", "linkedin": "A point against my own interest, because it is true: scanning is table stakes.\n\nYour existing vulnerability and cloud posture tools find things perfectly well. Nobody needs another discovery engine, and a vendor telling you otherwise is selling you a second inventory to reconcile against the first.\n\nThe hard part was never finding. It is everything between a finding and a change that shipped: whether it is reachable, who owns the asset, what the fix is, and when that team can take it.\n\nBe suspicious of anyone whose answer to the second problem is a better version of the first.", "x": "A point against my own interest: scanning is table stakes.\n\nThe hard part was never finding. It's everything between a finding and a change that shipped.", "cta": "Reshare if you've bought the second inventory and regretted it.", "ctaUrl": "https://www.kai.security/glossary/exposure-assessment-platform", "source": "Kai messaging — 'Scanning is table stakes', conceded position", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "after-the-find", "ctaWhy": "What the category does and does not cover.", "ctaPlacement": "first comment"}, {"id": "intel-to-rule", "week": 3, "slot": 3, "goal": "traffic", "scene": "rules-stack", "theme": "From intelligence to a deployed rule", "eyebrow": "Detection intelligence", "headline": "70+ rules, generated and tuned, in two hours.", "linkedin": "Threat intelligence tells you what is being exploited. Detection engineering turns that into a rule. Between the two sits a queue, and that queue is usually measured in weeks.\n\nDoing both in one pass — scoped to the exposures you actually have rather than every published technique — produced 70+ detection rules, generated and tuned, in two hours.\n\nThe constraint was never the writing. It was the context: knowing which exposures are real in this estate before deciding what to detect.\n\nSame intelligence, same team. Different order of operations.", "x": "Threat intel tells you what's exploited. Detection engineering makes it a rule. Between them sits a queue measured in weeks.\n\n70+ rules, generated and tuned, in two hours.", "cta": "See detection written for your environment →", "ctaUrl": "https://www.kai.security/glossary/sigma", "source": "Cross-checked metric — 70+ rules generated and tuned in 2 hours", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "rules-stack", "ctaWhy": "The format the rules are written in.", "ctaPlacement": "body"}, {"id": "reachability-maths", "week": 3, "slot": 4, "goal": "traffic", "scene": "erode-to-real", "theme": "Reachability changes the arithmetic", "eyebrow": "Exploitability", "headline": "Over 90% of findings are removed before anyone triages.", "linkedin": "Severity is assigned in the abstract. Reachability is a fact about your environment.\n\nWhen you prove whether a finding is reachable — on the asset, in the code path, and from outside — most of the queue stops being work. In Kai's deployments that removes over 90% of findings before a human triages anything, and up to 99% depending on environment, language ecosystem and scanner mix.\n\nThe remaining list is small enough to argue about from evidence rather than from a CVSS score.\n\nThat is the whole case for proving exploitability before you prioritize.", "x": "Severity is assigned in the abstract. Reachability is a fact about your environment.\n\nProving it removes 90%+ of findings before anyone triages.", "cta": "See what exposure management looks like when it closes →", "ctaUrl": "https://www.kai.security/glossary/reachability-analysis", "source": "Kai product messaging + Ladder 'Live': reachability cuts findings 90%+, up to 99%", "pillar": "CTEM", "tile": {"type": "headline"}, "concept": "erode-to-real", "ctaWhy": "The method behind the number.", "ctaPlacement": "body"}, {"id": "accepted-has-no-expiry", "week": 4, "slot": 1, "goal": "reshare", "scene": "accepted-ages", "theme": "Accepted risk has no expiry date", "eyebrow": "Risk acceptance", "headline": "Accepted risk is a decision, not a status.", "linkedin": "Every exposure program has an accepted-risk bucket. Almost none of them have a review date.\n\nA risk accepted in March was accepted against March's estate, March's threat landscape and March's compensating controls. By October none of those three are the same, and nobody re-ran the decision — because the finding left the queue the moment it was marked accepted.\n\nAcceptance is a reasonable answer. Permanent acceptance, with no expiry and no owner, is just a quieter kind of backlog.\n\nDoes your program put a review date on an accepted risk? Genuinely curious how many do.", "x": "A risk accepted in March was accepted against March's estate and March's threat landscape.\n\nBy October nobody re-ran the decision.\n\nAcceptance without an expiry date is a quieter kind of backlog.", "cta": "If your program dates its acceptances, say so — I'd like to hear how.", "ctaUrl": "https://www.kai.security/glossary/asset-criticality", "source": "Kai CTEM page — 'Ranked is not the same as closed'", "pillar": "CTEM", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "accepted-ages", "ctaWhy": "Acceptance depends on criticality, which moves.", "ctaPlacement": "first comment"}, {"id": "record-vs-belief", "week": 4, "slot": 2, "goal": "follow", "scene": "belief-vs-evidence", "theme": "A CMDB records a belief", "eyebrow": "Asset record", "headline": "Your inventory records a belief. Evidence records a fact.", "linkedin": "A CMDB is a record of what somebody entered, and of what the last reconciliation agreed to. Both of those are beliefs about the estate. Neither is an observation of it.\n\nThat distinction stays harmless right up until you calculate something from it — coverage, ownership, exposure per business unit. Then the belief becomes a number in a board pack.\n\nRebuilding the record from evidence rather than reconciling what the CMDB already believed is a different exercise, and it tends to produce an uncomfortable first week. It is also the only version of the record you can defend.\n\nI post about asset truth and exposure management most weeks — follow along if this is your problem too.", "x": "A CMDB records what someone entered and what the last reconciliation agreed to.\n\nBoth are beliefs about the estate. Neither is an observation of it.", "cta": "Follow for more on asset truth and exposure management.", "ctaUrl": "https://www.kai.security/glossary/caasm", "source": "Kai product messaging — asset record rebuilt from evidence rather than reconciled", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "belief-vs-evidence", "ctaWhy": "The asset record is the subject.", "ctaPlacement": "body"}, {"id": "techniques-that-apply", "week": 4, "slot": 3, "goal": "traffic", "scene": "narrow-to-yours", "theme": "Detect what applies to you", "eyebrow": "Scope", "headline": "Most published techniques will never touch your estate.", "linkedin": "Detection coverage is usually measured against the published technique list. It is a tidy denominator, and it is the wrong one.\n\nMost of those techniques depend on software you do not run, in configurations you do not have, reachable from positions nobody can get to in your environment. Writing rules for them adds standing triage cost and buys no risk reduction.\n\nScoping detection to confirmed exposures inverts the exercise: you start from what is real here, then write for that. One SOC's false-positive rate moved from 74% to 12% on exactly that change.\n\nCoverage is easy to add and expensive to own.", "x": "Detection coverage is measured against the published technique list. Tidy denominator, wrong one.\n\nMost of it depends on software you don't run.\n\n74% false positives → 12%.", "cta": "See detection scoped to your environment →", "ctaUrl": "https://www.kai.security/glossary/mitre-attack", "source": "Cross-checked metric — 74% → 12% SOC false-positive rate", "pillar": "Threat Intelligence", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "narrow-to-yours", "ctaWhy": "The technique list the post narrows.", "ctaPlacement": "body"}, {"id": "rollback-is-the-fix", "week": 4, "slot": 4, "goal": "reshare", "scene": "rollback-path", "theme": "A change you cannot undo is not a fix", "eyebrow": "Change safety", "headline": "If you cannot roll it back, it is not a fix. It is a gamble.", "linkedin": "The reason remediation moves slowly in large estates is rarely that nobody knows what to change. It is that nobody will authorise the change without knowing how to undo it.\n\nThat is a completely rational position. A failed patch on a production system costs more than the exposure did, and the person who approved it owns that outcome.\n\nSo the useful question is not how to make changes faster. It is how to make them reversible — the change authored, the blast radius known, the rollback path recorded before anything ships. Speed is a consequence of that, not a substitute for it.\n\nEvery remediation conversation that skips the rollback question ends up back at the change advisory board anyway.", "x": "Remediation isn't slow because nobody knows what to change.\n\nIt's slow because nobody will authorise a change they can't undo.\n\nReversible first. Fast is a consequence.", "cta": "Pass it on if your CAB conversations sound like this.", "ctaUrl": "https://www.kai.security/resources/autonomous-remediation-trust-barrier", "source": "Kai product messaging — change authored and delivered inside a set boundary, rollback path recorded", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "rollback-path", "ctaWhy": "Kai's own piece on the hesitation.", "ctaPlacement": "first comment"}, {"id": "coverage-denominator", "week": 5, "slot": 1, "goal": "reshare", "scene": "denominator-grows", "theme": "Every coverage percentage has a denominator", "eyebrow": "Measurement", "headline": "98% coverage of the assets you already knew about.", "linkedin": "Coverage percentages are the most quoted and least interrogated number in security reporting.\n\nThe figure is only as honest as its denominator, and the denominator is whatever your tooling agreed to count. Discover 30,000 assets that endpoint tooling had marked unmanaged and a 98% becomes something considerably less comfortable — without a single control getting worse.\n\nThat is the right outcome, incidentally. The number was always wrong; it just looked better before.\n\nIf a coverage figure never moves when you improve discovery, it is not measuring coverage. It is measuring the inventory.", "x": "Coverage % is only as honest as its denominator, and the denominator is whatever your tooling agreed to count.\n\nFind 30,000 unmanaged assets and 98% stops looking like 98%.", "cta": "Reshare if your coverage figure has never moved.", "ctaUrl": "https://www.kai.security/lp/2026-state-of-autonomous-defense-report", "source": "Cross-checked metric — 30,000 shadow IT and OT assets discovered agentlessly", "pillar": "CTEM", "pillarSecondary": "CAASM", "tile": {"type": "headline"}, "concept": "denominator-grows", "ctaWhy": "Measurement post — the report is the payoff.", "ctaPlacement": "first comment"}, {"id": "unmanaged-is-a-verdict", "week": 5, "slot": 2, "goal": "reshare", "scene": "verdict-reversed", "theme": "Unmanaged is a verdict, not a property", "eyebrow": "Coverage", "headline": "'Unmanaged' is something your tooling decided, not something the asset is.", "linkedin": "When an endpoint tool marks an asset unmanaged, that is a statement about the tool's reach. It gets read as a statement about the asset.\n\nThe practical consequence is that the asset stops appearing in the places where work gets allocated. It is not in the coverage figure, not in the owner mapping, and not in anyone's queue. It is still on the network.\n\nRoughly 30,000 assets in one estate sat in exactly that category, and they were found agentlessly — nothing new deployed, no new agent to roll out.\n\nWorth checking what your own unmanaged bucket actually contains. In most estates nobody has looked inside it recently.", "x": "'Unmanaged' is a statement about your tool's reach. It gets read as a statement about the asset.\n\nEither way it's still on the network.", "cta": "Worth comparing notes — reshare if your unmanaged bucket is a mystery too.", "ctaUrl": "https://www.kai.security/glossary/shadow-it", "source": "Cross-checked metric — ~30,000 assets marked unmanaged by existing endpoint tooling", "pillar": "CAASM", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "verdict-reversed", "ctaWhy": "The bucket the post opens.", "ctaPlacement": "first comment"}, {"id": "detections-should-retire", "week": 5, "slot": 3, "goal": "follow", "scene": "rules-retire", "theme": "Detections should retire", "eyebrow": "Rule lifecycle", "headline": "Nobody is measured on the detections they retired.", "linkedin": "Detection libraries only ever grow. Every incident adds a rule, every new technique adds a rule, and nothing ever comes off — because no one has been rewarded for deleting a detection.\n\nThe cost is not storage. It is that every stale rule spends analyst attention on an exposure that was closed months ago.\n\nIf a detection was written to cover a specific exposure while the fix waited, then the fix landing is the signal to retire it. That only works if the rule knew which exposure it was standing in for — which is an argument for writing detections against confirmed exposures rather than against the technique list.\n\nA library that cannot shrink is not a library. It is an accumulation.\n\nI write about this most weeks — follow if detection lifecycle is on your mind.", "x": "Detection libraries only grow. Every incident adds a rule and nothing comes off.\n\nIf a detection covered an exposure while the fix waited, the fix landing is the signal to retire it.", "cta": "Follow for more on detection lifecycle and exposure management.", "ctaUrl": "https://www.kai.security/resources/security-team-after-automation", "source": "Kai product messaging — 'a detection stands in for as long as the fix has to wait'", "pillar": "Threat Intelligence", "pillarSecondary": "Autonomous Remediation", "tile": {"type": "headline"}, "concept": "rules-retire", "ctaWhy": "What the team stops doing.", "ctaPlacement": "body"}, {"id": "autonomy-inside-a-boundary", "week": 5, "slot": 4, "goal": "traffic", "scene": "inside-boundary", "theme": "Autonomy inside a boundary you set", "eyebrow": "The boundary", "headline": "Autonomy is not the absence of control. It is control you set once.", "linkedin": "The objection to autonomous remediation is always the same, and it is a fair one: I am not letting software change production on its own.\n\nThat objection is about an unbounded agent. It is not an argument against autonomy — it is an argument for a boundary.\n\nSet the boundary once: which asset classes, which change types, which windows, which approvals still route to a human. Inside it, the change is authored, delivered and recorded with a rollback path. Outside it, nothing moves without you.\n\nThat is a different proposition from a tool that files a ticket and calls it remediation. The exposure goes from found to fixed, and the control you exercised was the boundary rather than the keystroke.", "x": "'I'm not letting software change production on its own' is an argument against an unbounded agent.\n\nIt's an argument for a boundary, not against autonomy.", "cta": "See an exposure go from found to fixed →", "ctaUrl": "https://www.kai.security/demo", "source": "Kai product messaging — change authored and delivered inside the boundary you set, rollback recorded", "pillar": "Autonomous Remediation", "pillarSecondary": "CTEM", "tile": {"type": "headline"}, "concept": "inside-boundary", "ctaWhy": "The one bottom-of-funnel post. 'See it fixed'.", "ctaPlacement": "body"}], "_tile_modes": "A planner post is its own artwork, not a tile with a scene on it: white ground, Kai colours as accent, and a composition built for that one argument. Each post names a concept in POST_CONCEPTS. Nothing here is shared with the Single tile or Carousel tabs.", "_rolling_window": "The calendar always shows the next 30 days. Twenty posts fill five weeks of the Mon/Tue/Thu/Fri cadence, so there is never an empty slot inside the window. When a week falls behind, plan the next four and append them.", "framework": {"_note": "Read from Kai's own systems on 2 Oct 2026 and summarised here so the planner, and anyone reading the plan, works from the approved messaging rather than from whatever the last post happened to say. Re-read the sources when they change.", "sources": [{"label": "Kai Messaging Framework (19 Jun 2026)", "system": "SharePoint", "url": "https://kaicyberinc.sharepoint.com/sites/kai-marketing/Shared Documents/External Sharing/Kai & Taschler Insights/2026 CISO Survey/Kai Messaging Framework 061926.pdf", "gives": "Manifesto, vision, positioning statement, capabilities, 12 use cases, Autonomous Defense Cycle, taglines, boilerplate."}, {"label": "Q3/Q4 Campaign Brief — Prioritization is Dead. Long live Fixed.", "system": "SharePoint", "url": "https://kaicyberinc.sharepoint.com/sites/kai-marketing/Shared Documents/Campaigns/FY27 Q3-Q4/Campaign Brief.docx", "gives": "Current campaign umbrella, message ladder, tone guardrails, personas, funnel. Modified 2 Oct 2026 — the freshest positioning."}, {"label": "Master Sales Playbook + Scripts", "system": "Confluence (KPM)", "url": "https://kaicyber.atlassian.net/wiki/spaces/KPM/pages/347013121/Master+Sales+Playbook+Scripts", "gives": "What lands and what confuses on real calls, proof points, and the CISO stress test — the claims buyers push back on and the hardened way to say them."}], "umbrella": "Prioritization is Dead. Long live Fixed.", "ladder": {"ongoing": "Risk Fixed, Not Filed.", "subheadline": "Proven exploitable. Fixed by the right owner. Covered until the patch lands.", "closing": "Prioritization kept the backlog alive. Kai eliminates it.", "ciso": "Measure your program in risk closed, not tickets opened.", "vpVuln": "Your backlog finally goes down.", "guardrail": "Humans set the boundary. Kai acts automatically inside it; outside it, Kai stages the plan, names the owner and opens the ticket."}, "manifesto": ["Cybersecurity has reached its human limit.", "We cannot win a machine-speed war with human-speed defenses.", "Adding AI to a broken stack isn't progress. It's inertia with a new label.", "The future of security has no categories — only outcomes.", "Human defenders don't just keep up. They become superhuman."], "challenges": [{"challenge": "Tools aren't keeping up", "answer": "Collapse scanners into one platform"}, {"challenge": "The threat has changed", "answer": "Drive all exposures to remediation"}, {"challenge": "Resources have a ceiling", "answer": "Agents amplify security team capacity"}], "cycle": {"Protect": "Before an attack — discover, enrich, attribute ownership, validate true exploitability, tune detections, drive remediation.", "Detect": "During an attack — distil intel in real time, hunt, generate detections, correlate across assets, identities and vulnerabilities.", "Respond": "When an attack is detected — execute response, guide remediation with context, validate fixes, update the model."}, "phrases_that_land": ["We investigate first, then prioritize — instead of prioritize then investigate.", "We flip the process on its head.", "Your scanners find. We investigate, triage and remediate.", "We're a pilot, not a co-pilot.", "Attackers don't think in categories. Defense shouldn't either.", "Not just 'upgrade Library X' — here are all 15 dependencies."], "phrases_to_avoid": ["'GenAI' — buyers hear ChatGPT wrapper and disengage.", "Deep explanations of how transformers work — prospects get defensive.", "More than one use case in a single post — the thread gets lost.", "Fear-based or AI-attacker framing in a headline (campaign brief tone rule).", "Mocking prioritization or the people who built programs on it. Affectionate, never sneering.", "Naming competitors."], "tone": "Confident, plain-spoken, a little playful. Affectionate toward prioritization, never mocking.", "proof_public": [{"figure": "74% → 12% SOC false-positive rate", "source": "Cross-checked metric"}, {"figure": "~30,000 shadow IT and OT assets discovered agentlessly", "source": "Cross-checked metric"}, {"figure": "70+ detection rules generated and tuned in 2 hours", "source": "Cross-checked metric"}, {"figure": "4% → 92% asset ownership, 250k assets, under 12h", "source": "kai.security platform page"}, {"figure": "Reachability removes 90%+ of findings, up to 99%", "source": "kai.security platform page + Ladder 'Live'"}, {"figure": "20-30+ people, 15-20 tools, 3-5 handoffs in a remediation chain", "source": "kai.security CTEM page"}], "proof_internal_do_not_publish": ["15M vulnerabilities triaged in hours", "2M SCA findings, 97% eliminated in 1 hour", "16M → 3M actionable (hotel chain, 350k assets)", "2.5M → 32K (100k cloud assets)", "4% → 76% ownership in one week (27M tickets)", "50-85% SIEM cost reduction", "MITRE ATT&CK coverage +45%", "3M vulnerabilities in under 30 minutes", "False negative rate 2-3%", "$1M+ bookings; $125M raised", "The competitive matrix, which is built on Gartner sub-categories"], "claims_guard": {"the_90_99_number": "Do not frame it as a false-positive epidemic. The scanner is doing its job: it found a library with a known CVE, which is technically correct. The question is whether an attacker can exploit it in this environment. Frame it as a context gap scanners were never designed to fill — never as scanner failure. This is the CISO's single biggest pushback.", "ownership": "The published figure is 4% → 92% across 250k assets in under 12h. An internal playbook cites 4% → 76% in one week from 27M tickets, and flags the method as an inference rather than a fact. Use the published figure, and do not imply ticket inference is certainty.", "autonomy": "Automated remediation delivery is claimable as available (ruled 2 Oct 2026). Always pair it with the boundary: humans set it, Kai acts inside it, outside it Kai stages the plan.", "analyst_material": "Nothing sourced from licensed analyst research, including the competitive matrix and anything in the Gartner Research folder. Education only — no quotes, no figures, no attribution, no screenshots."}}, "destinations": [{"label": "Mobilization (glossary)", "url": "https://www.kai.security/glossary/mobilization", "kind": "neutral", "note": "Where ranking stops and work starts."}, {"label": "Ownership attribution (glossary)", "url": "https://www.kai.security/glossary/ownership-attribution", "kind": "neutral", "note": "Who owns the asset, and how that is inferred."}, {"label": "Detection as code (glossary)", "url": "https://www.kai.security/glossary/detection-as-code", "kind": "neutral", "note": "Rules as versioned, testable artefacts."}, {"label": "Exposure window (glossary)", "url": "https://www.kai.security/glossary/exposure-window", "kind": "neutral", "note": "The time between found and fixed."}, {"label": "CTEM (glossary)", "url": "https://www.kai.security/glossary/continuous-threat-exposure-management", "kind": "neutral", "note": "The five phases, defined neutrally."}, {"label": "CTEM solution", "url": "https://www.kai.security/solutions/ctem", "kind": "product", "note": "The product page. Traffic posts only."}, {"label": "Compensating controls (glossary)", "url": "https://www.kai.security/glossary/compensating-controls", "kind": "neutral", "note": "Cover while the fix waits."}, {"label": "The throughput gap", "url": "https://www.kai.security/resources/the-throughput-gap", "kind": "thought-leadership", "note": "Kai's own piece on why the queue never shrinks."}, {"label": "CVSS (glossary)", "url": "https://www.kai.security/glossary/cvss", "kind": "neutral", "note": "Severity in the abstract, and its limits."}, {"label": "Exposure assessment platform (glossary)", "url": "https://www.kai.security/glossary/exposure-assessment-platform", "kind": "neutral", "note": "What the category covers."}, {"label": "Sigma (glossary)", "url": "https://www.kai.security/glossary/sigma", "kind": "neutral", "note": "The portable detection rule format."}, {"label": "Reachability analysis (glossary)", "url": "https://www.kai.security/glossary/reachability-analysis", "kind": "neutral", "note": "Whether a finding can actually be reached."}, {"label": "Asset criticality (glossary)", "url": "https://www.kai.security/glossary/asset-criticality", "kind": "neutral", "note": "What makes an asset worth more than its CVSS."}, {"label": "CAASM (glossary)", "url": "https://www.kai.security/glossary/caasm", "kind": "neutral", "note": "The asset record and its coverage."}, {"label": "MITRE ATT&CK (glossary)", "url": "https://www.kai.security/glossary/mitre-attack", "kind": "neutral", "note": "The technique list, and what it is for."}, {"label": "The autonomous remediation trust barrier", "url": "https://www.kai.security/resources/autonomous-remediation-trust-barrier", "kind": "thought-leadership", "note": "Kai's own piece on why teams hesitate."}, {"label": "2026 State of Autonomous Defense report", "url": "https://www.kai.security/lp/2026-state-of-autonomous-defense-report", "kind": "gated", "note": "The report. Gated — use for follow and measurement posts."}, {"label": "Shadow IT (glossary)", "url": "https://www.kai.security/glossary/shadow-it", "kind": "neutral", "note": "Assets the tooling never counted."}, {"label": "The security team after automation", "url": "https://www.kai.security/resources/security-team-after-automation", "kind": "thought-leadership", "note": "Kai's own piece on what the role becomes."}, {"label": "Book a demo", "url": "https://www.kai.security/demo", "kind": "conversion", "note": "Bottom of funnel. One post at a time, at most."}, {"label": "Validation before automation", "url": "https://www.kai.security/resources/validation-before-automation", "kind": "thought-leadership", "note": "Kai's own piece on proving before acting."}, {"label": "Function reachability (glossary)", "url": "https://www.kai.security/glossary/function-reachability", "kind": "neutral", "note": "Whether the vulnerable function is called."}, {"label": "Exposure validation (glossary)", "url": "https://www.kai.security/glossary/exposure-validation", "kind": "neutral", "note": "Proving exploitability rather than assuming it."}, {"label": "Attack path (glossary)", "url": "https://www.kai.security/glossary/attack-path", "kind": "neutral", "note": "How findings chain into a route."}, {"label": "EPSS (glossary)", "url": "https://www.kai.security/glossary/epss", "kind": "neutral", "note": "Probability of exploitation, and its limits."}, {"label": "KEV (glossary)", "url": "https://www.kai.security/glossary/known-exploited-vulnerabilities-kev", "kind": "neutral", "note": "Known exploited, as a signal."}, {"label": "Resources hub", "url": "https://www.kai.security/resources", "kind": "hub", "note": "When nothing more specific fits."}, {"label": "Glossary hub", "url": "https://www.kai.security/glossary", "kind": "hub", "note": "When nothing more specific fits."}], "_destinations_note": "Every URL verified 200 against www.kai.security on 2 Oct 2026. The old plan pointed six posts at https://kai.security/platform, which is a 404 — that page does not exist. Glossary pages are the workhorse here: they are neutral and educational, so a reshare post can carry one without reading as an ad. Product and conversion pages are reserved for traffic posts.", "employees": [{"id": "galina", "name": "Galina Antova", "role": "Co-founder", "initials": "GA", "profile": "https://www.linkedin.com/company/kai-security/", "colour": "#027FA8", "voice": "First principles and category level. She has built this before — Claroty in cyber-physical, SecurityMatters before it — and she has had the conversation with 500+ CISOs. She is allowed to say why Kai exists, because she decided it.", "does": ["Speaks to peers: other founders, CISOs, boards.", "Argues from conviction and from having built the previous thing.", "Names the structural problem, not the product that answers it.", "Ends on a position, not a call to action."], "doesnt": ["No product specs, no feature names, no metrics dump.", "No reposting the company post with 'great read'.", "No competitor names.", "Never the first comment on her own company's post — she adds, she does not applaud."], "ownCadence": "One post a fortnight, Wednesdays."}, {"id": "thomas", "name": "Thomas Nuth", "role": "Marketing", "initials": "TN", "profile": "https://www.linkedin.com/in/tnuth/", "colour": "#00BFFF", "voice": "The program view. What the team is reading, testing and getting wrong. Useful rather than promotional, and honest about trade-offs — which is what earns the reshare from people who do not work here.", "does": ["Curates: other people's research, definitions, frameworks.", "Shares what the team learned, including the unflattering half.", "Adds the practical detail the company post left out.", "Links to the neutral page, not the product page."], "doesnt": ["No claims engineering has not made.", "No speaking for customers.", "No 'thrilled to announce'.", "No competitor names."], "ownCadence": "One post a fortnight, Wednesdays."}], "advocacy": {"_note": "Employee amplification. Two mechanics: a comment on the company post, and their own post on their own account. Comments go up 45-90 minutes after the company post — long enough not to look staged, early enough to matter. Nobody comments first on their own company's post, and nobody writes 'great read'. A comment that adds nothing is worse than no comment.", "commentDelayMins": [45, 90], "comments": [{"postId": "prioritization-not-sufficient", "who": "galina", "text": "The ranking layer was a rational response to a real problem — there were more findings than anyone could action, so we sorted them. What nobody priced in was that sorting is not throughput. You can be excellent at deciding what matters and still close nothing."}, {"postId": "ownership-blocker", "who": "thomas", "text": "The part that surprised me is that ownership is almost never tracked as a metric. Teams report coverage, mean time to remediate, open criticals — and not the one number that determines whether any of it moves."}, {"postId": "detection-tax", "who": "thomas", "text": "Worth separating two things that get conflated: coverage and precision. Adding a rule is free. Owning it is not — every one you keep spends analyst attention every week, forever."}, {"postId": "handoff-is-the-cost", "who": "thomas", "text": "If you want to measure this on your own program: count the handoffs, not the hours. The hours are invisible because nobody is sitting idle — they are each doing their own job, twice."}, {"postId": "ctem-is-a-program", "who": "galina", "text": "The five phases were a genuine contribution. The problem is that a framework describes the work, and most organizations then bought tools for the first three phases and staffed the last two with people. That is where it stops."}, {"postId": "shadow-assets", "who": "thomas", "text": "The bit I would underline: nothing new was deployed to find them. If the answer to a coverage gap is another agent rollout, that is a second project before you get the first answer."}, {"postId": "detection-as-stopgap", "who": "thomas", "text": "The retire step is the one everyone skips. A detection written to cover a specific exposure should die when the fix lands, and almost none of them do."}, {"postId": "queue-never-shrinks", "who": "thomas", "text": "A useful test: if your program improved every year and the backlog still grew, the thing you improved was not the constraint."}, {"postId": "exploitability-before-severity", "who": "galina", "text": "CVSS was never meant to describe your environment — it describes a vulnerability in the abstract, and it does that job well. Treating it as a priority queue is a category error we all made collectively."}, {"postId": "scanning-is-table-stakes", "who": "galina", "text": "Saying this costs us nothing, which is why it is worth saying. Discovery is solved. Any vendor whose answer to the post-discovery problem is better discovery is selling you a second inventory to reconcile against the first."}, {"postId": "intel-to-rule", "who": "thomas", "text": "The ordering matters more than the speed. Writing rules against confirmed exposures rather than the whole technique list is what makes two hours possible — not typing faster."}, {"postId": "reachability-maths", "who": "thomas", "text": "To be precise about this, because the number sounds like an accusation: the scanner did its job. It found a real CVE in a real library. Whether it is reachable in your code path is a question scanners were never built to answer."}, {"postId": "accepted-has-no-expiry", "who": "galina", "text": "Risk acceptance is one of the few decisions in security with no expiry date attached. We would not accept that in any other part of the business, and I do not think we should accept it here."}, {"postId": "record-vs-belief", "who": "thomas", "text": "Every coverage percentage you have ever reported was calculated against this. Worth knowing which one you are holding before the next board meeting."}, {"postId": "techniques-that-apply", "who": "thomas", "text": "Counting coverage against the published list is comfortable because the denominator is public. It is also the wrong denominator — the only one that matters is what is actually running in your estate."}, {"postId": "rollback-is-the-fix", "who": "galina", "text": "Having built in environments where a failed change takes a plant offline, I would put it more strongly: reversibility is not a safety feature on top of automation. It is the precondition for anyone letting you automate at all."}, {"postId": "coverage-denominator", "who": "galina", "text": "The uncomfortable version of this: the number was always wrong. Improving discovery did not make your posture worse, it made your reporting honest. Those are very different conversations to have with a board."}, {"postId": "unmanaged-is-a-verdict", "who": "thomas", "text": "Worth actually opening that bucket this quarter. In most estates nobody has looked inside it since the tooling was deployed."}, {"postId": "detections-should-retire", "who": "thomas", "text": "Nobody has ever been promoted for deleting a detection. That is the whole problem in one sentence."}, {"postId": "autonomy-inside-a-boundary", "who": "galina", "text": "The objection is right and I would not want to work with a CISO who did not raise it. But it is an objection to an unbounded agent. Set the boundary and the question changes from whether to trust the software to where you draw the line."}]}, "employeePosts": [{"id": "ga-w1", "who": "galina", "week": 1, "day": "wed", "theme": "Why we rebuilt rather than improved", "text": "The best founders do not improve existing categories. They make them obsolete.\n\nI have been on the other side of this. Claroty did not make existing security tools better for industrial environments — it accepted that those environments needed something that did not exist yet.\n\nThe same judgement applies now, and it is harder to make, because the industry has a comfortable answer available: add AI to what you already run. Smarter SIEM. Analyst copilot. AI-assisted triage.\n\nThat is not progress. It is the same fragmented stack with a new label on it, and the ambition stops at marginally better.\n\nYou cannot win a machine-speed war with human-speed defenses. Not with more tools, not with more headcount, and not with AI bolted onto the thing that was already failing.", "why": "Founder conviction, no product. Sets up the month's reshare posts.", "concept": "two-paths", "eyebrow": "First principles", "headline": "The best founders do not improve categories. They make them obsolete.", "goal": "reshare", "promotes": "Nothing. This is an authority post — it earns the reshare that makes the company's posts travel later in the week. A product line here would cost more than it gains.", "cta": "If you are making this call in your own category, I would like to hear how you framed it.", "ctaUrl": "", "source": "Kai — Our Story"}, {"id": "tn-month-of-writing", "week": 1, "day": "wed", "concept": "tally-circled", "eyebrow": "What we are learning", "theme": "The posts that travelled conceded something", "headline": "The posts that travelled all conceded something.", "text": "We have been publishing on exposure management four times a week for a month. The posts that travelled were not the ones with our best numbers.\n\nThey were the ones that conceded something.\n\n'Scanning is table stakes' got reshared by people who sell scanners. 'A better-ordered backlog is still a backlog' got reshared by people who built the prioritization layer.\n\nThe pattern seems to be that a post which admits the hard part is still hard reads as a colleague talking. A post that resolves neatly into a product reads as an advert, and people can tell in about two seconds.\n\nStill working this out. If you run content for a security company and have found otherwise, I would like to know.", "why": "Useful and self-aware. Earns follows from the marketing peer group, not just buyers.", "source": "Kai LinkedIn, four posts a week, 28 Sept – 2 Oct", "who": "thomas", "goal": "follow", "promotes": "His own audience, and credibility with the marketing peer group. No product.", "cta": "Follow along if you run content for a security company.", "ctaUrl": ""}, {"id": "tn-throughput-ledger", "week": 1, "day": "fri", "concept": "ledger-gap", "eyebrow": "One number", "theme": "Measure throughput, not volume", "headline": "If every metric improved, did the backlog get smaller?", "text": "A question worth putting to your own program this quarter.\n\nIf every metric you report improved last year, did the backlog get smaller?\n\nFor most exposure programs the honest answer is no. Findings went up, prioritization got better, mean time to remediate improved on the items that were worked — and the queue still grew.\n\nVolume metrics measure the parts of the process that were never the constraint. Throughput is set by the slowest step, and the slowest step is almost never the ranking.\n\nOne number worth adding to the board pack: findings closed per week against findings opened per week. It is unflattering. It is also the only one that tells you whether you are winning.", "why": "Practical, no product, gives the reader something to do on Monday.", "source": "Kai CTEM page — 'Ranked is not the same as closed'", "who": "thomas", "goal": "reshare", "promotes": "Nothing directly. A metric the reader can take into their own board pack, which is what gets it reshared.", "cta": "If you already report this, I would like to know what it changed.", "ctaUrl": ""}, {"id": "tn-define-ctem", "week": 2, "day": "wed", "concept": "definitions-diverge", "eyebrow": "A small experiment", "theme": "Five people, five definitions", "headline": "I asked five people to define CTEM. I got five answers.", "text": "Small experiment this week. I asked five people in security — two practitioners, two vendors, one analyst-adjacent — to define CTEM in a sentence.\n\nEveryone named the five phases. Nobody disagreed about scope, discover, prioritize, validate, mobilize.\n\nThe divergence was entirely about where the program ends. Two said it ends at mobilization. Two said it ends when the finding is closed. One said it does not end, which is technically the most correct answer and the least useful one.\n\nThat gap is not academic. If your vendor thinks the program ends at mobilization and you think it ends at closure, you have bought two thirds of a thing and will find out which third is missing in about six months.", "why": "Original, vendor-agnostic, and lands a real buying insight without naming anyone.", "source": "Informal, five conversations, Sept 2026", "who": "thomas", "goal": "reshare", "promotes": "A buying insight, vendor-agnostic. It makes Kai look like the people who noticed, not the people selling.", "cta": "Where does your definition end?", "ctaUrl": ""}, {"id": "tn-got-wrong", "week": 2, "day": "fri", "concept": "struck-replaced", "eyebrow": "Changed my mind", "theme": "What I got wrong about asset ownership", "headline": "I had ownership filed under inventory. It is a throughput problem.", "text": "For about two years I had asset ownership filed under inventory hygiene. Tidy-up work. Important in the way that documentation is important.\n\nThat was wrong, and the thing that changed my mind was watching where remediation actually stalls.\n\nA validated, exploitable, genuinely urgent finding with no named owner does not get fixed slowly. It does not get fixed at all. It sits in a queue that nobody is accountable for draining, and it is invisible in every metric because technically it was triaged.\n\nOwnership is not hygiene. It is the step that decides whether any of the work downstream of it happens.\n\nStill adjusting how I think about the rest of the chain off the back of that one.", "why": "Admitting an error is the highest-trust thing a marketer can post. No product.", "source": "Kai product messaging — ownership attribution", "who": "thomas", "goal": "follow", "promotes": "Trust. Admitting an error is the highest-value thing a marketer can post, and it compounds.", "cta": "", "ctaUrl": ""}, {"id": "ga-w3", "who": "galina", "week": 3, "day": "wed", "theme": "The thing 500 CISO conversations had in common", "text": "Before starting Kai we spoke with more than 500 CISOs. I expected the conversations to diverge by sector, by size, by maturity.\n\nThey converged on one thing, and it was not a threat.\n\nIt was that their teams were drowning in complexity of our collective making. Every new problem over two decades was answered with a new tool, and the gaps between those tools are not edge cases. They are the attack surface.\n\nNobody asked for another product. Several of them asked, more or less directly, for someone to take work away.\n\nThat is a harder thing to build and a much harder thing to sell. It is also the only answer that scales.", "why": "Earned authority, zero product. The strongest reshare asset the company has.", "concept": "converge-500", "eyebrow": "500 conversations", "headline": "They converged on one thing, and it was not a threat.", "goal": "follow", "promotes": "Her own audience. This is the single strongest follow driver either account has — earned authority, no product, and nobody else can post it.", "cta": "I write about this most weeks.", "ctaUrl": "", "source": "Kai — founder story, 500+ CISO conversations"}, {"id": "tn-reading-list", "week": 3, "day": "wed", "concept": "stack-flagged", "eyebrow": "Curated", "theme": "What is actually worth reading", "headline": "Four definitions worth reading before your next vendor call.", "text": "If you are being sold exposure management this quarter, four terms will do most of the work in the conversation, and the definitions are not interchangeable.\n\nReachability — whether a finding can be reached at all, in your environment.\n\nExploitability — whether it can be used, which is narrower.\n\nMobilisation — handing validated work to whoever can act on it. Note that this is a handoff, not a fix.\n\nCompensating control — cover while the fix waits, which should be temporary and almost never is.\n\nWorth reading the neutral definitions rather than any vendor's version, including ours. Links in the comments.", "why": "Pure utility, explicitly includes 'including ours'. Strong reshare and follow driver.", "source": "kai.security glossary", "who": "thomas", "goal": "traffic", "promotes": "The glossary. Neutral definitions on kai.security, explicitly including 'ours' in the caveat.", "cta": "Links in the comments.", "ctaUrl": "https://www.kai.security/glossary"}, {"id": "tn-one-question", "week": 3, "day": "fri", "concept": "one-question-branches", "eyebrow": "The question", "theme": "The question I ask every security team now", "headline": "Who fixes it, and when can they take a change?", "text": "I have landed on one question that tells me more about an exposure program than any maturity assessment.\n\nFor your last critical finding: who fixed it, and when could they take the change?\n\nThe answers are usually revealing. Sometimes nobody can name the person. Sometimes they can, and the next change window is in three weeks. Sometimes the finding was closed in the tool and the change never shipped, which is the worst answer and the most common one.\n\nEverything upstream — scanning, scoring, prioritization — is in service of that one exchange. If it breaks there, improving the upstream is just making the queue arrive faster.", "why": "One portable idea the reader can use in their next meeting. Highly quotable.", "source": "Kai CTEM page — Autonomous Defense Cycle", "who": "thomas", "goal": "reshare", "promotes": "One portable idea. The reader uses it in their next meeting and remembers where they got it.", "cta": "Try it on your last critical finding.", "ctaUrl": ""}, {"id": "tn-concede-lift", "week": 4, "day": "wed", "concept": "two-cards-lift", "eyebrow": "Marketing, out loud", "theme": "The conceding post outperformed", "headline": "We published a post against our own interest. It outperformed.", "text": "We published a post that said scanning is table stakes — that your existing tools find things perfectly well and nobody needs another discovery engine.\n\nThat is a concession. We sell into that market.\n\nIt outperformed every post we have written that led with a capability, and it was reshared by people at companies that compete with us.\n\nI do not think this is a clever tactic, and I would not recommend treating it as one. It worked because it was true and because the alternative — claiming discovery is broken so you need ours — is the kind of thing buyers have been hearing for a decade.\n\nThe cost of saying the true thing was lower than we assumed. That is worth knowing.", "why": "Marketing-peer content that doubles as a credibility signal to buyers.", "source": "Kai LinkedIn, 'Scanning is table stakes', conceded position", "who": "thomas", "goal": "follow", "promotes": "Marketing-peer credibility that doubles as a buyer signal.", "cta": "", "ctaUrl": ""}, {"id": "ga-w5", "who": "galina", "week": 5, "day": "wed", "theme": "Security has no categories, only outcomes", "text": "A prediction I am comfortable being held to: the category labels we use today will not survive the decade.\n\nAsset management, exposure management, detection engineering, identity — these are not natural divisions of the problem. They are divisions of the org chart, and then of the procurement cycle, and we have been buying tools shaped like our own internal boundaries for twenty years.\n\nAttackers do not think in categories. They move across every boundary we drew, because the boundaries are where the gaps are.\n\nThe next era of security will not be organized around what a tool is called. It will be organized around whether risk went down. I think that is a better world to sell into, and a considerably harder one to hide in.", "why": "Category-level thesis. Quotable, and it lands the manifesto line without the manifesto.", "concept": "categories-dissolve", "eyebrow": "A prediction", "headline": "Security has no categories. Only outcomes.", "goal": "reshare", "promotes": "The category thesis, not the product. It gives the market the frame Kai wants to be judged in, without asking anyone to buy anything.", "cta": "Hold me to it.", "ctaUrl": "", "source": "Kai manifesto — 'the future of security has no categories'"}, {"id": "tn-detection-retire", "week": 5, "day": "wed", "concept": "library-only-grows", "eyebrow": "Lifecycle", "theme": "Nobody is measured on what they retired", "headline": "Every detection library only ever grows.", "text": "Detection libraries only ever grow. Every incident adds a rule, every new technique adds a rule, and nothing ever comes off.\n\nThe reason is not technical. It is that nobody has ever been promoted for deleting a detection, and everybody can imagine the conversation that follows deleting the wrong one.\n\nThe cost is not storage. Every stale rule spends analyst attention, every week, on an exposure that closed months ago.\n\nIf a detection was written to cover a specific exposure while the fix was pending, the fix landing is the signal to retire it. That only works if the rule recorded which exposure it was standing in for — which most do not.\n\nWorth auditing. It is a boring project with an unusually good return.", "why": "Practitioner-useful, slightly contrarian, no product claim.", "source": "Kai product messaging — 'a detection stands in for as long as the fix has to wait'", "who": "thomas", "goal": "reshare", "promotes": "Nothing. A boring audit with a good return, which is the kind of thing practitioners pass on.", "cta": "Worth an afternoon this quarter.", "ctaUrl": ""}], "_thomasIdentity": {"note": "Thomas's posts are his, not the company's. Same Kai palette and type, different structure: a ruled ground rather than a dot grid, a margin rule down the left, a byline instead of a brand lockup, and the deeper teal leading rather than Kai blue. Every concept carries an annotation mark — a circle, a strike, a bracket — because the voice is working notes rather than a company statement.", "ground": "ruled", "accent": "deep teal #027FA8", "secondary": "mint #8AF0E6", "lockup": "byline: initials chip + name + 'Marketing, Kai'", "signature": "annotation marks"}, "_employeeGoals": "Every own post states what it is for. Most of them promote nothing directly, and that is the point — an account that only ever promotes stops being followed. The ones that do carry a destination say so. Reshare and follow posts build the audience that makes the company's traffic posts work.", "_galinaIdentity": {"note": "Hers is editorial, not notes and not product. No card: the statement sits on the page under a heavy navy rule, set large and tight. The artwork is geometric and line-led rather than made of UI, because she argues positions rather than demonstrating features. Navy dominant, mint as the single accent.", "ground": "plain", "rule": "heavy navy masthead", "accent": "mint #8AF0E6", "card": "none"}};
 /* ---- end LinkedIn plan ---- */
 const FORMATS = [
   {
@@ -4877,10 +4877,16 @@ function ppFeed(){
     const row = rows[ep.week - 1];
     if (!row) return;
     const mon = row.start, d2 = new Date(mon);
-    d2.setDate(mon.getDate() + 2);          // Wednesday, the day the company account is quiet
-    d2.setHours(8, 30, 0, 0);
+    // Wednesday is clear of the company account; a Friday post goes out late
+    // afternoon, well after the company's morning slot.
+    const fri = ep.day === 'fri';
+    d2.setDate(mon.getDate() + (fri ? 4 : 2));
+    d2.setHours(fri ? 16 : 8, fri ? 30 : 30, 0, 0);
     out.push({ kind: 'own', who: ep.who, when: d2, id: 'p:' + ep.id,
                text: ep.text, theme: ep.theme, why: ep.why,
+               concept: ep.concept, eyebrow: ep.eyebrow, headline: ep.headline,
+               source: ep.source, goal: ep.goal, promotes: ep.promotes,
+               cta: ep.cta, ctaUrl: ep.ctaUrl,
                state: d2 <= new Date() ? 'due' : 'future',
                done: !!ppDone()['p:' + ep.id] });
   });
@@ -5061,12 +5067,49 @@ function ppCard(r, opt){
 
   const ctx = document.createElement('p'); ctx.className = 'pp-ctx';
   if (r.kind === 'own'){
-    ctx.innerHTML = `<b>${String(r.theme).replace(/</g,'&lt;')}</b> &mdash; ${
-      String(r.why).replace(/</g,'&lt;')}` +
-      (r.state === 'future' ? `<br><span style="opacity:.75">Goes up ${
-        r.when.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})
-      }. Draft it whenever.</span>` : '');
-    card.appendChild(ctx);
+    // the title is editable in place; it is how you find the post again, not
+    // something that gets published
+    const tw = document.createElement('div');
+    tw.style.cssText = 'display:flex;align-items:baseline;gap:8px;margin:0 0 9px;flex-wrap:wrap';
+    const ti = document.createElement('input'); ti.type = 'text';
+    ti.value = ppValue(r.id + ':title', r.theme);
+    ti.style.cssText = 'flex:1;min-width:200px;font:700 14px/1.3 "Wix Madefor Text",sans-serif;' +
+      'color:var(--ink);border:1px solid transparent;border-radius:7px;padding:6px 8px;' +
+      'background:transparent';
+    ti.addEventListener('focus', () => { ti.style.borderColor = 'var(--line)';
+                                         ti.style.background = '#fff'; });
+    ti.addEventListener('blur',  () => { ti.style.borderColor = 'transparent';
+                                         ti.style.background = 'transparent'; });
+    ti.addEventListener('input', () => ppEdit(r.id + ':title', ti.value));
+    tw.appendChild(ti);
+    if (r.state === 'future'){
+      const g = document.createElement('span'); g.className = 'pl-note';
+      g.textContent = 'goes up ' + r.when.toLocaleDateString('en-GB',
+        { weekday: 'long', day: 'numeric', month: 'long' });
+      tw.appendChild(g);
+    }
+    card.appendChild(tw);
+    // "what is this for" is the question a bare post cannot answer on its own
+    const hl = document.createElement('label');
+    hl.innerHTML = '<span>Headline on the image</span>';
+    hl.style.cssText = 'display:block;margin:0 0 10px';
+    const hi = document.createElement('input'); hi.type = 'text';
+    hi.value = ppValue(r.id + ':headline', r.headline || '');
+    hi.style.cssText = 'width:100%;font:500 13px/1.4 "Wix Madefor Text",sans-serif;' +
+      'border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:#FCFCFD';
+    hi.addEventListener('input', () => { ppEdit(r.id + ':headline', hi.value); repaint(); });
+    hl.appendChild(hi); card.appendChild(hl);
+
+    const purpose = document.createElement('div');
+    purpose.className = 'pp-ctx';
+    purpose.style.cssText = 'border-left-color:' + (ppPerson(r.who).colour || LX.deep);
+    purpose.innerHTML =
+      `<b>Goal:</b> ${r.goal || 'reshare'}. ` +
+      `<b>Promotes:</b> ${String(r.promotes || '—').replace(/</g,'&lt;')}` +
+      (r.cta ? `<br><b>Ends on:</b> &ldquo;${String(r.cta).replace(/</g,'&lt;')}&rdquo;` : '') +
+      (r.ctaUrl ? ` <a class="link" href="${r.ctaUrl}" target="_blank" rel="noopener">${
+        r.ctaUrl.replace('https://www.kai.security','')}</a>` : '');
+    card.appendChild(purpose);
   } else {
     const hook = String(planValue(r.onPost, 'linkedin') || '').split('\n')[0];
     ctx.innerHTML = `<b>Replying to the Kai post:</b> &ldquo;${
@@ -5086,6 +5129,87 @@ function ppCard(r, opt){
   // Only a reaction is gated on its trigger existing. An own post is drafted
   // ahead of the date by definition, so it stays open however far out it is.
   if (opt.collapsed && r.kind === 'comment') return card;
+
+  // his own posts carry their own artwork, in his identity rather than the company's
+  let repaint = () => {};
+  const FRAME = r.kind === 'own' && r.concept
+    ? (typeof TN_CONCEPTS !== 'undefined' && TN_CONCEPTS[r.concept]
+        ? { draw: drawPersonFrame, key: 'personConcept' }
+        : (typeof GA_CONCEPTS !== 'undefined' && GA_CONCEPTS[r.concept]
+            ? { draw: drawFounderFrame, key: 'founderConcept' } : null))
+    : null;
+  if (FRAME){
+    const art = document.createElement('div');
+    art.style.cssText = 'display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin:0 0 12px';
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 520;
+    cv.style.cssText = 'width:260px;height:260px;border-radius:10px;border:1px solid var(--line)';
+    const st = { eyebrow: r.eyebrow, head: ppValue(r.id + ':headline', r.headline),
+                 source: r.source };
+    st[FRAME.key] = r.concept;
+    const paint = pr => { const cx = cv.getContext('2d');
+      st.head = ppValue(r.id + ':headline', r.headline);
+      cx.clearRect(0, 0, 520, 520); FRAME.draw(cx, 520, 520, st, pr); };
+    repaint = () => paint(1);
+    (async () => { try { await prepare({ logoStyle: 'mono' }); } catch {} paint(1); })();
+    art.appendChild(cv);
+
+    const side = document.createElement('div');
+    side.style.cssText = 'display:flex;flex-direction:column;gap:7px;min-width:150px';
+    const mk2 = (label, fn, cls) => {
+      const b2 = document.createElement('button'); b2.type = 'button'; b2.textContent = label;
+      if (cls) b2.className = cls;
+      b2.style.cssText = (b2.style.cssText || '') + ';font-size:12px;padding:9px 13px';
+      b2.addEventListener('click', fn); side.appendChild(b2); return b2;
+    };
+    mk2('Replay', () => {
+      const t0 = performance.now(), dur = 2200;
+      const step = () => { const e = (performance.now() - t0) / dur;
+        paint(Math.min(1, e)); if (e < 1) requestAnimationFrame(step); };
+      step();
+    });
+    mk2('PNG', () => {
+      const out = document.createElement('canvas'); out.width = out.height = 1200;
+      FRAME.draw(out.getContext('2d'), 1200, 1200, st, 1);
+      out.toBlob(bl => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(bl); a.download = r.id + '.png'; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      }, 'image/png');
+      say('PNG saved.');
+    }, 'go');
+    mk2('GIF', async () => {
+      say('Recording…');
+      const out = document.createElement('canvas'); out.width = out.height = 1080;
+      const cx2 = out.getContext('2d');
+      const stream = out.captureStream(30);
+      const mime = ['video/mp4;codecs=avc1', 'video/webm;codecs=vp9', 'video/webm']
+        .find(m => MediaRecorder.isTypeSupported(m));
+      const rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8e6 });
+      const parts = []; rec.ondataavailable = e => e.data.size && parts.push(e.data);
+      rec.onstop = () => {
+        const bl = new Blob(parts, { type: mime });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(bl);
+        a.download = r.id + (mime.startsWith('video/mp4') ? '.mp4' : '.webm');
+        a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 6000);
+        say('Saved ' + a.download);
+      };
+      rec.start();
+      const t0 = performance.now(), dur = 2400;
+      await new Promise(res => {
+        const step = () => {
+          const e = (performance.now() - t0) / dur;
+          FRAME.draw(cx2, 1080, 1080, st, Math.min(1, e));
+          if (e < 1.25) requestAnimationFrame(step); else res();
+        };
+        step();
+      });
+      rec.stop();
+    });
+    art.appendChild(side);
+    card.appendChild(art);
+  }
 
   const ta = document.createElement('textarea');
   ta.rows = r.kind === 'own' ? 10 : 4;
@@ -5272,13 +5396,13 @@ Roughly two reshare, one traffic, one follow. Reshare leads, because the other
 two depend on it.
 
 Messaging (from the framework — see the Messaging panel above):
-- The umbrella is "Prioritization is Dead. Long live Fixed." Prioritisation is
+- The umbrella is "Prioritization is Dead. Long live Fixed." Prioritization is
   not gone; it became a step. What died is ranking a list and calling the work
-  done. Never attack CTEM or the people who built programmes on it.
-- The strongest hook Kai has is the flip: investigate first, then prioritise.
+  done. Never attack CTEM or the people who built programs on it.
+- The strongest hook Kai has is the flip: investigate first, then prioritize.
   Use it when the post is about triage.
 - Tone: confident, plain-spoken, a little playful. Affectionate toward
-  prioritisation, never mocking.
+  prioritization, never mocking.
 - No fear-based or AI-attacker framing in a headline.
 - Never say "GenAI", never explain how transformers work, never name a
   competitor, and never carry more than one use case in a post.
@@ -5425,14 +5549,14 @@ function lxCard(c, x, y, w, h, r, opt){
   pRound(c, x, y, w, h, r); c.fill();
   c.strokeStyle = o.border || LX.hair;
   c.lineWidth = Math.max(1, S);
-  pRound(c, x + 0.5, y + 0.5, w - 1, h - 1, r); c.stroke();
+  pStroke(c, x + 0.5, y + 0.5, w - 1, h - 1, r); c.stroke();
   if (o.highlight !== false){
     const g = c.createLinearGradient(0, y, 0, y + Math.min(h * 0.5, 100 * S));
     g.addColorStop(0, 'rgba(255,255,255,0.95)');
     g.addColorStop(1, 'rgba(255,255,255,0)');
     c.save(); pRound(c, x + 0.5, y + 0.5, w - 1, h - 1, r); c.clip();
     c.strokeStyle = g; c.lineWidth = Math.max(1, S);
-    pRound(c, x + 0.5, y + 0.5, w - 1, h - 1, r); c.stroke(); c.restore();
+    pStroke(c, x + 0.5, y + 0.5, w - 1, h - 1, r); c.stroke(); c.restore();
   }
 }
 
@@ -5478,7 +5602,7 @@ function lxRow(c, x, y, w, h, opt){
   pRound(c, x, y, w, h, o.r || 10); c.fill();
   if (o.border !== false){
     c.strokeStyle = o.border || LX.hair; c.lineWidth = 1;
-    pRound(c, x + 0.5, y + 0.5, w - 1, h - 1, o.r || 10); c.stroke();
+    pStroke(c, x + 0.5, y + 0.5, w - 1, h - 1, o.r || 10); c.stroke();
   }
 }
 
@@ -5547,7 +5671,7 @@ function lxChip(c, t, x, y, size, opt){
   pRound(c, x, y, w, h, h / 2); c.fill();
   if (o.border !== false){
     c.strokeStyle = o.border || LX.hair; c.lineWidth = 1;
-    pRound(c, x + 0.5, y + 0.5, w - 1, h - 1, h / 2); c.stroke();
+    pStroke(c, x + 0.5, y + 0.5, w - 1, h - 1, h / 2); c.stroke();
   }
   c.fillStyle = o.color || LX.t2; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
   c.fillText(label, x + padX, y + h * 0.68);
@@ -5561,7 +5685,29 @@ const PK = { ink:LX.t1, mute:LX.t3, faint:'#DDE3EB', hair:LX.hair,
              foam:'#50C7AC', lime:LX.lime, acid:'#D6FF20', paper:LX.bg0,
              t2:LX.t2, t4:LX.t4, bg2:LX.bg2, bg3:LX.bg3, solid:LX.solid };
 const pe = t => lxOutQuart(t);        // Linear's ease-out-quart, not plain cubic
-const pstep = (p, i, n, overlap) => Math.max(0, Math.min(1, (p * n - i) / (overlap || 1)));
+/* Staggered sub-progress. The naive form, (p*n - i)/overlap, leaves the LAST
+   item at 1/overlap when p hits 1 — so a ring never closes, a bar stops half
+   grown, the final cell stays faded. Four concepts shipped with that bug
+   before I spotted the pattern. The scale factor makes the last item land
+   exactly on 1, whatever the overlap. */
+const pstep = (p, i, n, overlap) => {
+  const o = overlap || 1, scale = (n - 1 + o) / n;
+  return Math.max(0, Math.min(1, (p * scale * n - i) / o));
+};
+/* Path only, no paint. roundRect() ends in a fill — right for its callers in
+   the tile engine, wrong for anything that wanted an outline, which has been
+   quietly painting a rectangle in whatever fillStyle happened to be current.
+   That is what made the dissolving category boxes read as solid grey. */
+function pStroke(c, x, y, w, h, r){
+  const rr = Math.min(r, Math.abs(h) / 2, Math.abs(w) / 2);
+  c.beginPath();
+  c.moveTo(x + rr, y);
+  c.arcTo(x + w, y, x + w, y + h, rr);
+  c.arcTo(x + w, y + h, x, y + h, rr);
+  c.arcTo(x, y + h, x, y, rr);
+  c.arcTo(x, y, x + w, y, rr);
+  c.closePath();
+}
 function pRound(c, x, y, w, h, r){ roundRect(c, x, y, w, h, Math.min(r, Math.abs(h)/2, Math.abs(w)/2)); }
 function pText(c, t, x, y, size, col, weight, align, font, track){
   c.save(); c.fillStyle = col; c.textAlign = align || 'left'; c.textBaseline = 'alphabetic';
@@ -5691,7 +5837,7 @@ const POST_CONCEPTS = {
           LX.t1, 700, 'center', 'Roboto, sans-serif');
     lxMicro(c, 'of 7', cx, cy + R * 0.50, Math.max(8.5, R * 0.16), LX.t4, 'center');
     const lx2 = b.x + b.w * 0.54, rh = b.h * 0.105, lg = b.h * 0.028;
-    ['Scope','Discover','Prioritise','Validate','Mobilise','Remediate','Prove'].forEach((lab,i)=>{
+    ['Scope','Discover','Prioritize','Validate','Mobilize','Remediate','Prove'].forEach((lab,i)=>{
       const on = pstep(t, i, n, 1.4) > 0.5, y = b.y + i * (rh + lg);
       lxDot(c, lx2 + rh * 0.3, y + rh / 2, Math.max(3, rh * 0.15),
             on ? (i < 5 ? LX.blue : LX.deep) : LX.bg3, false);
@@ -5901,7 +6047,7 @@ const POST_CONCEPTS = {
       if (shown <= 0) continue;
       if (DIFF.includes(i)){
         c.save(); c.setLineDash([3, 3]); c.strokeStyle = LX.solid; c.lineWidth = 1.5;
-        pRound(c, x + 0.75, yB + 0.75, w - 1.5, rh - 1.5, 4); c.stroke(); c.restore();
+        pStroke(c, x + 0.75, yB + 0.75, w - 1.5, rh - 1.5, 4); c.stroke(); c.restore();
       } else {
         c.save(); c.globalAlpha = shown; c.fillStyle = LX.blue;
         pRound(c, x, yB, w, rh, 4); c.fill(); c.restore();
@@ -6089,7 +6235,7 @@ const POST_CONCEPTS = {
     pRound(c, b.x, fy, b.w, fh, 12); c.fill(); c.restore();
     c.save(); c.setLineDash([7, 6]); c.strokeStyle = LX.deep;
     c.lineWidth = Math.max(2, b.h * 0.012);
-    pRound(c, b.x, fy, b.w, fh, 12); c.stroke(); c.restore();
+    pStroke(c, b.x, fy, b.w, fh, 12); c.stroke(); c.restore();
     lxMicro(c, 'the boundary you set', b.x, fy - b.h * 0.045,
             Math.max(9.5, b.h * 0.050), LX.deep);
     lxMicro(c, 'set once', b.x + b.w, fy - b.h * 0.045,
@@ -6121,6 +6267,571 @@ const POST_CONCEPTS = {
             Math.max(9.5, b.h * 0.050), LX.t4, 'right');
   },
 };
+
+
+
+/* His eight. Each one annotated — that is the signature. */
+const TN_CONCEPTS = {
+
+  /* A month of posts; the ones that travelled are circled. */
+  'tally-circled': (c, b, p, S) => {
+    const t = pe(p), cols = 4, rows = 4, n = 16;
+    const cw = b.w * 0.62 / cols, ch = b.h * 0.92 / rows;
+    const TRAVELLED = [2, 5, 9, 14];
+    for (let i = 0; i < n; i++){
+      const x = b.x + (i % cols) * cw, y = b.y + Math.floor(i / cols) * ch;
+      const w = cw * 0.76, h = ch * 0.40;
+      const hit = TRAVELLED.includes(i);
+      c.fillStyle = hit ? TN.lead : LX.bg3;
+      c.globalAlpha = hit ? 1 : 0.9;
+      pRound(c, x, y, w, h, 4); c.fill(); c.globalAlpha = 1;
+      if (hit && pstep(t, TRAVELLED.indexOf(i), TRAVELLED.length, 1.4) > 0.35){
+        tnCircle(c, x - w * 0.13, y - h * 0.52, w * 1.26, h * 2.0, S,
+                 pstep(t, TRAVELLED.indexOf(i), TRAVELLED.length, 1.4));
+      }
+    }
+    const num = Math.max(24, b.h * 0.26);
+    pText(c, '4', b.x + b.w, b.y + b.h * 0.44, num, TN.ink, 700, 'right', 'Roboto, sans-serif');
+    lxMicro(c, 'of 16 travelled', b.x + b.w, b.y + b.h * 0.56,
+            Math.max(9.5, b.h * 0.052), TN.faint, 'right');
+  },
+
+  /* Opened against closed, with the gap bracketed. */
+  'ledger-gap': (c, b, p, S) => {
+    const t = pe(p), rows = 6, rh = b.h * 0.105, gap = b.h * 0.055;
+    const mid = b.x + b.w * 0.46;
+    lxMicro(c, 'opened', b.x, b.y - b.h * 0.01, Math.max(9.5, b.h * 0.05), TN.faint);
+    lxMicro(c, 'closed', mid + b.w * 0.06, b.y - b.h * 0.01, Math.max(9.5, b.h * 0.05), TN.lead);
+    for (let i = 0; i < rows; i++){
+      const y = b.y + b.h * 0.08 + i * (rh + gap) * 0.92;
+      const grow = pstep(t, i, rows, 2);
+      c.fillStyle = LX.bg3;
+      pRound(c, b.x, y, b.w * 0.40 * grow, rh * 0.52, rh * 0.26); c.fill();
+      c.fillStyle = TN.lead;
+      pRound(c, mid + b.w * 0.06, y, b.w * 0.14 * grow, rh * 0.52, rh * 0.26); c.fill();
+    }
+    const by = b.y + b.h * 0.08, bh = (rh + gap) * 0.92 * (rows - 1) + rh * 0.52;
+    if (t > 0.5){
+      tnBracket(c, b.x + b.w * 0.985, by, bh, S, 'right');
+      pText(c, 'the gap', b.x + b.w * 0.95, by + bh / 2 + b.h * 0.02,
+            Math.max(11, b.h * 0.085), TN.lead, 700, 'right');
+    }
+  },
+
+  /* One term, five definitions, diverging on where it ends. */
+  'definitions-diverge': (c, b, p, S) => {
+    const t = pe(p), n = 5, x0 = b.x + b.w * 0.06;
+    const cy = b.y + b.h * 0.48, spread = b.h * 0.36;
+    c.fillStyle = TN.ink;
+    c.beginPath(); c.arc(x0, cy, Math.max(4, b.h * 0.030), 0, Math.PI * 2); c.fill();
+    lxMicro(c, 'CTEM', x0 - b.w * 0.045, cy - b.h * 0.095, Math.max(9.5, b.h * 0.05), TN.faint);
+    for (let i = 0; i < n; i++){
+      const u = n === 1 ? 0.5 : i / (n - 1);
+      const endY = cy + (u - 0.5) * spread * 2;
+      const prog = pstep(t, i, n, 1);       // every branch completes by t=1
+      const ex = x0 + (b.w * 0.70) * prog;
+      c.strokeStyle = i >= 3 ? TN.lead : LX.solid;
+      c.lineWidth = Math.max(2, (i >= 3 ? 2.6 : 1.8) * S); c.lineCap = 'round';
+      c.beginPath(); c.moveTo(x0, cy);
+      c.bezierCurveTo(x0 + (ex - x0) * 0.45, cy, x0 + (ex - x0) * 0.55, endY, ex, endY);
+      c.stroke();
+      if (prog > 0.9){
+        c.fillStyle = i >= 3 ? TN.lead : LX.solid;
+        c.beginPath(); c.arc(ex, endY, Math.max(3, b.h * 0.020), 0, Math.PI * 2); c.fill();
+      }
+    }
+    if (t > 0.75){
+      lxMicro(c, 'ends at mobilization', b.x + b.w, cy - spread * 0.75,
+              Math.max(9, b.h * 0.048), LX.t4, 'right');
+      lxMicro(c, 'ends at closure', b.x + b.w, cy + spread * 0.78,
+              Math.max(9, b.h * 0.048), TN.lead, 'right');
+    }
+  },
+
+  /* The old idea struck out, the new one underlined. */
+  'struck-replaced': (c, b, p, S) => {
+    const t = pe(p);
+    // both phrases are sized to the box, so neither can run past the card
+    const fit = (txt, want, weight) => {
+      let sz = want;
+      for (let i = 0; i < 24 && sz > 9; i++){
+        c.font = `${weight} ${sz}px "Wix Madefor Text", sans-serif`;
+        if (c.measureText(txt).width <= b.w) break;
+        sz *= 0.94;
+      }
+      return sz;
+    };
+    const A = 'inventory hygiene', B = 'the throughput step';
+    const s1 = fit(A, Math.max(13, b.h * 0.15), 600);
+    const s2 = fit(B, Math.max(14, b.h * 0.17), 700);
+    const lab = Math.max(9.5, b.h * 0.05);
+    const gap = lab * 1.5;                       // the label clears the ascender
+    const y1 = b.y + s1 + gap, y2 = b.y + b.h - s2 * 0.30;
+
+    lxMicro(c, 'what I had', b.x, y1 - s1 - lab * 0.55, lab, TN.faint);
+    c.save(); c.globalAlpha = 1 - 0.45 * t;
+    pText(c, A, b.x, y1, s1, LX.t3, 600);
+    c.restore();
+    c.font = `600 ${s1}px "Wix Madefor Text", sans-serif`;
+    tnStrike(c, b.x, y1 - s1 * 0.30, c.measureText(A).width, S, t * 1.4);
+
+    if (t > 0.35){
+      c.save(); c.globalAlpha = Math.min(1, (t - 0.35) / 0.35);
+      lxMicro(c, 'what it is', b.x, y2 - s2 - lab * 0.55, lab, TN.lead);
+      pText(c, B, b.x, y2, s2, TN.ink, 700);
+      c.font = `700 ${s2}px "Wix Madefor Text", sans-serif`;
+      tnUnderline(c, b.x, y2 + s2 * 0.24, c.measureText(B).width, S, (t - 0.35) / 0.5);
+      c.restore();
+    }
+  },
+  'stack-flagged': (c, b, p, S) => {
+    const t = pe(p), n = 7, rh = b.h * 0.098, gap = b.h * 0.035;
+    const KEEP = [1, 2, 4, 6], rowW = b.w * 0.70;
+    for (let i = 0; i < n; i++){
+      const y = b.y + i * (rh + gap), keep = KEEP.includes(i);
+      const shown = keep ? pstep(t, KEEP.indexOf(i), KEEP.length, 1.6) : 0;
+      lxRow(c, b.x, y, rowW, rh, { r: 7, fill: keep && shown > 0.4 ? LX.bg0 : LX.bg2,
+                                   border: keep && shown > 0.4 ? '#CDEEFB' : LX.hair });
+      lxSkeleton(c, b.x + rh * 0.55, y + rh * 0.40,
+                 rowW * (0.34 + 0.30 * ((i * 3) % 5) / 5), rh * 0.18);
+      if (keep && shown > 0.4){
+        // a proper flag in the margin, not a sliver at the edge
+        const fw = rh * 0.80, fh = rh * 0.74, fx = b.x + rowW + rh * 0.42;
+        c.fillStyle = TN.lead;
+        c.beginPath();
+        c.moveTo(fx, y + (rh - fh) / 2); c.lineTo(fx + fw, y + (rh - fh) / 2);
+        c.lineTo(fx + fw * 0.68, y + rh / 2);
+        c.lineTo(fx + fw, y + (rh + fh) / 2); c.lineTo(fx, y + (rh + fh) / 2);
+        c.closePath(); c.fill();
+      }
+    }
+    const stackBottom = b.y + (n - 1) * (rh + gap) + rh;
+    pText(c, String(Math.round(KEEP.length * t)), b.x + b.w, b.y + b.h * 0.40,
+          Math.max(24, b.h * 0.26), TN.ink, 700, 'right', 'Roboto, sans-serif');
+    lxMicro(c, 'worth your time', b.x + b.w, b.y + b.h * 0.50,
+            Math.max(9, b.h * 0.048), TN.faint, 'right');
+  },
+  'one-question-branches': (c, b, p, S) => {
+    const t = pe(p), x0 = b.x + b.w * 0.05, cy = b.y + b.h * 0.50;
+    const qs = Math.max(26, b.h * 0.32);
+    pText(c, '?', x0, cy + qs * 0.34, qs, TN.lead, 700, 'left', 'Roboto, sans-serif');
+    const ans = ['nobody can name them', 'three weeks from now', 'closed, never shipped'];
+    const sx = x0 + b.w * 0.13;
+    ans.forEach((a, i) => {
+      const prog = pstep(t, i, ans.length, 1);     // the last one must finish at t=1
+      if (prog <= 0) return;
+      const ey = b.y + b.h * (0.16 + i * 0.34);
+      const ex = sx + b.w * 0.22;
+      c.strokeStyle = i === 2 ? TN.lead : LX.solid;
+      c.lineWidth = Math.max(1.8, (i === 2 ? 2.4 : 1.6) * S); c.lineCap = 'round';
+      // control points held on the two endpoints' rows so the curve cannot overshoot
+      c.beginPath(); c.moveTo(sx, cy);
+      c.bezierCurveTo(sx + (ex - sx) * 0.55, cy, sx + (ex - sx) * 0.45, ey,
+                      sx + (ex - sx) * prog, ey);
+      c.stroke();
+      if (prog > 0.55){
+        c.save(); c.globalAlpha = Math.min(1, (prog - 0.55) / 0.35);
+        const ls = Math.max(11, b.h * 0.082);
+        pText(c, a, ex + b.w * 0.035, ey + b.h * 0.030, ls,
+              i === 2 ? TN.ink : LX.t3, i === 2 ? 700 : 500);
+        if (i === 2){
+          c.font = `700 ${ls}px "Wix Madefor Text", sans-serif`;
+          tnUnderline(c, ex + b.w * 0.035, ey + b.h * 0.058,
+                      c.measureText(a).width, S, Math.min(1, (prog - 0.55) / 0.35));
+        }
+        c.restore();
+      }
+    });
+  },
+  'two-cards-lift': (c, b, p, S) => {
+    const t = pe(p), cw = b.w * 0.40, chh = b.h * 0.56;
+    const y0 = b.y + b.h * 0.30;
+    const lift = b.h * 0.26 * t;
+    [[b.x, 0, 'led with a capability', LX.bg2, LX.hair, LX.t4],
+     [b.x + b.w - cw, lift, 'conceded something', LX.bg0, '#CDEEFB', TN.lead]
+    ].forEach(([x, dy, lab, fill, border, col], i) => {
+      lxCard(c, x, y0 - dy, cw, chh, 10, { S, fill, border, shadow: i === 1, highlight: false });
+      lxSkeleton(c, x + cw * 0.12, y0 - dy + chh * 0.20, cw * 0.62, chh * 0.075);
+      lxSkeleton(c, x + cw * 0.12, y0 - dy + chh * 0.36, cw * 0.46, chh * 0.075);
+      lxSkeleton(c, x + cw * 0.12, y0 - dy + chh * 0.52, cw * 0.55, chh * 0.075);
+      lxMicro(c, lab, x, y0 - dy + chh + b.h * 0.085, Math.max(9, b.h * 0.048), col);
+    });
+    if (t > 0.5){
+      const ax = b.x + b.w - cw / 2;
+      c.strokeStyle = TN.lead; c.lineWidth = Math.max(2, 2.4 * S); c.lineCap = 'round';
+      const ay = y0 - lift - b.h * 0.055;
+      c.beginPath(); c.moveTo(ax, ay); c.lineTo(ax, ay - b.h * 0.10);
+      c.moveTo(ax, ay - b.h * 0.10); c.lineTo(ax - b.h * 0.035, ay - b.h * 0.055);
+      c.moveTo(ax, ay - b.h * 0.10); c.lineTo(ax + b.h * 0.035, ay - b.h * 0.055);
+      c.stroke();
+    }
+  },
+
+  /* The library only grows; the retired ones never leave. */
+  'library-only-grows': (c, b, p, S) => {
+    const t = pe(p), n = 11, bw = b.w / n;
+    const base = b.y + b.h * 0.80;
+    for (let i = 0; i < n; i++){
+      const grow = pstep(t, i, n, 2.6);
+      const h = b.h * (0.12 + 0.60 * (i / (n - 1))) * grow;
+      c.fillStyle = i >= n - 3 ? TN.lead : LX.bg3;
+      pRound(c, b.x + i * bw, base - h, bw * 0.74, h, 3); c.fill();
+    }
+    c.strokeStyle = LX.solid; c.lineWidth = Math.max(1, S);
+    c.beginPath(); c.moveTo(b.x, base + 0.5); c.lineTo(b.x + b.w, base + 0.5); c.stroke();
+    lxMicro(c, 'rules in the library', b.x, base + b.h * 0.10,
+            Math.max(9.5, b.h * 0.05), TN.faint);
+    if (t > 0.6){
+      lxMicro(c, 'never comes off', b.x + b.w, base + b.h * 0.10,
+              Math.max(9.5, b.h * 0.05), TN.lead, 'right');
+      tnCircle(c, b.x + b.w * 0.70, b.y + b.h * 0.02, b.w * 0.32, b.h * 0.70, S,
+               Math.min(1, (t - 0.6) / 0.3));
+    }
+  }
+};
+
+
+/* ==================================================================== *
+ * Galina Antova — founder identity
+ *
+ * Editorial, not working notes and not product. No card: the statement sits
+ * on the page under a heavy navy rule, set large and tight. The artwork is
+ * geometric and line-led rather than made of UI, because she argues
+ * positions rather than demonstrating features. Navy dominant, mint as the
+ * single accent — the third distinct look in the family, still Kai.
+ * ==================================================================== */
+const GA = {
+  ink: LX.t1, mute: LX.t3, faint: '#AEB6C4',
+  accent: '#8AF0E6', deep: LX.deep, line: '#D8DEE7', ground: '#FFFFFF'
+};
+
+const GA_CONCEPTS = {
+
+  /* Improving the existing line, against starting somewhere else. */
+  'two-paths': (c, b, p, S) => {
+    const t = pe(p), x0 = b.x, x1 = b.x + b.w;
+    const y0 = b.y + b.h * 0.34;
+    // the incremental path: nudges upward, arrives barely higher
+    c.strokeStyle = GA.line; c.lineWidth = Math.max(2, 2.4 * S); c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x0, y0);
+    const n = 7;
+    for (let i = 1; i <= n; i++){
+      const u = i / n;
+      if (u > t) break;
+      c.lineTo(x0 + (x1 - x0) * u, y0 - b.h * 0.10 * u);
+    }
+    c.stroke();
+    if (t > 0.9) lxMicro(c, 'improve it', x1, y0 - b.h * 0.145,
+                         Math.max(9.5, b.h * 0.052), GA.faint, 'right');
+    // the other path: leaves the line entirely
+    const yb = b.y + b.h * 0.62;
+    c.strokeStyle = GA.ink; c.lineWidth = Math.max(3, 3.6 * S);
+    c.beginPath(); c.moveTo(x0, yb);
+    const seg = Math.min(1, t * 1.15);
+    c.bezierCurveTo(x0 + b.w * 0.34, yb, x0 + b.w * 0.40, b.y + b.h * 0.86,
+                    x0 + (x1 - x0) * seg, b.y + b.h * 0.86);
+    c.stroke();
+    if (seg > 0.96){
+      c.fillStyle = GA.accent;
+      c.beginPath(); c.arc(x1, b.y + b.h * 0.86, Math.max(6, b.h * 0.040), 0, Math.PI * 2); c.fill();
+      lxMicro(c, 'make it obsolete', x1, b.y + b.h * 0.97,
+              Math.max(10, b.h * 0.055), GA.ink, 'right');
+    }
+    c.fillStyle = GA.ink;
+    c.beginPath(); c.arc(x0, y0, Math.max(4, b.h * 0.026), 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.arc(x0, yb, Math.max(4, b.h * 0.026), 0, Math.PI * 2); c.fill();
+  },
+
+  /* Five hundred conversations, arriving at one answer. */
+  'converge-500': (c, b, p, S) => {
+    const t = pe(p), n = 26;
+    const tx = b.x + b.w * 0.88, ty = b.y + b.h * 0.50;
+    for (let i = 0; i < n; i++){
+      const u = (i + 0.5) / n;
+      const sy = b.y + b.h * 0.04 + u * b.h * 0.92;
+      const prog = pstep(t, i, n, 5);
+      if (prog <= 0) continue;
+      c.strokeStyle = GA.line; c.lineWidth = Math.max(1, 1.2 * S);
+      c.globalAlpha = 0.30 + 0.45 * prog;
+      c.beginPath(); c.moveTo(b.x, sy);
+      const ex = b.x + (tx - b.x) * prog, ey = sy + (ty - sy) * prog;
+      c.bezierCurveTo(b.x + b.w * 0.40, sy, b.x + b.w * 0.52, ey, ex, ey);
+      c.stroke(); c.globalAlpha = 1;
+    }
+    if (t > 0.55){
+      const r = Math.max(9, b.h * 0.055) * Math.min(1, (t - 0.55) / 0.35);
+      c.save(); c.globalAlpha = 0.30; c.fillStyle = GA.accent;
+      c.beginPath(); c.arc(tx, ty, r * 2.4, 0, Math.PI * 2); c.fill(); c.restore();
+      c.fillStyle = GA.ink;
+      c.beginPath(); c.arc(tx, ty, r, 0, Math.PI * 2); c.fill();
+    }
+    lxMicro(c, '500+ conversations', b.x, b.y + b.h * 0.085,
+            Math.max(9.5, b.h * 0.050), GA.faint);
+    if (t > 0.85) lxMicro(c, 'one answer', b.x + b.w, ty + b.h * 0.14,
+                          Math.max(10, b.h * 0.055), GA.ink, 'right');
+  },
+
+  /* The labels dissolve; what is left is whether risk went down. */
+  'categories-dissolve': (c, b, p, S) => {
+    const t = pe(p), labels = ['ASSET', 'EXPOSURE', 'DETECTION', 'IDENTITY'];
+    const bw = b.w * 0.21, gap = (b.w - bw * 4) / 3, by = b.y + b.h * 0.10, bh = b.h * 0.34;
+    labels.forEach((l, i) => {
+      const go = pstep(t, i, labels.length, 2);
+      const x = b.x + i * (bw + gap) + (b.w / 2 - (b.x + i * (bw + gap) + bw / 2) + b.x - b.x) * 0;
+      c.save();
+      c.globalAlpha = 1 - 0.92 * go;
+      c.setLineDash([4, 4]); c.strokeStyle = GA.line; c.lineWidth = Math.max(1.5, 1.8 * S);
+      pStroke(c, x, by, bw, bh, 8); c.stroke();
+      c.setLineDash([]);
+      pText(c, l, x + bw / 2, by + bh / 2 + b.h * 0.018,
+            Math.max(10, b.h * 0.055), GA.mute, 700, 'center', null, 0.06);
+      c.restore();
+    });
+    // what survives
+    const oy = b.y + b.h * 0.76;
+    if (t > 0.45){
+      const a = Math.min(1, (t - 0.45) / 0.4);
+      c.save(); c.globalAlpha = a;
+      const w = b.w * 0.70 * a, x = b.x + (b.w - w) / 2;
+      c.fillStyle = GA.accent; c.globalAlpha = a * 0.35;
+      pRound(c, x, oy - b.h * 0.055, w, b.h * 0.115, b.h * 0.0575); c.fill();
+      c.globalAlpha = a;
+      pText(c, 'did risk go down?', b.x + b.w / 2, oy + b.h * 0.022,
+            Math.max(13, b.h * 0.095), GA.ink, 700, 'center');
+      c.restore();
+    }
+  }
+};
+
+/* Her frame. No card — the statement is the object. */
+function drawFounderFrame(c, W, H, s, progress){
+  const wide = W / H > 1.25, S = W / REF_W;
+  const M = Math.round(W * (wide ? 0.058 : 0.082));
+  c.save();
+  c.fillStyle = GA.ground; c.fillRect(0, 0, W, H);
+
+  // the masthead rule
+  c.fillStyle = GA.ink;
+  c.fillRect(M, M, W - M * 2, Math.max(4, 7 * S));
+
+  const nameY = M + Math.max(4, 7 * S) + Math.max(26, 40 * S);
+  pText(c, 'Galina Antova', M, nameY, Math.max(14, 23 * S), GA.ink, 700, 'left', null, -0.011);
+  lxMicro(c, 'Co-founder, Kai', M + Math.max(110, 180 * S), nameY,
+          Math.max(10, 15 * S), GA.faint);
+
+  const colW = wide ? W * 0.42 : W - M * 2;
+  const eyeS = Math.max(11, 19 * S), eyeGap = Math.max(20, 32 * S);
+  const size = Math.max(22, (wide ? 48 : 64) * S), lineH = size * 1.06;
+
+  c.font = `700 ${size}px "Wix Madefor Text", sans-serif`;
+  if ('letterSpacing' in c) c.letterSpacing = (size * -0.024).toFixed(2) + 'px';
+  const words = String(s.head || '').split(/\s+/);
+  const lines = []; let cur = '';
+  for (const w of words){
+    const t2 = cur ? cur + ' ' + w : w;
+    if (c.measureText(t2).width > colW && cur){ lines.push(cur); cur = w; } else cur = t2;
+  }
+  if (cur) lines.push(cur);
+  if ('letterSpacing' in c) c.letterSpacing = '0px';
+  const headLines = lines.slice(0, 4);
+
+  const srcS = Math.max(13, 20 * S);
+  const srcTop = H - Math.max(26, 42 * S);
+  const textTop = nameY + Math.max(26, 44 * S);
+  const textH = (s.eyebrow ? eyeGap : 0) + headLines.length * lineH;
+
+  let y = textTop;
+  if (s.eyebrow){ lxMicro(c, s.eyebrow, M, y, eyeS, GA.deep); y += eyeGap; }
+  headLines.forEach(ln => {
+    pText(c, ln, M, y + size * 0.80, size, GA.ink, 700, 'left', null, -0.024);
+    y += lineH;
+  });
+
+  // the artwork takes the space under the statement
+  const artTop = y + H * 0.030;
+  const artBot = srcTop - srcS * 2.6;
+  const box = { x: M, y: artTop, w: W - M * 2, h: Math.max(H * 0.14, artBot - artTop) };
+  const fn = GA_CONCEPTS[s.founderConcept];
+  if (fn && box.h > H * 0.06){ c.save(); fn(c, box, Math.max(0, Math.min(1, progress)), S); c.restore(); }
+
+  if (s.source){
+    c.strokeStyle = GA.line; c.lineWidth = Math.max(1, S);
+    c.beginPath(); c.moveTo(M, srcTop - srcS * 1.5); c.lineTo(W - M, srcTop - srcS * 1.5); c.stroke();
+    pText(c, s.source, M, srcTop, srcS, GA.mute, 500, 'left', null, -0.011);
+    const logo = img('logo:' + LX.t4);
+    if (logo){
+      const lh = Math.max(14, 22 * S);
+      c.save(); c.globalAlpha = 0.5;
+      c.drawImage(logo, W - M - lh * logo.width / logo.height, srcTop - srcS * 0.95,
+                  lh * logo.width / logo.height, lh);
+      c.restore();
+    }
+  }
+  c.restore();
+}
+
+/* ==================================================================== *
+ * Thomas Nuth — personal identity
+ *
+ * His posts are his, not the company's. Same Kai palette, same type, same
+ * card system, so it still reads as Kai. What differs is structure: a ruled
+ * ground instead of a dot grid, a rule down the left margin, a byline rather
+ * than a brand lockup, and the deeper teal leading instead of Kai blue.
+ * Every concept carries an annotation mark — a circle, a strike, a bracket —
+ * because the voice is working notes, not a company statement.
+ * ==================================================================== */
+const TN = {
+  lead: LX.deep,          // teal leads, where the company leads with blue
+  second: '#8AF0E6',
+  ink: LX.t1, mute: LX.t3, faint: LX.t4,
+  rule: '#E3E8EE', ground: '#FBFCFD', paper: '#FFFFFF'
+};
+
+/* Ruled paper, not a dot grid. */
+function tnRules(c, x, y, w, h, S){
+  const pitch = 34 * (S || 1);
+  c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip();
+  c.strokeStyle = TN.rule; c.lineWidth = Math.max(1, S);
+  for (let gy = y + pitch; gy < y + h; gy += pitch){
+    c.globalAlpha = 0.5 - 0.3 * (gy - y) / h;
+    c.beginPath(); c.moveTo(x, gy + 0.5); c.lineTo(x + w, gy + 0.5); c.stroke();
+  }
+  c.restore();
+}
+
+/* The margin rule, and his byline where the Kai lockup would be. */
+function tnByline(c, x, y, S){
+  const r = Math.max(15, 23 * S);
+  c.fillStyle = TN.lead;
+  c.beginPath(); c.arc(x + r, y + r, r, 0, Math.PI * 2); c.fill();
+  pText(c, 'TN', x + r, y + r + r * 0.34, r * 0.80, '#FFFFFF', 700, 'center', null, 0);
+  pText(c, 'Thomas Nuth', x + r * 2.55, y + r * 0.92, Math.max(14, 23 * S), TN.ink, 700);
+  lxMicro(c, 'Marketing, Kai', x + r * 2.55, y + r * 1.72, Math.max(10, 15 * S), TN.faint);
+  return r * 2;
+}
+
+/* An annotation: the hand-marked emphasis that is his signature. */
+function tnCircle(c, x, y, w, h, S, alpha){
+  c.save(); c.globalAlpha = alpha === undefined ? 1 : alpha;
+  c.strokeStyle = TN.lead; c.lineWidth = Math.max(2, 2.6 * (S || 1)); c.lineCap = 'round';
+  const cx = x + w / 2, cy = y + h / 2, rx = w / 2, ry = h / 2;
+  c.beginPath();
+  for (let i = 0; i <= 60; i++){
+    const a = (i / 60) * Math.PI * 2.12 - 0.4;              // overshoots, like a pen would
+    const wob = 1 + Math.sin(a * 3) * 0.035;
+    const px = cx + Math.cos(a) * rx * wob, py = cy + Math.sin(a) * ry * wob;
+    i ? c.lineTo(px, py) : c.moveTo(px, py);
+  }
+  c.stroke(); c.restore();
+}
+function tnStrike(c, x, y, w, S, prog){
+  c.save(); c.strokeStyle = TN.lead; c.lineWidth = Math.max(2, 2.4 * (S || 1)); c.lineCap = 'round';
+  c.beginPath(); c.moveTo(x, y + 1.5); c.lineTo(x + w * Math.max(0, Math.min(1, prog)), y - 1.5);
+  c.stroke(); c.restore();
+}
+function tnBracket(c, x, y, h, S, side){
+  const arm = Math.max(6, 9 * (S || 1)), d = side === 'right' ? -1 : 1;
+  c.save(); c.strokeStyle = TN.lead; c.lineWidth = Math.max(2, 2.2 * (S || 1));
+  c.lineCap = 'round'; c.lineJoin = 'round';
+  c.beginPath();
+  c.moveTo(x + arm * d, y); c.lineTo(x, y); c.lineTo(x, y + h); c.lineTo(x + arm * d, y + h);
+  c.stroke(); c.restore();
+}
+function tnUnderline(c, x, y, w, S, prog){
+  c.save(); c.strokeStyle = TN.second; c.lineWidth = Math.max(4, 6 * (S || 1));
+  c.lineCap = 'round'; c.globalAlpha = 0.9;
+  c.beginPath(); c.moveTo(x, y); c.lineTo(x + w * Math.max(0, Math.min(1, prog)), y);
+  c.stroke(); c.restore();
+}
+
+/* His frame. Same bones as the company post, different signature. */
+function drawPersonFrame(c, W, H, s, progress){
+  const wide = W / H > 1.25, S = W / REF_W;
+  const M = Math.round(W * (wide ? 0.058 : 0.078));
+  c.save();
+  c.fillStyle = TN.ground; c.fillRect(0, 0, W, H);
+  tnRules(c, 0, 0, W, H, S);
+
+  // the margin rule — the clearest tell that this is his and not the company's
+  c.strokeStyle = TN.lead; c.lineWidth = Math.max(2, 3 * S); c.globalAlpha = 0.85;
+  c.beginPath(); c.moveTo(M * 0.45, M * 0.8); c.lineTo(M * 0.45, H - M * 0.8); c.stroke();
+  c.globalAlpha = 1;
+
+  const bylineH = tnByline(c, M, M, S);
+
+  const colW = wide ? W * 0.42 : W - M * 2;
+  const eyeS = Math.max(11, 19 * S), eyeGap = Math.max(20, 32 * S);
+  const size = Math.max(20, (wide ? 42 : 54) * S), lineH = size * 1.10;
+
+  c.font = `700 ${size}px "Wix Madefor Text", sans-serif`;
+  if ('letterSpacing' in c) c.letterSpacing = (size * -0.022).toFixed(2) + 'px';
+  const words = String(s.head || '').split(/\s+/);
+  const lines = []; let cur = '';
+  for (const w of words){
+    const t2 = cur ? cur + ' ' + w : w;
+    if (c.measureText(t2).width > colW && cur){ lines.push(cur); cur = w; } else cur = t2;
+  }
+  if (cur) lines.push(cur);
+  if ('letterSpacing' in c) c.letterSpacing = '0px';
+  const headLines = lines.slice(0, 4);
+
+  const srcS = Math.max(13, 20 * S);
+  let srcLines = [];
+  if (s.source){
+    c.font = `500 ${srcS}px "Wix Madefor Text", sans-serif`;
+    const avail = W - M * 2, sw = String(s.source).split(/\s+/);
+    let acc = '';
+    for (const w of sw){
+      const t2 = acc ? acc + ' ' + w : w;
+      if (c.measureText(t2).width > avail && acc){ srcLines.push(acc); acc = w; } else acc = t2;
+    }
+    if (acc) srcLines.push(acc);
+    if (srcLines.length > 2){ srcLines = srcLines.slice(0, 2);
+      srcLines[1] = srcLines[1].replace(/[\s,;]+$/, '') + '…'; }
+  }
+  const srcTop = H - Math.max(26, 42 * S) - (srcLines.length - 1) * srcS * 1.35;
+  const textH = (s.eyebrow ? eyeGap : 0) + headLines.length * lineH;
+  const textTop = wide ? M + bylineH + H * 0.10
+    : (srcLines.length ? srcTop - srcS * 2.4 : H - M) - textH - H * 0.012;
+
+  const cardTop = M + bylineH + H * (wide ? 0.05 : 0.040);
+  const card = wide
+    ? { x: W * 0.50, y: cardTop, w: W * 0.44, h: H - cardTop - M }
+    : { x: M, y: cardTop, w: W - M * 2, h: Math.max(H * 0.22, textTop - cardTop - H * 0.050) };
+  const cardR = LX.r.lg * S * 1.3;
+  lxCard(c, card.x, card.y, card.w, card.h, cardR, { S, fill: TN.paper });
+
+  const pad = Math.min(card.w, card.h) * (wide ? 0.11 : 0.13);
+  const box = { x: card.x + pad, y: card.y + pad, w: card.w - pad * 2, h: card.h - pad * 2 };
+  const fn = TN_CONCEPTS[s.personConcept];
+  if (fn){ c.save(); pRound(c, card.x, card.y, card.w, card.h, cardR); c.clip();
+           fn(c, box, Math.max(0, Math.min(1, progress)), S); c.restore(); }
+
+  let y = textTop;
+  if (s.eyebrow){ lxMicro(c, s.eyebrow, M, y, eyeS, TN.lead); y += eyeGap; }
+  headLines.forEach(ln => {
+    pText(c, ln, M, y + size * 0.80, size, TN.ink, 700, 'left', null, -0.022);
+    y += lineH;
+  });
+
+  if (srcLines.length){
+    c.strokeStyle = TN.rule; c.lineWidth = Math.max(1, S);
+    c.beginPath(); c.moveTo(M, srcTop - srcS * 1.45); c.lineTo(W - M, srcTop - srcS * 1.45);
+    c.stroke();
+    srcLines.forEach((ln, i) =>
+      pText(c, ln, M, srcTop + i * srcS * 1.35, srcS, TN.mute, 500, 'left', null, -0.011));
+    // Kai, small, as affiliation rather than as the author
+    const logo = img('logo:' + LX.t4);
+    if (logo){
+      const lh = Math.max(14, 22 * S);
+      c.save(); c.globalAlpha = 0.5;
+      c.drawImage(logo, W - M - lh * logo.width / logo.height, srcTop - srcS * 1.45 - lh - 10 * S,
+                  lh * logo.width / logo.height, lh);
+      c.restore();
+    }
+  }
+  c.restore();
+}
 
 /* The post frame: white, the mark in navy, the concept, then the words. */
 function drawPostFrame(c, W, H, s, progress){
@@ -6270,6 +6981,7 @@ function selectPost(post, date){
   plSelected = post.id;
   document.querySelectorAll('.pl-cell').forEach(el =>
     el.classList.toggle('sel', el.dataset.id === post.id));
+  plSelected = post.id;
   const host = document.getElementById('plDetail');
   const li = planValue(post, 'linkedin'), xc = planValue(post, 'x');
   const hook = li.split('\n')[0];
@@ -6299,7 +7011,7 @@ function selectPost(post, date){
       `<span class="m">${post.pillar}</span>` +
       (post.pillarSecondary ? `<span class="m">${post.pillarSecondary}</span>` : '') +
       `<span class="m">${T.type === 'stat' ? 'Animated counter' : 'Animated diagram'} · ${post.scene}</span>` +
-    `</div><h3>${post.theme}</h3>`;
+    `</div><h3 id="plTitleHead">${planValue(post, 'theme')}</h3>`;
   const body = document.createElement('div'); body.className = 'pl-body';
   right.appendChild(body);
 
@@ -6311,6 +7023,11 @@ function selectPost(post, date){
     t.addEventListener('input', () => { planEdit(post.id, key, t.value); refreshCounts(); buildPlanner(); });
     l.appendChild(t); body.appendChild(l); return t;
   };
+  const tf = field('Post title — your name for it, not published', 'theme', 0, planValue(post, 'theme'));
+  tf.addEventListener('input', () => {
+    const h = document.getElementById('plTitleHead');
+    if (h) h.textContent = tf.value || '(untitled)';
+  });
   field('Headline on the image', 'headline', 0, planValue(post, 'headline'));
   field('LinkedIn copy', 'linkedin', 8, li);
   field('X copy', 'x', 4, xc);
