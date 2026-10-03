@@ -4869,7 +4869,8 @@ function ppFeed(){
     const when = new Date(date); when.setHours(9, 0, 0, 0);
     when.setMinutes(when.getMinutes() + PLAN.advocacy.commentDelayMins[0]);
     out.push({ kind: 'comment', who: cm.who, when, id: 'c:' + cm.postId,
-               text: cm.text, onPost: post });
+               text: cm.text, onPost: post, state: postState(post, date),
+               done: !!ppDone()['c:' + cm.postId] });
   });
 
   (PLAN.employeePosts || []).forEach(ep => {
@@ -4879,10 +4880,70 @@ function ppFeed(){
     d2.setDate(mon.getDate() + 2);          // Wednesday, the day the company account is quiet
     d2.setHours(8, 30, 0, 0);
     out.push({ kind: 'own', who: ep.who, when: d2, id: 'p:' + ep.id,
-               text: ep.text, theme: ep.theme, why: ep.why });
+               text: ep.text, theme: ep.theme, why: ep.why,
+               state: d2 <= new Date() ? 'due' : 'future',
+               done: !!ppDone()['p:' + ep.id] });
   });
 
   return out.sort((a, b) => a.when - b.when);
+}
+
+/* Whether the company post has actually happened. A live URL is proof; a date
+   in the past is only a presumption, so those are held separately and asked
+   about rather than treated as done. Nothing is reactable until one or the
+   other is true. */
+function postState(post, date){
+  const url = postUrl(post.id);
+  if (url) return 'live';
+  if (!date) return 'future';
+  const when = new Date(date); when.setHours(9, 0, 0, 0);
+  return when <= new Date() ? 'due' : 'future';
+}
+function ppDone(){ return plGet(PL_KEYS.done) || {}; }
+function ppSetDone(id, v){
+  const a = ppDone();
+  if (v) a[id] = new Date().toISOString(); else delete a[id];
+  plSet(PL_KEYS.done, a);
+}
+
+/* Either a link to the live post, or the box to paste it into. Without this a
+   comment is an instruction with nowhere to go. */
+function ppLinkRow(post, onChange){
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 11px';
+  const url = postUrl(post.id);
+  if (url){
+    const a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = 'Open the post on LinkedIn ↗';
+    a.style.cssText = 'background:#E6F8FF;color:#027FA8;border:1px solid #CDEEFB;' +
+      'font:700 12px/1 "Wix Madefor Text",sans-serif;padding:9px 13px;border-radius:8px;' +
+      'text-decoration:none';
+    wrap.appendChild(a);
+    const ch = document.createElement('button'); ch.type = 'button'; ch.textContent = 'Change';
+    ch.style.cssText = 'background:#EEF2F6;color:var(--muted);font-size:11px;padding:8px 11px;border-radius:7px';
+    ch.addEventListener('click', () => { setPostUrl(post.id, ''); onChange(); });
+    wrap.appendChild(ch);
+  } else {
+    const tag = document.createElement('span'); tag.className = 'pp-kind';
+    tag.textContent = 'not posted yet'; wrap.appendChild(tag);
+    const inp = document.createElement('input'); inp.type = 'text';
+    inp.placeholder = 'paste the LinkedIn post URL';
+    inp.style.cssText = 'flex:1;min-width:230px;font:500 12px/1 "Wix Madefor Text",sans-serif;' +
+      'border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:#fff';
+    const save = document.createElement('button'); save.type = 'button'; save.textContent = 'Save';
+    save.className = 'go'; save.style.cssText += ';font-size:12px;padding:9px 14px';
+    const commit = () => {
+      const v = inp.value.trim();
+      if (!v) return;
+      if (!LI_RE.test(v)){ say('That does not look like a LinkedIn URL.'); return; }
+      setPostUrl(post.id, v); onChange();
+    };
+    save.addEventListener('click', commit);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); commit(); } });
+    wrap.append(inp, save);
+  }
+  return wrap;
 }
 
 function buildPeople(){
@@ -4899,17 +4960,25 @@ function buildPeople(){
   });
 
   const feed = ppFeed().filter(r => ppWho === 'all' || r.who === ppWho);
-  const nc = feed.filter(r => r.kind === 'comment').length;
-  const np = feed.filter(r => r.kind === 'own').length;
-  document.getElementById('ppIntro').textContent =
-    'Every company post gets a comment from one of them, 45 to 90 minutes after it goes up — ' +
-    'late enough not to look staged, early enough to matter. Wednesdays are theirs: the company ' +
-    'account is quiet, so an own post has the day to itself.';
-  document.getElementById('ppSchedNote').textContent =
-    nc + ' comment' + (nc === 1 ? '' : 's') + ' and ' + np + ' own post' + (np === 1 ? '' : 's') +
-    ' across the window. Everything here is editable and saved in this browser.';
 
-  // the voice card, so nobody writes in the wrong register
+  /* A reaction is only work once the thing it reacts to exists. Everything is
+     sorted into what can be done now, what is blocked on a post going up, and
+     what has already been done. */
+  const ready   = feed.filter(r => !r.done && (r.state === 'live' ||
+                                  (r.kind === 'own' && r.state === 'due')));
+  const blocked = feed.filter(r => !r.done && r.kind === 'comment' && r.state === 'due');
+  const later   = feed.filter(r => !r.done && r.state === 'future');
+  const done    = feed.filter(r => r.done);
+
+  document.getElementById('ppIntro').textContent =
+    'Reactive by design: a comment only becomes work once the Kai post it answers is actually ' +
+    'up. Paste a post\'s LinkedIn URL and its comment moves into the queue, 45 to 90 minutes ' +
+    'behind it. Wednesdays are theirs — the company account is quiet, so an own post has the ' +
+    'day to itself.';
+  document.getElementById('ppSchedNote').textContent =
+    ready.length + ' ready now · ' + blocked.length + ' waiting on a URL · ' +
+    later.length + ' not due yet · ' + done.length + ' done.';
+
   const vh = document.getElementById('ppVoice');
   vh.innerHTML = '';
   PLAN.employees.filter(e => ppWho === 'all' || e.id === ppWho).forEach(e => {
@@ -4936,65 +5005,126 @@ function buildPeople(){
   });
 
   host.innerHTML = '';
-  feed.forEach(r => {
-    const emp = ppPerson(r.who);
-    const card = document.createElement('div'); card.className = 'pp-card';
+  const section = (title, note, rows, opt) => {
+    if (!rows.length) return;
+    const h = document.createElement('div');
+    h.style.cssText = 'margin:22px 0 10px';
+    h.innerHTML = `<div class="pl-eyebrow" style="margin:0">[ ${title} ]</div>` +
+                  `<p class="pl-note" style="margin:4px 0 0">${note}</p>`;
+    host.appendChild(h);
+    rows.forEach(r => host.appendChild(ppCard(r, opt || {})));
+  };
 
-    const head = document.createElement('div'); head.className = 'pp-head';
-    head.appendChild(ppAvatar(emp, true));
-    const nm = document.createElement('div');
-    nm.innerHTML = `<div class="pp-nm">${emp.name}</div>`;
-    head.appendChild(nm);
-    const kind = document.createElement('span');
-    kind.className = 'pp-kind' + (r.kind === 'own' ? ' own' : '');
-    kind.textContent = r.kind === 'own' ? 'own post' : 'comment';
-    head.appendChild(kind);
-    const when = document.createElement('span'); when.className = 'pp-when';
-    when.style.marginLeft = 'auto';
-    when.textContent = r.when.toLocaleDateString('en-GB',
-      { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' +
-      r.when.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    head.appendChild(when);
-    card.appendChild(head);
+  section('ready now',
+    'The Kai post is up. Comment within the hour if you can — that is when it counts.',
+    ready);
+  section('waiting on a url',
+    'These were scheduled to go up and nobody has recorded where. Paste the link and ' +
+    'the comment becomes actionable.', blocked, { muted: true });
+  section('not due yet',
+    'Comments are held until the post they answer exists. Own posts stay open — ' +
+    'those are written ahead.', later, { muted: true, collapsed: true });
+  section('done', 'Already posted.', done, { muted: true });
 
-    const ctx = document.createElement('p'); ctx.className = 'pp-ctx';
-    ctx.textContent = r.kind === 'own'
-      ? r.theme + ' — ' + r.why
-      : 'On: ' + planValue(r.onPost, 'headline');
+  if (!host.children.length){
+    host.innerHTML = '<p class="pl-note">Nothing scheduled for this person in the window.</p>';
+  }
+}
+
+/* One row of the feed. */
+function ppCard(r, opt){
+  const emp = ppPerson(r.who);
+  const card = document.createElement('div'); card.className = 'pp-card';
+  if (opt.muted) card.style.opacity = r.done ? '0.6' : '0.82';
+
+  const head = document.createElement('div'); head.className = 'pp-head';
+  head.appendChild(ppAvatar(emp, true));
+  const nm = document.createElement('div');
+  nm.innerHTML = `<div class="pp-nm">${emp.name}</div>`;
+  head.appendChild(nm);
+  const kind = document.createElement('span');
+  kind.className = 'pp-kind' + (r.kind === 'own' ? ' own' : '');
+  kind.textContent = r.kind === 'own' ? 'own post' : 'comment';
+  head.appendChild(kind);
+  if (r.done){
+    const d = document.createElement('span'); d.className = 'pp-kind';
+    d.style.cssText = 'background:#E8F7EE;color:#17663A'; d.textContent = 'posted';
+    head.appendChild(d);
+  }
+  const when = document.createElement('span'); when.className = 'pp-when';
+  when.style.marginLeft = 'auto';
+  when.textContent = r.when.toLocaleDateString('en-GB',
+    { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' +
+    r.when.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  head.appendChild(when);
+  card.appendChild(head);
+
+  const ctx = document.createElement('p'); ctx.className = 'pp-ctx';
+  if (r.kind === 'own'){
+    ctx.innerHTML = `<b>${String(r.theme).replace(/</g,'&lt;')}</b> &mdash; ${
+      String(r.why).replace(/</g,'&lt;')}` +
+      (r.state === 'future' ? `<br><span style="opacity:.75">Goes up ${
+        r.when.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})
+      }. Draft it whenever.</span>` : '');
     card.appendChild(ctx);
-
-    const ta = document.createElement('textarea');
-    ta.rows = r.kind === 'own' ? 10 : 4;
-    ta.value = ppValue(r.id, r.text);
-    ta.addEventListener('input', () => { ppEdit(r.id, ta.value); count(); });
-    card.appendChild(ta);
-
-    const acts = document.createElement('div'); acts.className = 'pl-acts';
-    const counts = document.createElement('span'); counts.className = 'pl-note';
-    const count = () => { counts.textContent =
-      ta.value.trim().split(/\s+/).length + ' words · ' + ta.value.length + ' chars'; };
-    count();
-    const copy = document.createElement('button'); copy.type = 'button';
-    copy.className = 'go'; copy.textContent = r.kind === 'own' ? 'Copy post' : 'Copy comment';
-    copy.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(ta.value); say('Copied.'); }
-      catch { say('Clipboard blocked — select and copy by hand.'); }
-    });
-    acts.append(copy);
-    if (r.kind === 'comment'){
-      const go = document.createElement('button'); go.type = 'button';
-      go.textContent = 'Open the post it replies to';
-      go.addEventListener('click', () => {
-        document.querySelector('#tabs button[data-t="planner"]').click();
-        const po = allPosts().find(x => x.id === r.onPost.id);
-        if (po) selectPost(po, r.when);
-      });
-      acts.append(go);
+  } else {
+    const hook = String(planValue(r.onPost, 'linkedin') || '').split('\n')[0];
+    ctx.innerHTML = `<b>Replying to the Kai post:</b> &ldquo;${
+      planValue(r.onPost, 'headline').replace(/</g,'&lt;')}&rdquo;` +
+      (hook ? `<br><span style="opacity:.75">Opens: &ldquo;${
+        hook.slice(0, 110).replace(/</g,'&lt;')}${hook.length > 110 ? '…' : ''}&rdquo;</span>` : '');
+    card.appendChild(ctx);
+    if (r.state !== 'future') card.appendChild(ppLinkRow(r.onPost, () => buildPeople()));
+    else {
+      const n = document.createElement('p'); n.className = 'pl-note';
+      n.textContent = 'The post goes up ' + r.when.toLocaleDateString('en-GB',
+        { weekday: 'long', day: 'numeric', month: 'long' }) + '. Nothing to react to yet.';
+      card.appendChild(n);
     }
-    acts.append(counts);
-    card.appendChild(acts);
-    host.appendChild(card);
+  }
+
+  // Only a reaction is gated on its trigger existing. An own post is drafted
+  // ahead of the date by definition, so it stays open however far out it is.
+  if (opt.collapsed && r.kind === 'comment') return card;
+
+  const ta = document.createElement('textarea');
+  ta.rows = r.kind === 'own' ? 10 : 4;
+  ta.value = ppValue(r.id, r.text);
+  ta.addEventListener('input', () => { ppEdit(r.id, ta.value); count(); });
+  card.appendChild(ta);
+
+  const acts = document.createElement('div'); acts.className = 'pl-acts';
+  const counts = document.createElement('span'); counts.className = 'pl-note';
+  const count = () => { counts.textContent =
+    ta.value.trim().split(/\s+/).length + ' words · ' + ta.value.length + ' chars'; };
+  count();
+
+  const copy = document.createElement('button'); copy.type = 'button';
+  copy.className = 'go'; copy.textContent = r.kind === 'own' ? 'Copy post' : 'Copy comment';
+  copy.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(ta.value); say('Copied.'); }
+    catch { say('Clipboard blocked — select and copy by hand.'); }
   });
+  acts.append(copy);
+
+  const mark = document.createElement('button'); mark.type = 'button';
+  mark.textContent = r.done ? 'Not posted after all' : 'Mark as posted';
+  mark.addEventListener('click', () => { ppSetDone(r.id, !r.done); buildPeople(); });
+  acts.append(mark);
+
+  if (r.kind === 'comment'){
+    const go = document.createElement('button'); go.type = 'button';
+    go.textContent = 'Edit it in the planner';
+    go.addEventListener('click', () => {
+      document.querySelector('#tabs button[data-t="planner"]').click();
+      const po = allPosts().find(x => x.id === r.onPost.id);
+      if (po) selectPost(po, r.when);
+    });
+    acts.append(go);
+  }
+  acts.append(counts);
+  card.appendChild(acts);
+  return card;
 }
 
 /* ---------------- LinkedIn Planner ----------------
@@ -5117,7 +5247,8 @@ async function openInFigma(kind){
 
 const PL_KEYS = { edits:'kai-plan-edits-v1', inputs:'kai-plan-inputs-v1',
                   dirs:'kai-plan-directions-v1', ctas:'kai-plan-ctas-v1',
-                  drafts:'kai-plan-drafts-v1' };
+                  drafts:'kai-plan-drafts-v1', urls:'kai-plan-urls-v1',
+                  done:'kai-people-done-v1' };
 const PL_CADENCE = [1, 2, 4, 5];                       // Mon, Tue, Thu, Fri
 const PL_DAYS = ['mon','tue','thu','fri'];
 const PL_PILLAR_COLOUR = {
@@ -6184,6 +6315,25 @@ function selectPost(post, date){
   field('LinkedIn copy', 'linkedin', 8, li);
   field('X copy', 'x', 4, xc);
   field('Call to action', 'cta', 0, planValue(post, 'cta'));
+  {
+    const l = document.createElement('label');
+    l.innerHTML = '<span>Live LinkedIn URL &mdash; paste after publishing</span>';
+    const t = document.createElement('input'); t.type = 'text';
+    t.placeholder = 'https://www.linkedin.com/feed/update/...';
+    t.value = postUrl(post.id);
+    t.addEventListener('input', () => {
+      setPostUrl(post.id, t.value.trim());
+      note.textContent = t.value.trim()
+        ? (LI_RE.test(t.value.trim()) ? 'Saved. The comments for this post now link to it.'
+                                      : 'That does not look like a LinkedIn URL.')
+        : 'Not posted yet.';
+      note.style.color = t.value.trim() && !LI_RE.test(t.value.trim()) ? '#B42318' : '';
+    });
+    l.appendChild(t); body.appendChild(l);
+    const note = document.createElement('p'); note.className = 'pl-note';
+    note.textContent = postUrl(post.id) ? 'Comments for this post link to it.' : 'Not posted yet.';
+    body.appendChild(note);
+  }
   if (post.ctaUrl !== undefined){
     const cf = field('CTA link', 'ctaUrl', 0, planValue(post, 'ctaUrl'));
     syncCtaList(); cf.setAttribute('list', 'plCtaOptions');
@@ -6260,6 +6410,17 @@ function selectPost(post, date){
       t.split('\n')[0].length} chars`;
   }
 }
+
+/* Where each company post ended up on LinkedIn. Filled in after publishing,
+   so the people commenting on it have somewhere to click. */
+function postUrls(){ return plGet(PL_KEYS.urls) || {}; }
+function postUrl(id){ return postUrls()[id] || ''; }
+function setPostUrl(id, url){
+  const a = postUrls();
+  if (url) a[id] = url; else delete a[id];
+  plSet(PL_KEYS.urls, a);
+}
+const LI_RE = /^https?:\/\/(www\.)?linkedin\.com\//i;
 
 /* An idea in the brief can go straight onto the calendar as a draft post. It
    lands in the next open slot, carries the idea's own link as its CTA, and is
